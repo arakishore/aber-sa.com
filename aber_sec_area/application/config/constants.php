@@ -98,30 +98,12 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 define('setting', 1);
 if(setting==1){
     define('back_path', 'http://127.0.0.1/aber-sa.com/');
-    define('FIREBASE_CREDENTIALS_PATH', 'firebase/bo-ice-2f1ce71da14c_local.json');
-    define('FIREBASE_DATABASE_PATH', 'https://bo-ice.firebaseio.com');
     
-    define('FIREBASE_NOTIFICATION_ADMIN_ORDER_DETAIL_URL', 'https://ice.shreewebs.com/secu_doice/index.php/orders/orderdetail/');
-    define('FIREBASE_NOTIFICATION_MP3', 'http://ice.shreewebs.com/firebase/for-sure.mp3');
-    define('FIREBASE_NOTIFICATION_ICON', 'http://ice.shreewebs.com/firebase/logoforfirebase.png');
-    define('FIREBASE_NOTIFICATION_IMAGE', 'http://ice.shreewebs.com/firebase/logoforfirebase.png');
-    define('FIREBASE_NOTIFICATION_URL', 'https://fcm.googleapis.com/fcm/send');
-    define('FIREBASE_API_KEY', 'AAAAmsGc2gA:APA91bHN6lQ043APOLrh5RpMXBE84Cmm6lU0t1gCIE4Qwys1WSydPfsZIaoCuuwPEowIJPBCHMpKkVNCHPHhB6DV2i7BCUXXDHowL568DhlwyRcnyLunOqP-e5gFlof7yysIVGHr76SO');
-    define('FIREBASE_PUBLIC_KEY', 'BFrn5UCHWPbDkKb3uAZo5PAyO02aMKfpMhKR9WGDq1mm4yKV73E_bEmzaSVuvcW1NTamPmzFa8HMeT5RLMv1CTM');
     
 } else {
 	
     define('back_path', 'http://aber-sa.com/');
-    define('FIREBASE_CREDENTIALS_PATH', 'firebase/bo-ice-2f1ce71da14c.json');
-    define('FIREBASE_DATABASE_PATH', 'https://bo-ice.firebaseio.com');
     
-    define('FIREBASE_NOTIFICATION_ADMIN_ORDER_DETAIL_URL', 'https://ice.shreewebs.com/secu_doice/index.php/orders/orderdetail/');
-    define('FIREBASE_NOTIFICATION_MP3', 'http://ice.shreewebs.com/firebase/for-sure.mp3');
-    define('FIREBASE_NOTIFICATION_ICON', 'http://ice.shreewebs.com/firebase/logoforfirebase.png');
-    define('FIREBASE_NOTIFICATION_IMAGE', 'http://ice.shreewebs.com/firebase/logoforfirebase.png');
-    define('FIREBASE_NOTIFICATION_URL', 'https://fcm.googleapis.com/fcm/send');
-    define('FIREBASE_API_KEY', 'AAAArAMsTHc:APA91bGjgPzwM-bvZShuFU3U_UFZoVVOQHVhwRle9ziP89mhsCqbUy7-OjGTl5urSy6FjNPvW_lQOUZpLsO3YCDHZ9ZNhVg8Y5DLLZZz_t-yxUTDfJuQKPGokXrOBGhE-vdmBLnZgrUS');
-    define('FIREBASE_PUBLIC_KEY', 'BH8YIMkS9obyt3g0OmInFtgdniay2yD4Ogx8_T93MV-46INHkoK_gZsazhswj2pEqUUE4xZa49haDhk10kAwLrA');
     
     
 }
