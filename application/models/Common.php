@@ -837,6 +837,9 @@ class Common extends CI_Model
         if (!isset($session_user_data['user_id'])) {
             //redirect( $this->config->item('site_url'));
             redirect(site_url());
+        } else {
+            
+            return $this->session->userdata('user_data');
         }
     }
     /////////////////////////////

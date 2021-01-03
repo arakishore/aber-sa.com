@@ -1247,6 +1247,18 @@ class Services extends CI_Model
         } else {
             $sql_cond = " and r.request_status='" . $params['request_status'] . "' ";
         }
+        if (!isset($params['request_status_multple'])) {
+            $sql_cond_multi = " ";
+        } else {
+            $sql_cond_multi = " and r.request_status in (" . $params['request_status_multple'] . ") ";
+        }
+
+        if (!isset($params['status_flag'])) {
+            $sql_cond_status = "   r.status_flag='Active'";
+        } else {
+            $sql_cond_status = "   r.status_flag in (" . $params['status_flag'] . ") ";
+        }
+
         if ($user_id != 0) {
             $sql_cond_user = " and r.user_id='{$user_id}' ";
         } else {
@@ -1263,7 +1275,7 @@ class Services extends CI_Model
         $add_in_items = [];
         $requests_items = [];
         $sort_order_by = "c.name asc";
-         $sql = "select r.* from lt_requests r    where r.status_flag='Active'  " . $sql_cond . $sql_cond_dri . $sql_cond_user . $sql_cond_dri_status . " order by r.insert_date desc";
+          $sql = "select r.* from lt_requests r    where  ". $sql_cond_status. $sql_cond .$sql_cond_multi. $sql_cond_dri . $sql_cond_user . $sql_cond_dri_status . " order by r.insert_date desc";
         //$ddd =getRecordsLimit
         $requestsQuery = $this->db->query($sql);
         if ($requestsQuery->num_rows() > 0) {
@@ -1303,6 +1315,7 @@ class Services extends CI_Model
                     'request_id' => $requests_val['request_id'],
                     'uuid' => $requests_val['uuid'],
                     'user_id' => $requests_val['user_id'],
+                    'shipment_id' => $requests_val['shipment_id']."",
                     'driver_id' => $requests_val['driver_id'],
                     'request_title' => $requests_val['request_title'],
                     'request_description' => $requests_val['request_description'],
@@ -1324,6 +1337,7 @@ class Services extends CI_Model
                     'subcategory_name' => $requests_val['subcategory_name'],
                     'consignment_note' => $requests_val['consignment_note'],
                     'budget_amount' => $requests_val['budget_amount'],
+                    'insert_date' => $requests_val['insert_date'],
                     'request_status' => $request_status,
                     'consignment_image' => $consignment_image,
                     'requests_items' => $requests_items,
@@ -1505,6 +1519,12 @@ class Services extends CI_Model
         } else {
             $sql_cond_dri = " ";
         }
+        if (!isset($params['status_flag'])) {
+            $sql_cond_status = "   rq.status_flag='Active'";
+        } else {
+            $sql_cond_status = "   rq.status_flag in (" . $params['status_flag'] . ") ";
+        }
+
         $request_id = (isset($params['request_id'])) ? $this->common->mysql_safe_string($params['request_id']) : '0';
 
         $sql_cond = "";
@@ -1525,7 +1545,7 @@ class Services extends CI_Model
           left join user_master_front uf1 on rq.service_provider_id= uf1.user_id
           left join user_master_front uf2 on rq.driver_id= uf2.user_id
 
-        where rq.status_flag='Active'  {$sql_cond_user} {$sql_cond_dri} and  rq.request_id='{$request_id}' order by rq.insert_date desc";
+        where {$sql_cond_status}  {$sql_cond_user} {$sql_cond_dri} and  rq.request_id='{$request_id}' order by rq.insert_date desc";
         //$ddd =getRecordsLimit
         $requestsQuery = $this->db->query($sql);
         if ($requestsQuery->num_rows() > 0) {
@@ -1575,6 +1595,8 @@ class Services extends CI_Model
                 'request_id' => $requests_val['request_id'],
                 'uuid' => $requests_val['uuid'],
                 'driver_id' => $requests_val['driver_id'],
+                'shipment_id' => $requests_val['shipment_id']."",
+                'insert_date' => $requests_val['insert_date'],
                 'service_provider_id' => $requests_val['service_provider_id'],
                 'user_id' => $requests_val['user_id'],
                 'request_title' => $requests_val['request_title'],
@@ -2090,8 +2112,8 @@ class Services extends CI_Model
         $query = $this->db->query($sql);
         if ($query->num_rows() > 0) {
             
-            $request_status = 'Canceled'; // oOrder Processed
-            $request_sub_status = 'Canceled'; // oOrder Processed
+            $request_status = 'Cancel'; // oOrder Processed
+            $request_sub_status = 'Cancel'; // oOrder Processed
 
             $lt_requests['request_status'] = $request_status;
             $lt_requests['status_flag'] = "Cancel";
@@ -2135,4 +2157,17 @@ class Services extends CI_Model
             die();
         }
     }    
+    public function get_request_status_history($request_id = 0)
+    {
+        $request_status = [];
+        $sql = "select request_status,request_sub_status from lt_requests_history where request_id='{$request_id}' ";
+        $request_imgs_query = $this->db->query($sql)->result_array();
+        if ($request_imgs_query) {
+            foreach ($request_imgs_query as $request_imgs_query_val) {
+                $request_status['request_sub_status'][] =$request_imgs_query_val['request_sub_status'];
+                $request_status['request_status'][] =$request_imgs_query_val['request_status'];
+            }
+        }
+        return $request_status;
+    }
 }

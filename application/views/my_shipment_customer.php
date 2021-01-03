@@ -44,15 +44,48 @@
 
                 <div class="col-sm-12 col-md-12 col-lg-9">
                     <div class="fb-dashbord">
-
-                        <div class="card">
-                            <div class="card-header">Recent Order
-                                <div class="card-action">
-
+                        <div class="card-dash mt-3">
+                            <div class="card-content">
+                                <div class="row row-group">
+                                    <div class="col-3 col-lg-3 col-xl-3 border-light">
+                                        <a href="<?php echo site_url('customer/my_shipment/Requested')?>">
+                                            <div
+                                                class="card-body <?php echo (isset($request_status) && $request_status=="Requested" ) ? 'active' : '';?>">
+                                                <h5 class="mb-0"><b>Requested</b></h5>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-3 col-lg-3 col-xl-3 border-light">
+                                        <a href="<?php echo site_url('customer/my_shipment/Ongoing')?>">
+                                            <div
+                                                class="card-body <?php echo (isset($request_status) && $request_status=="Ongoing" ) ? 'active' : '';?>">
+                                                <h5 class="mb-0">Ongoing</h5>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-3 col-lg-3 col-xl-3 border-light">
+                                        <a href="<?php echo site_url('customer/my_shipment/Scheduled')?>">
+                                            <div
+                                                class="card-body <?php echo (isset($request_status) && $request_status=="Scheduled" ) ? 'active' : '';?>">
+                                                <h5 class="mb-0">Scheduled</h5>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-3 col-lg-3 col-xl-3 border-light">
+                                        <a href="<?php echo site_url('customer/my_shipment/Completed')?>">
+                                            <div
+                                                class="card-body <?php echo (isset($request_status) && $request_status=="Completed" ) ? 'active' : '';?>">
+                                                <h5 class="mb-0">Completed</h5>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="card">
+
                             <div class="table-responsive">
-                                <?php 
+                            <?php 
                             if(isset($all_request) && sizeof($all_request)>0){
 
                              
@@ -103,6 +136,7 @@
                             ?>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
