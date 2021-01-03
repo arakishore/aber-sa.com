@@ -1,0 +1,16 @@
+RewriteEngine on
+RewriteCond $1 !^(index\.php|resources|robots\.txt)
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} !^www\. [OR]
+RewriteCond %{HTTP_HOST} ^aber\-sa\.com$ [NC]
+RewriteRule ^ https://www.aber-sa.com%{REQUEST_URI} [R=301,L,NE]
+RewriteCond %{THE_REQUEST} ^[A-Z]+\ /index\.php(/[^\ ]*)?\ HTTP/ 
+RewriteRule ^index\.php(/(.*))?$ aber-sa.com/$2 [R=301,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L,QSA]

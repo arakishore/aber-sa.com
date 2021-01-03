@@ -1,8 +1,5 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-//use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-//use Ramsey\Uuid\Uuid;
-
 class Home extends CI_Controller
 {
 
@@ -21,89 +18,43 @@ class Home extends CI_Controller
      * map to /index.php/welcome/<method_name>
      * @see https://codeigniter.com/user_guide/general/urls.html
      */
-
+    public $controller = "home";
     public function __construct()
     {
-        parent::__construct();
+            parent::__construct();
+			$this->load->library('session');
+			$this->load->model('common');
+			$this->load->helper('security');
+			$this->load->library('email');
+			$this->load->helper('url_helper');
+			//if session not exist
+		 
+          //  $data['config_maintenance'] = $config_maintenance = (int)$this->common->get('config_maintenance');
+	
+		/* 	if($config_maintenance){
+				 redirect("maintenance");
+				  exit;
+			} */
 
     }
-    public function index()
-    {
-
-        $session_user_data = $this->session->userdata('user_data');
-        if ($session_user_data['logged_in']) {
-
-            redirect('dashboard', 'refresh');
-            exit;
+	
+	
+    public function index(){
+        
+		$data['act_id'] = 1;
+		$data['page_header'] = "home";
+        $param_page = $this->uri->segment(1); // n=1 for controller, n=2 for method, etc
+        
+        if($param_page=="" ){
+            $param_page = "home";
         }
 
-        $data['title'] = 'Login';
-        $data['error_msg'] = '';
-        //$session_user_data = $this->session->userdata('admin_data');
+        $data['cms_data_1'] = $this->common->get_site_cms_master(2);
+		$data['cms_data_3'] = $this->common->get_site_cms_master(3);
 
-        $error_msg = '';
-        if ($this->input->post()) {
-
-            $username = $this->input->post('username');
-            $password = $this->input->post('password');
-
-            // $password = md5($password);
-
-            $sql = "select * from user_admin where email='" . $username . "' and user_pass='" . $password . "'";
-
-            $query = $this->db->query($sql);
-
-            if ($query->num_rows() > 0) {
-                $result = $query->row_array();
-                //  and status='A'
-                if ($result['user_status'] == "Active") {
-                    $unique_logincode = $this->common->rand_str(5);
-                    $time_sent = time();
-                    $ip_address = $this->common->get_ip();
-                    $login_time = date("Y-m-d H:i:s");
-
-                    /*$array = array(
-                        'unique_logincode' => $unique_logincode,
-                        'time_sent' => $time_sent,
-                        'ip_address' => $ip_address,
-                        'login_time' => $login_time,
-                    );*/
-
-                    $array = array(
-                        'ip_address' => $ip_address,
-                    );
-
-                    $this->db->where('email', $username);
-                    $this->db->where('user_pass', $password);
-                    $this->db->update('user_admin', $array);
-
-                    //$code = base64_encode($unique_logincode."##".$ip_address);
-                    //    $this->session->sess_destroy();
-                    $this->session->sess_regenerate(true);
-
-                    $this->session->set_userdata(array('user_data' => array()));
-
-                    $ar_session_data['user_data'] = $result;
-                    $ar_session_data['user_data']['logged_in'] = true;
-                    $ar_session_data['user_data']['passphrase'] = "";
-                    $this->session->set_userdata($ar_session_data);
-
-                    redirect(site_url("dashboard"), 'refresh');
-                    exit();
-                } else {
-                    $error_msg = "Please contact admin";
-
-                }
-
-            } else {
-                $error_msg = "Incorrect login credentials";
-                //    $this->session->set_flashdata('error_msg', $error_msg);
-                //redirect($this->config->item('site_url') . 'users/login');
-
-            }
-        }
-
-        $data['error_msg'] = $error_msg;
+		         
         $this->load->view("home", $data);
+
     }
+    
 }

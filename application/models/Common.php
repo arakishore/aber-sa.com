@@ -426,9 +426,8 @@ class Common extends CI_Model
             $number = substr($number, 0, -1);
           }
         }
-        $string = number_format($number, (int)$precision, '.', ',');
-
-        return $string ;
+    
+        return $number * 1;
       }
     
     public function GenerateKey($length = 15)
@@ -975,4 +974,17 @@ class Common extends CI_Model
         }
         
 	}
+	
+    public function get_site_cms_master($id = 0){
+
+        $where_cond = "where cms_id=" . $id;
+        $sel_rs = $this->common->getOneRow('site_cms_master', $where_cond);
+
+        $sel_rs['cms_desc'] = $sel_rs['cms_desc'];
+        $sel_rs['cms_image'] = $sel_rs['cms_image'];
+        $sel_rs['cms_title'] = $sel_rs['cms_title'];
+		
+
+        return $sel_rs;
+    }	
 }
