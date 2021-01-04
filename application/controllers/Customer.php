@@ -100,7 +100,7 @@ class Customer extends CI_Controller
         } else {
             $data['requests'] = [];
         }
-        print_r($data['requests']);
+        
         $request_status = $this->services->get_request_status_history($params['request_id'],'ARRAY');
         $data['request_status'] = $request_status['request_sub_status'];
         
