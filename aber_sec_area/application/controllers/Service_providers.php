@@ -85,7 +85,7 @@ class Service_providers extends CI_Controller
         $where_edt = "user_id = $id";
 
         if (isset($_POST['mode_pop']) && $_POST['mode_pop'] == "addchildpoup") {
-            $add_in['status'] =  'Active';
+            $add_in['status_flag'] =  'Active';
            
             $add_in['first_name'] = $first_name = (isset($_POST['first_name'])) ? $this->common->mysql_safe_string($_POST['first_name']) : '';
             $add_in['last_name'] = $last_name = (isset($_POST['last_name'])) ? $this->common->mysql_safe_string($_POST['last_name']) : '';
@@ -101,12 +101,12 @@ class Service_providers extends CI_Controller
             if ($error == '') {
                 $add_in['parent_id'] = $id;
                 $add_in['user_type'] = 'CUST';
-                $add_in['business_type'] = 'Branch';
+                //$add_in['business_type'] = 'Branch';
                 $this->common->insertRecord($this->tbl_name,$add_in);
                   
                 $this->session->set_flashdata('success', 'Information added succssfully!');
                 $data['msg'] = 'success';
-                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=2");
+                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=2");
                 $this->session->set_flashdata('error', $error);
             } else {
                 $data['msg'] = $error;
@@ -114,7 +114,7 @@ class Service_providers extends CI_Controller
         }
 
         if (isset($_POST['mode_pop']) && $_POST['mode_pop'] == "frmUpdateData") {
-            $add_in['status'] = $status = (isset($_POST['status'])) ? $this->common->mysql_safe_string($_POST['status']) : 'Active';
+            $add_in['status_flag'] = $status = (isset($_POST['status'])) ? $this->common->mysql_safe_string($_POST['status']) : 'Active';
            
            
 			$childid = (isset($_POST['childid'])) ? $this->common->mysql_safe_string($_POST['childid']) : '';
@@ -125,7 +125,7 @@ class Service_providers extends CI_Controller
                 $update_status = $this->common->updateRecord($this->tbl_name, $add_in, $where_edt);
                 $this->session->set_flashdata('success', 'Information updated succssfully!');
                 $data['msg'] = 'success';
-                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=2");
+                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=2");
                 $this->session->set_flashdata('error', $error);
             } else {
                 $data['msg'] = $error;
@@ -145,26 +145,26 @@ class Service_providers extends CI_Controller
                 $where_edt = "user_id = '" . $childid . "'";
                 $update_status = $this->common->updateRecord($this->tbl_name, $array, $where_edt);
                 $this->session->set_flashdata('success', 'Information updated succssfully..');
-                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=2");
+                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=2");
             }
         }
        
         if (isset($_POST['mode']) && $_POST['mode'] == "submitform") {
 
-            $add_in['status'] = $status = (isset($_POST['status'])) ? $this->common->mysql_safe_string($_POST['status']) : 'Active';
-            $add_in['business_type'] = $business_type = (isset($_POST['business_type'])) ? $this->common->mysql_safe_string($_POST['business_type']) : 'General';
+            $add_in['status_flag'] = $status = (isset($_POST['status'])) ? $this->common->mysql_safe_string($_POST['status']) : 'Active';
+           // $add_in['business_type'] = $business_type = (isset($_POST['business_type'])) ? $this->common->mysql_safe_string($_POST['business_type']) : 'General';
             $add_in['enterprise_name'] = $enterprise_name = (isset($_POST['enterprise_name'])) ? $this->common->mysql_safe_string($_POST['enterprise_name']) : '';
-            $add_in['bo_ice_id'] = $bo_ice_id = (isset($_POST['bo_ice_id'])) ? $this->common->mysql_safe_string($_POST['bo_ice_id']) : '';
+         //   $add_in['bo_ice_id'] = $bo_ice_id = (isset($_POST['bo_ice_id'])) ? $this->common->mysql_safe_string($_POST['bo_ice_id']) : '';
             $add_in['user_language'] = $user_language = (isset($_POST['user_language'])) ? $this->common->mysql_safe_string($_POST['user_language']) : 'EN';
             $add_in['push_notification'] = $push_notification = (isset($_POST['push_notification'])) ? $this->common->mysql_safe_string($_POST['push_notification']) : '1';
-            $add_in['credit_limit_status'] = $credit_limit_status = (isset($_POST['credit_limit_status'])) ? $this->common->mysql_safe_string($_POST['credit_limit_status']) : 'Active';
-            $add_in['credit_limit'] = $credit_limit = (isset($_POST['credit_limit'])) ? $this->common->mysql_safe_string($_POST['credit_limit']) : '0';
+           // $add_in['credit_limit_status'] = $credit_limit_status = (isset($_POST['credit_limit_status'])) ? $this->common->mysql_safe_string($_POST['credit_limit_status']) : 'Active';
+          //  $add_in['credit_limit'] = $credit_limit = (isset($_POST['credit_limit'])) ? $this->common->mysql_safe_string($_POST['credit_limit']) : '0';
             
             if ($error == '') {
                 $update_status = $this->common->updateRecord($this->tbl_name, $add_in, $where_edt);
                 $this->session->set_flashdata('success', 'Information updated succssfully!');
                 $data['msg'] = 'success';
-                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=1");
+                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=1");
                 $this->session->set_flashdata('error', $error);
             } else {
                 $data['msg'] = $error;
@@ -182,7 +182,7 @@ class Service_providers extends CI_Controller
 
                 $update_status = $this->common->updateRecord($this->tbl_name, $array, $where_edt);
                 $this->session->set_flashdata('success', 'Information updated succssfully..');
-                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=1");
+                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=1");
             }
         }
         //$where_cond = "where user_id=".$id;
@@ -248,12 +248,12 @@ class Service_providers extends CI_Controller
         
 		$data['start'] = $page;
 	 
-		$fun_name = $this->ctrl_name ."/view_customer/".$id;
+		$fun_name = $this->ctrl_name ."/view_service_provider/".$id;
 		$data['other_para'] = "tab=3";
 		
 		$data['fun_name'] = $fun_name . "?" . $data['other_para'];
 
-
+        
 
         $this->load->view('view_service_provider', $data);
         $this->session->unset_userdata('success');

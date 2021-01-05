@@ -1275,7 +1275,7 @@ class Services extends CI_Model
         $add_in_items = [];
         $requests_items = [];
         $sort_order_by = "c.name asc";
-          $sql = "select r.* from lt_requests r    where  ". $sql_cond_status. $sql_cond .$sql_cond_multi. $sql_cond_dri . $sql_cond_user . $sql_cond_dri_status . " order by r.insert_date desc";
+        $sql = "select r.* from lt_requests r    where  " . $sql_cond_status . $sql_cond . $sql_cond_multi . $sql_cond_dri . $sql_cond_user . $sql_cond_dri_status . " order by r.insert_date desc";
         //$ddd =getRecordsLimit
         $requestsQuery = $this->db->query($sql);
         if ($requestsQuery->num_rows() > 0) {
@@ -1315,7 +1315,7 @@ class Services extends CI_Model
                     'request_id' => $requests_val['request_id'],
                     'uuid' => $requests_val['uuid'],
                     'user_id' => $requests_val['user_id'],
-                    'shipment_id' => $requests_val['shipment_id']."",
+                    'shipment_id' => $requests_val['shipment_id'] . "",
                     'driver_id' => $requests_val['driver_id'],
                     'request_title' => $requests_val['request_title'],
                     'request_description' => $requests_val['request_description'],
@@ -1595,7 +1595,7 @@ class Services extends CI_Model
                 'request_id' => $requests_val['request_id'],
                 'uuid' => $requests_val['uuid'],
                 'driver_id' => $requests_val['driver_id'],
-                'shipment_id' => $requests_val['shipment_id']."",
+                'shipment_id' => $requests_val['shipment_id'] . "",
                 'insert_date' => $requests_val['insert_date'],
                 'service_provider_id' => $requests_val['service_provider_id'],
                 'user_id' => $requests_val['user_id'],
@@ -1631,16 +1631,16 @@ class Services extends CI_Model
                 'complete_consignment_image' => $complete_consignment_image,
                 'driver_ratings_overall' => $requests_val['driver_ratings_overall'] * 1,
                 'driver_ratings' => $requests_val['driver_ratings'] * 1,
-                'driver_review' => $requests_val['driver_review'] ."",
-                'driver_review_date' => $requests_val['driver_review_date']."" ,
+                'driver_review' => $requests_val['driver_review'] . "",
+                'driver_review_date' => $requests_val['driver_review_date'] . "",
                 'service_pro_overall' => $requests_val['service_pro_overall'] * 1,
                 'service_pro_ratings' => $requests_val['service_pro_ratings'] * 1,
-                'service_pro_review' => $requests_val['service_pro_review']."" ,
-                'service_pro_review_date' => $requests_val['service_pro_review_date'] ."",
+                'service_pro_review' => $requests_val['service_pro_review'] . "",
+                'service_pro_review_date' => $requests_val['service_pro_review_date'] . "",
                 'cust_overall' => $requests_val['cust_overall'] * 1,
                 'cust_rating' => $requests_val['cust_rating'] * 1,
-                'cust_review' => $requests_val['cust_review'] ."" ,
-                'cust_review_date' => $requests_val['cust_review_date'].""
+                'cust_review' => $requests_val['cust_review'] . "",
+                'cust_review_date' => $requests_val['cust_review_date'] . "",
 
             );
 
@@ -1867,7 +1867,7 @@ class Services extends CI_Model
         $request_sub_status = "";
         $sql = "select * from lt_requests rq   where rq.request_id='{$request_id}'   and rq.status_flag='Active'  ";
         $query = $this->db->query($sql);
-        if ($query->num_rows()> 0) {
+        if ($query->num_rows() > 0) {
 
             if (strtolower($action_flag) == "dispatched") {
                 $request_status = "Scheduled";
@@ -1877,27 +1877,27 @@ class Services extends CI_Model
             if (strtolower($action_flag) == "pickup") {
                 $request_status = "Scheduled";
                 $request_sub_status = "Pick Up";
-                 
+
             }
             if (strtolower($action_flag) == "delivered") {
                 $request_status = "Completed";
                 $request_sub_status = "Delivered";
                 $lt_requests['is_trip_started'] = 1;
             }
-            if($request_sub_status!=""){
-            $lt_requests['request_status'] = $request_status;
-            $lt_requests['request_sub_status'] = $request_sub_status;
-            
-            //
-            $where_edt = "request_id='{$request_id}'  ";
-            $this->common->updateRecord('lt_requests', $lt_requests, $where_edt);
-            // add order history
+            if ($request_sub_status != "") {
+                $lt_requests['request_status'] = $request_status;
+                $lt_requests['request_sub_status'] = $request_sub_status;
 
-            $this->db->query("INSERT INTO lt_requests_history SET request_id = '" . (int) $request_id . "' ,request_status = '" . $request_status . "',request_sub_status='{$request_sub_status}', comment='by driver {$driver_id}', date_added = '" . $today . "'");
+                //
+                $where_edt = "request_id='{$request_id}'  ";
+                $this->common->updateRecord('lt_requests', $lt_requests, $where_edt);
+                // add order history
+
+                $this->db->query("INSERT INTO lt_requests_history SET request_id = '" . (int) $request_id . "' ,request_status = '" . $request_status . "',request_sub_status='{$request_sub_status}', comment='by driver {$driver_id}', date_added = '" . $today . "'");
             }
             $arr = [];
             $arr['status'] = 1;
-            $arr['successMessage'] =  'Request order status changed successfully' ;
+            $arr['successMessage'] = 'Request order status changed successfully';
 
         }
 
@@ -1919,6 +1919,9 @@ class Services extends CI_Model
 
         $today = date("Y-m-d H:i:s");
 
+        $sql = "delete from lt_driver_live_location where  request_id = '" . (int) $request_id . "' and driver_id = '" . $driver_id . "'";
+        $this->db->query($sql);
+
         $this->db->query("INSERT INTO lt_driver_live_location SET request_id = '" . (int) $request_id . "' ,driver_id = '" . $driver_id . "',longitude='{$longitude}',latitude='{$latitude}',  date_added = '" . $today . "'");
 
         $arr['status'] = 1;
@@ -1936,12 +1939,11 @@ class Services extends CI_Model
     {
         $driver_id = (isset($params['driver_id'])) ? (int) $this->common->mysql_safe_string($params['driver_id']) : '0';
         $request_id = (isset($params['request_id'])) ? (int) $this->common->mysql_safe_string($params['request_id']) : '0';
-      
+
         $add_in_image = [];
-        $sql = "select * from lt_driver_live_location where request_id='{$request_id}' and  driver_id='{$driver_id}' ";
-        $request_query = $this->db->query($sql)->result_array();
-         
-        
+        $sql = "select * from lt_driver_live_location where   driver_id='{$driver_id}' ";
+        $request_query = $this->db->query($sql)->row_array();
+
         $arr['status'] = 1;
         $arr['result'] = $request_query;
         $arr['successMessage'] = '';
@@ -2004,43 +2006,41 @@ class Services extends CI_Model
         $request_id = (isset($params['request_id'])) ? (int) $this->common->mysql_safe_string($params['request_id']) : '0';
 
         //$to_user_id = (isset($params['by_user_id'])) ? (int) $this->common->mysql_safe_string($params['by_user_id']) : '0';
-        $rating = (isset($params['rating'])) ?  (int)$this->common->mysql_safe_string($params['rating']) : '0';
+        $rating = (isset($params['rating'])) ? (int) $this->common->mysql_safe_string($params['rating']) : '0';
         $review = (isset($params['review'])) ? $this->common->mysql_safe_string($params['review']) : '';
         $over_all = (isset($params['over_all'])) ? (int) $this->common->mysql_safe_string($params['over_all']) : '0';
-      //  $by_user_type = (isset($params['by_user_type'])) ? $this->common->mysql_safe_string($params['by_user_type']) : '';
-        
-      $to_user_type = (isset($params['to_user_type'])) ? $this->common->mysql_safe_string($params['to_user_type']) : '';
+        //  $by_user_type = (isset($params['by_user_type'])) ? $this->common->mysql_safe_string($params['by_user_type']) : '';
 
-        if ($to_user_type == "Driver" ) {
+        $to_user_type = (isset($params['to_user_type'])) ? $this->common->mysql_safe_string($params['to_user_type']) : '';
+
+        if ($to_user_type == "Driver") {
             $add_review['driver_review_date'] = date("Y-m-d H:i:s");
             $add_review['driver_ratings'] = $rating;
             $add_review['driver_review'] = $review;
             $add_review['driver_ratings_overall'] = $over_all;
 
-            $where_edt = "request_id = '" . $request_id. "'";
+            $where_edt = "request_id = '" . $request_id . "'";
             $this->common->updateRecord('lt_requests', $add_review, $where_edt);
         }
-        if ($to_user_type == "Service Provider" ) {
+        if ($to_user_type == "Service Provider") {
             $add_review['service_pro_review_date'] = date("Y-m-d H:i:s");
             $add_review['service_pro_ratings'] = $rating;
             $add_review['service_pro_review'] = $review;
             $add_review['service_pro_overall'] = $over_all;
-            $where_edt = "request_id = '" . $request_id. "'";
+            $where_edt = "request_id = '" . $request_id . "'";
             $this->common->updateRecord('lt_requests', $add_review, $where_edt);
-        }   
+        }
         if ($to_user_type == "Customer") {
             $add_review['cust_review_date'] = date("Y-m-d H:i:s");
             $add_review['cust_rating'] = $rating;
             $add_review['cust_review'] = $review;
             $add_review['cust_overall'] = $over_all;
-            $where_edt = "request_id = '" . $request_id. "'";
+            $where_edt = "request_id = '" . $request_id . "'";
             $this->common->updateRecord('lt_requests', $add_review, $where_edt);
         }
-        
-
 
         $arr['status'] = 1;
-        
+
         $arr['successMessage'] = 'Successfully added the review ';
 
         if ($returnformat == "JSON") {
@@ -2055,36 +2055,36 @@ class Services extends CI_Model
     public function getReviewsList($params, $returnformat = "JSON")
     {
         $user_id = (isset($params['user_id'])) ? (int) $this->common->mysql_safe_string($params['user_id']) : '0';
-        
+
         $to_user_type = (isset($params['to_user_type'])) ? $this->common->mysql_safe_string($params['to_user_type']) : '';
         //to_user_type : Service Provider , Driver,Customer
-        if($to_user_type=="Service Provider"){
+        if ($to_user_type == "Service Provider") {
             $sql = "select request_title, service_pro_overall as overall,service_pro_ratings as ratings,service_pro_review as review, service_pro_review_date as review_date from lt_requests where service_provider_id='{$user_id}'  ";
         }
-        if($to_user_type=="Driver"){
+        if ($to_user_type == "Driver") {
             $sql = "select  request_title, driver_ratings_overall as overall,driver_ratings as ratings,driver_review as review, driver_review_date as review_date from lt_requests where driver_id='{$user_id}'  ";
         }
-        if($to_user_type=="Customer"){
+        if ($to_user_type == "Customer") {
             $sql = "select  request_title, cust_overall as overall,cust_rating as ratings,cust_review as review, cust_review_date as review_date  from lt_requests where user_id='{$user_id}'   ";
         }
 
         $request_query = $this->db->query($sql)->result_array();
-         $reviews = [];
+        $reviews = [];
         foreach ($request_query as $request_query_val) {
 
-            if($request_query_val['ratings'] > 0 ){
-                $request_query_val['request_title'] = $request_query_val['request_title']."";
-                $request_query_val['overall'] = $request_query_val['overall']."";
-                $request_query_val['ratings'] = $request_query_val['ratings']."";
-                $request_query_val['review'] = $request_query_val['review']."";
-                $request_query_val['review_date'] = $request_query_val['review_date']."";
+            if ($request_query_val['ratings'] > 0) {
+                $request_query_val['request_title'] = $request_query_val['request_title'] . "";
+                $request_query_val['overall'] = $request_query_val['overall'] . "";
+                $request_query_val['ratings'] = $request_query_val['ratings'] . "";
+                $request_query_val['review'] = $request_query_val['review'] . "";
+                $request_query_val['review_date'] = $request_query_val['review_date'] . "";
                 $reviews[] = $request_query_val;
             }
-            
+
         }
         $arr['status'] = 1;
         $arr['result'] = $reviews;
-        
+
         if ($returnformat == "JSON") {
             return $this->common->jsonencode($arr);
             die();
@@ -2093,13 +2093,12 @@ class Services extends CI_Model
             die();
         }
     }
- 
+
     public function doRequestCancelAction($params, $returnformat = "JSON")
     {
         $user_id = (isset($params['user_id'])) ? $this->common->mysql_safe_string($params['user_id']) : '0';
         $request_id = (isset($params['request_id'])) ? $this->common->mysql_safe_string($params['request_id']) : '0';
         $cancel_reason = (isset($params['cancel_reason'])) ? $this->common->mysql_safe_string($params['cancel_reason']) : '';
-       
 
         $today = date("Y-m-d H:i:s");
         $arr['status'] = 0;
@@ -2111,7 +2110,7 @@ class Services extends CI_Model
                  where rq.request_id='{$request_id}'  and request_status='Requested'  and rq.status_flag='Active'  ";
         $query = $this->db->query($sql);
         if ($query->num_rows() > 0) {
-            
+
             $request_status = 'Cancel'; // oOrder Processed
             $request_sub_status = 'Cancel'; // oOrder Processed
 
@@ -2124,8 +2123,6 @@ class Services extends CI_Model
             $where_edt = "request_id='{$request_id}' and user_id='{$user_id}'";
             $this->common->updateRecord('lt_requests', $lt_requests, $where_edt);
             // add order history
-
-             
 
             $this->db->query("INSERT INTO lt_requests_history SET request_id = '" . (int) $request_id . "' ,request_status = '" . $request_status . "',request_sub_status='{$request_sub_status}', comment='{$cancel_reason}', date_added = '" . $today . "'");
 
@@ -2142,11 +2139,8 @@ class Services extends CI_Model
             //   $this->sendNotificationToCustomer($arra, $chkRequestinfo['uuid'], '', '');
             // $this->setFirebaserealtimedata("update", $arra, 'Order Accepted by driver ');
             $arr['status'] = 1;
-            $arr['successMessage'] =  'Request order cancel successfully';  
-            
-         
+            $arr['successMessage'] = 'Request order cancel successfully';
 
-           
         }
 
         if ($returnformat == "JSON") {
@@ -2156,7 +2150,7 @@ class Services extends CI_Model
             return $arr;
             die();
         }
-    }    
+    }
     public function get_request_status_history($request_id = 0)
     {
         $request_status = [];
@@ -2164,10 +2158,230 @@ class Services extends CI_Model
         $request_imgs_query = $this->db->query($sql)->result_array();
         if ($request_imgs_query) {
             foreach ($request_imgs_query as $request_imgs_query_val) {
-                $request_status['request_sub_status'][] =$request_imgs_query_val['request_sub_status'];
-                $request_status['request_status'][] =$request_imgs_query_val['request_status'];
+                $request_status['request_sub_status'][] = $request_imgs_query_val['request_sub_status'];
+                $request_status['request_status'][] = $request_imgs_query_val['request_status'];
             }
         }
         return $request_status;
+    }
+
+    public function doLoginViaMedia($params, $returnformat = "JSON")
+    {
+        $facebook_gmail_by = $facebook_gmail_by = (isset($params['facebook_gmail_by'])) ? $this->common->mysql_safe_string($params['facebook_gmail_by']) : '';
+        $add_in['user_type'] = (isset($params['user_type'])) ? $this->common->mysql_safe_string($params['user_type']) : 'Customer';
+
+        $google_id = $google_id = (isset($params['google_id'])) ? $this->common->mysql_safe_string($params['google_id']) : '';
+        $facebook_id = $facebook_id = (isset($params['facebook_id'])) ? $this->common->mysql_safe_string($params['facebook_id']) : '';
+        $email = $email = (isset($params['email'])) ? $this->common->mysql_safe_string($params['email']) : '';
+        //  $full_name = (isset($params['full_name'])) ? $this->common->mysql_safe_string($params['full_name']) : '';
+        $first_name = (isset($params['first_name'])) ? $this->common->mysql_safe_string($params['first_name']) : '';
+        $last_name = (isset($params['last_name'])) ? $this->common->mysql_safe_string($params['last_name']) : '';
+
+        $add_in['device_id'] = $device_id = (isset($params['device_id'])) ? $this->common->mysql_safe_string($params['device_id']) : '';
+        $add_in['device_type'] = $device_type = (isset($params['device_type'])) ? $this->common->mysql_safe_string($params['device_type']) : '';
+
+        $today = date("Y-m-d H:i:s");
+        $arr['status'] = 0;
+
+        $arr['errorMessage'] = "Some thing went wrong. Please try again";
+
+        $errorMessage = "";
+
+        if ($first_name == "") {
+            $errorMessage = "Please enter first name";
+
+        }
+        if ($last_name == "") {
+            $errorMessage = "Please enter last name";
+
+        }
+        if ($errorMessage == "") {
+            $sql = "";
+            if ($facebook_id != "") {
+                $sql = "SELECT user_id FROM user_master_front where facebook_id='" . $facebook_id . "' ";
+            }
+            if ($google_id != "") {
+                $sql = "SELECT user_id FROM user_master_front where google_id='" . $google_id . "' ";
+            }
+            if ($email != "") {
+                $sql = "SELECT user_id FROM user_master_front where email='" . $email . "'  ";
+            }
+            if($sql!=""){
+                $rschk = $this->db->query($sql);
+
+                if ($rschk->num_rows() > 0) {
+                    $chkUserInfo = $rschk->row_array();
+    
+                    // $user_id = $chkUserInfo['user_id'];
+                    $userInfo = $this->userProfileData($chkUserInfo);
+                    $retUserAddressInfo = $this->getDefaultAddress($chkUserInfo);
+    
+                    if ($chkUserInfo['status_flag'] == 'Active') {
+    
+                        $add_in_uuid['login_time'] = date("Y-m-d H:i:s");
+                        $add_in_uuid['is_login'] = 1;
+                        $add_in_uuid['device_id'] = $device_id;
+                        $add_in_uuid['device_type'] = $device_type;
+    
+                        $where_edt_user = "user_id = '" . $chkUserInfo['user_id'] . "'";
+                        $this->common->updateRecord('user_master_front', $add_in_uuid, $where_edt_user);
+                        $arr['status'] = 1;
+                        $arr['userInfo'] = $userInfo;
+                        $arr['addressInfo'] = $retUserAddressInfo;
+                    } else if ($chkUserInfo['is_email_verified'] == 0 && $chkUserInfo['status_flag'] == 'Inactive') {
+    
+                        $temp_otp = "1234";
+                        $sql_data_array = array(
+    
+                            'temp_otp' => $temp_otp,
+                            'device_id' => $device_id,
+                            'device_type' => $device_type,
+                        );
+    
+                        $where = "user_id = '" . $chkUserInfo['user_id'] . "' and temp_otp='" . $temp_otp . "'";
+                        $this->common->updateRecord('user_master_front', $sql_data_array, $where);
+    
+                        $userInfo = $this->userProfileData($chkUserInfo);
+                        $userInfo['temp_otp'] = $temp_otp;
+                        //$arr['errorData'] = [];
+                        $arr['userInfo'] = $userInfo;
+                        $arr['addressInfo'] = $retUserAddressInfo;
+    
+                        $arr['temp_otp'] = $temp_otp;
+                        $arr['status'] = 2;
+                        // $arr['userInfo'] = $userInfo;
+                        //  $arr['addressInfo'] = $retUserAddressInfo;
+                        $arr['errorMessage'] = "Success! We have sent the OTP in yor mail box.Please check your mail";
+                    } else if ($chkUserInfo['status_flag'] == 'Delete') {
+                        $errorMessage = "Please contact admin. There is some issue in your account";
+                        $arr['status'] = 0;
+                        $arr['retData'] = $params;
+    
+                        $arr['errorMessage'] = $errorMessage;
+                    } else {
+                        $errorMessage = "Some thing went wrong. Please contact admin ";
+                        $arr['status'] = 0;
+                        $arr['retData'] = $params;
+    
+                        $arr['errorMessage'] = $errorMessage;
+                    }
+    
+                } else {
+                    
+                    $add_in = array();
+                    $errorData = array();
+                    $errorMessage = "";
+            
+                    $add_in['user_type'] = (isset($params['user_type'])) ? $this->common->mysql_safe_string($params['user_type']) : 'Customer';
+            
+                    $add_in['first_name'] = (isset($params['first_name'])) ? $this->common->mysql_safe_string($params['first_name']) : '';
+                    $add_in['last_name'] = (isset($params['last_name'])) ? $this->common->mysql_safe_string($params['last_name']) : '';
+                    $add_in['middle_name'] = (isset($params['middle_name'])) ? $this->common->mysql_safe_string($params['middle_name']) : null;
+                    $add_in['mobile'] = (isset($params['mobile'])) ? $this->common->mysql_safe_string($params['mobile']) : null;
+                  
+                    $add_in['email'] = (isset($params['email'])) ? $this->common->mysql_safe_string($params['email']) : '';
+                    $add_in['passphrase'] = $passphrase = (isset($params['passphrase'])) ? $this->common->mysql_safe_string($params['passphrase']) : '';
+                    $add_in['user_language'] = $LANGCODE = (isset($params['LANGCODE'])) ? $this->common->mysql_safe_string($params['LANGCODE']) : 'EN';
+                    $add_in['device_id'] = $device_id = (isset($params['device_id'])) ? $this->common->mysql_safe_string($params['device_id']) : '';
+                    $add_in['device_type'] = $device_type = (isset($params['device_type'])) ? $this->common->mysql_safe_string($params['device_type']) : '';
+
+                    $add_in['facebook_id'] = (isset($params['facebook_id'])) ? $this->common->mysql_safe_string($params['facebook_id']) : '';
+                    $add_in['google_id'] = (isset($params['google_id'])) ? $this->common->mysql_safe_string($params['google_id']) : '';
+                  
+
+                    $add_in['status_flag'] = 'Active';
+                    
+                    if ($errorMessage == "") {
+                        $chkUserInfo = $this->common->getSingleInfoBy('user_master_front', 'email', $add_in['email'], 'email');
+                        if (sizeof($chkUserInfo) > 0) {
+                            $errorMessage = $add_in['email'] . "  is already registered";
+                        }
+                        $chkUserInfo = $this->common->getSingleInfoBy('user_master_front', 'mobile', $add_in['mobile'], 'mobile');
+                        if (sizeof($chkUserInfo) > 0) {
+                            $errorMessage = $add_in['mobile'] . "  is already registered";
+                        }
+                    }
+            
+                    if ($errorMessage == "") {
+                        try {
+                            // Generate a version 4 (random) UUID object
+                            $uuid4 = Uuid::uuid4();
+                            $uuid = $uuid4->toString();
+                            $add_in['uuid'] = $uuid;
+                        } catch (UnsatisfiedDependencyException $e) {
+            
+                        }
+                        $add_in['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(6);
+                        $add_in['added_date'] = date("Y-m-d H:i:s");
+                        $this->common->insertRecord('user_master_front', $add_in);
+                        $chkUserInfo = $this->common->getSingleInfoBy('user_master_front', 'uuid', $add_in['uuid'], '*');
+            
+                        try {
+                            // Generate a version 4 (random) UUID object
+                            $uuid4 = Uuid::uuid4();
+                            $uuid_shipping = $uuid4->toString();
+                            $address_in['uuid'] = $uuid_shipping;
+                        } catch (UnsatisfiedDependencyException $e) {
+            
+                        }
+                        $address_in['address_name'] = 'Home';
+                        $address_in['address_1'] = (isset($params['address_1'])) ? $this->common->mysql_safe_string($params['address_1']) : '';
+                        $address_in['state_id'] = (isset($params['state_id'])) ? $this->common->mysql_safe_string($params['state_id']) : '';
+                        $address_in['city_id'] = (isset($params['city_id'])) ? $this->common->mysql_safe_string($params['city_id']) : '';
+                        $address_in['postcode'] = (isset($params['postcode'])) ? $this->common->mysql_safe_string($params['postcode']) : '';
+                        $address_in['user_id'] = $chkUserInfo['user_id'];
+                        $address_in['firstname'] = $add_in['first_name'];
+                        $address_in['lastname'] = $add_in['last_name'];
+                        $address_in['is_default'] = 1;
+            
+                        $this->db->insert('customer_shipping_address', $address_in);
+                        $userAddressInfo = $this->common->getSingleInfoBy('customer_shipping_address', 'uuid', $address_in['uuid'], '*');
+            
+                        $userInfo = $this->userProfileData($chkUserInfo);
+                        $userInfo['is_otp_verified'] =1;
+                        $retUserAddressInfo = $this->userAddressData($userAddressInfo);
+                        $arr['status'] = 1;
+                        $arr['errorData'] = [];
+                        $arr['userInfo'] = $userInfo;
+                        $arr['temp_otp'] = $temp_otp;
+                        $arr['addressInfo'] = $retUserAddressInfo;
+            
+                        $arr['successMessage'] = 'Success! We have sent the OTP in yor mail box. Please check your mail';
+            
+                        // $sendotp_data = $this->sendotp($user_info);
+            
+                         
+                    } else {
+                        $errorData[] = $errorMessage;
+                        // $arr = array('status' => 0, 'retData' => $params, 'errorData' => $errorData);
+                        $arr['status'] = 0;
+                        $arr['retData'] = $params;
+                        // $arr['errorData'] = $errorData;
+                        $arr['errorMessage'] = $errorMessage;
+                    }
+                }
+            }else {
+                $arr['status'] = 0;
+                $arr['retData'] = $params;
+                // $arr['errorData'] = $errorData;
+                $arr['errorMessage'] = "Missing some param from app";
+            }
+           
+
+        } else {
+            $arr['status'] = 0;
+            $arr['retData'] = $params;
+            // $arr['errorData'] = $errorData;
+            $arr['errorMessage'] = $errorMessage;
+        }
+        
+
+        if ($returnformat == "JSON") {
+            return $this->common->jsonencode($arr);
+            die();
+        } else {
+            return $arr;
+            die();
+        }
     }
 }

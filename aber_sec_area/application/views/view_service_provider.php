@@ -80,7 +80,7 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
 
                             <div class="tab-content">
                                 <div class="tab-pane fade <?php echo ($tab==1)?'show active':'' ?>" id="highlighted-tab1">
-                                    <form name="frm-edit" id="frm-edit" action="<?php echo site_url($this->ctrl_name.'/view_customer/'.$id) ?>" method="post">
+                                    <form name="frm-edit" id="frm-edit" action="<?php echo site_url($this->ctrl_name.'/view_service_provider/'.$id) ?>" method="post">
                                         <input type="hidden" name="mode" id="mode" value="submitform">
 
 

@@ -61,17 +61,18 @@ public $s_act = 11;
 					//$add_in['cms_alt_title_en'] = $cms_alt_title_en = $this->common->mysql_safe_string($_POST['cms_alt_title_en']);	
 
 					if(isset($_FILES['cms_image'])){
+
 						if ($_FILES['cms_image']['name']!=""){
 								$pusti = $this->common->gen_key(10);
 								$extension=strstr($_FILES['cms_image']['name'],".");
 								$thumbpath = $_FILES['cms_image']['name'];
 								$thumbpath = preg_replace("/[^a-zA-Z0-9.]/", "", $thumbpath);
-								copy($_FILES['cms_image']['tmp_name'],"./uploads/para_images/".$pusti.$thumbpath);
+								copy($_FILES['cms_image']['tmp_name'],"../uploads/para_images/".$pusti.$thumbpath);
 								$add_in['cms_image'] = $pusti.$thumbpath;
 						}
 					}
 					
-					if(isset($_FILES['cms_image_en'])){
+					/*if(isset($_FILES['cms_image_en'])){
 						if ($_FILES['cms_image_en']['name']!=""){
 								$pusti = $this->common->gen_key(10);
 								$extension=strstr($_FILES['cms_image_en']['name'],".");
@@ -80,7 +81,9 @@ public $s_act = 11;
 								copy($_FILES['cms_image_en']['tmp_name'],"./uploads/para_images/".$pusti.$thumbpath);
 								$add_in['cms_image_en'] = $pusti.$thumbpath;
 						}
-					}					
+					}*/	
+					
+					//die();				
 					
 					if ($error=='') {		
 						$update_status=$this->common->updateRecord($this->tbl_name,$add_in,$where_edt);

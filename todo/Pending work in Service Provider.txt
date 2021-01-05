@@ -1,0 +1,67 @@
+1. https://www.aber-sa.com/serviceprovider/find_business
+>>> Pagination
+>>> In request list >> Ends field date difference in hours, Total weight
+>>> Left search box functionality
+>>> Sort button in request list
+## SATISH
+
+2. https://www.aber-sa.com/serviceprovider/shipment_details/2
+>>> Route Information >> Google map showing pick up and delivery location route
+>>> Shipment Ends field date difference in hours
+>>> Shipment ID field display
+>>> Accept Terms & Conditions message, if checkbox is not checked during bid.
+>>> After bid placed, remove sent from this message:
+"Bid request has been added succssfully sent!!"
+## SATISH
+
+3. https://www.aber-sa.com/serviceprovider/my_shipment
+>>> Status drop down filter search
+>>> Shipment ID field in list
+## SATISH
+
+4. https://www.aber-sa.com/serviceprovider/my_shipment_details/4
+>>> Route Information >> Google map showing pick up and delivery location route
+>>> Shipment Ends field date difference in hours
+>>> Shipment ID field display
+>>> Bid list >> Transporter/Courier average rating
+## KISHOR
+>>> Shipment images slider
+## KISHOR
+>>> Live tracking of driver location on Google map for that order
+## KISHOR
+>>> Consignment image slider for delivery images uploaded by Driver
+## KISHOR
+>>> Review/Rating display for order, if given by customer and driver to each other.
+## KISHOR
+
+5. https://www.aber-sa.com/serviceprovider/review
+>>> Reviews list
+## KISHOR
+
+6. Add/Edit Driver 
+>>> Vehicle Type Drop down with hardcoded values
+## SATISH
+ 
+======================================
+Row no 40 - B-C : ## KISHOR : https://www.aber-sa.com/aber_sec_area/index.php/service_providers/view_service_provider/25
+Row no 37 - D-E : ## SATISH
+Row no 38 - D-E : ## KISHOR : https://www.aber-sa.com/aber_sec_area/index.php/requests_bids
+Row no 39 - D-E : ## KISHOR : https://www.aber-sa.com/aber_sec_area/index.php/service_providers/view_service_provider/25
+======================================
+
+
+SMOKE : 
+
+Dashbaord : 
+https://www.iquitsmokingnow.com/myaccount
+surprise :
+https://www.iquitsmokingnow.com/myaccount/surprise
+
+
+DESIGNER
+New window : Chat with group
+
+
+
+
+

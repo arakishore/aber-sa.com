@@ -243,11 +243,11 @@ class Customers extends CI_Controller
         $query = $this->db->query($sSql);
         $data['requests_items'] = $query->result_array();
 
-        $sSql = " SELECT * FROM  lt_request_consignment_imgs WHERE status!='Delete' AND request_id=".$request_id." AND user_id=".$id." ";
+        $sSql = " SELECT * FROM  lt_request_consignment_imgs WHERE request_id=".$request_id." AND user_id=".$id." ";
         $query = $this->db->query($sSql);
         $data['consignment_images'] = $query->result_array();
 
-        $sSql = " SELECT * FROM  lt_request_final_complete_images WHERE status!='Delete' AND request_id=".$request_id." AND user_id=".$id." ";
+        $sSql = " SELECT * FROM  lt_request_final_complete_images WHERE request_id=".$request_id." AND user_id=".$id." ";
         $query = $this->db->query($sSql);
         $data['consignment_images_comp'] = $query->result_array();
 

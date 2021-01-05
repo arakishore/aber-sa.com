@@ -1531,7 +1531,7 @@ class Apiuser extends CI_Controller
                 $errorData[] = "Please enter driver id";
             }
             if ($request_id == '') {
-                $errorData[] = "Please enter request id";
+              //  $errorData[] = "Please enter request id";
             }
             if ($error == "") {
 
@@ -1811,5 +1811,45 @@ class Apiuser extends CI_Controller
        print_r($this->common->jsonencode($returnData));
        die();
 
+   }
+   public function doLoginViaMedia()
+   {
+
+    $returnData = array('status' => 0, 'errorMessage' => 'Something went wrong');
+    $data_json = file_get_contents('php://input');
+    /*  if(debug==1){
+    file_put_contents('debug/'.date("ymd").'.txt', $data_json, FILE_APPEND);
+    }
+    $received_signature = (isset($_SERVER['HTTP_DOICEX_SIGNATURE'])) ? $this->common->mysql_safe_string($_SERVER['HTTP_DOICEX_SIGNATURE']) : ''; // $_SERVER['HTTP_DOICEX_SIGNATURE'];
+    $computed_signature = hash_hmac('sha256', $data_json, Secret_Key);
+
+    if ($received_signature != $computed_signature) {
+    $arr = array('status' => 0, 'errorMessage' => "Invalid Signature");
+    print_r($this->common->jsonencode($arr));
+    die();
+    } */
+
+    $data_json = json_decode($data_json, true);
+
+    $error = "";
+
+    if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doLoginViaMidea') {
+
+        $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '0';
+     
+        
+        if ($error == "") {
+
+            $returnData = $this->services->doLoginViaMidea($data_json, 'ARRAY');
+
+        } else {
+            $returnData = array('status' => 0, 'errorMessage' => $error);
+        }
+
+    }
+
+            print_r($this->common->jsonencode($returnData));
+            die();
+       # code...
    }
 }
