@@ -1024,7 +1024,7 @@ class Apiuser extends CI_Controller
                 } catch (UnsatisfiedDependencyException $e) {
                 //  echo 'Caught exception: ' . $e->getMessage() . "\n";
                 } */
-                $filename = $user_id . "-" .  date("YmdHis");
+                $filename = $user_id . "-" . date("YmdHis");
 
                 $upload = $this->common->UploadImage('consignmentimage', 'uploads/consignmentimage_temp/', $filename);
 
@@ -1162,14 +1162,14 @@ class Apiuser extends CI_Controller
 
             $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '0';
             $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
-           
+
             if ($user_id == '') {
                 $errorData[] = "Please enter user id";
             }
             if ($request_id == '') {
                 $errorData[] = "Please enter request id";
             }
-             
+
             if ($error == "") {
 
                 $returnData = $this->services->doRequestUpdate($data_json, 'ARRAY');
@@ -1184,7 +1184,7 @@ class Apiuser extends CI_Controller
         die();
 
     }
-     
+
     public function doAddConsignmentImage()
     {
         $returnData = [];
@@ -1226,7 +1226,7 @@ class Apiuser extends CI_Controller
                 } catch (UnsatisfiedDependencyException $e) {
                 //  echo 'Caught exception: ' . $e->getMessage() . "\n";
                 } */
-                $filename = $request_id."-".$user_id . "-" . date("YmdHis");
+                $filename = $request_id . "-" . $user_id . "-" . date("YmdHis");
 
                 $upload = $this->common->UploadImage('consignmentimage', 'uploads/consignmentimage/', $filename);
 
@@ -1280,7 +1280,7 @@ class Apiuser extends CI_Controller
 
         if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'getRequestDetail') {
 
-             $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '';
+            $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '';
             $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '';
             $errorData = [];
 
@@ -1288,10 +1288,10 @@ class Apiuser extends CI_Controller
                 $errorData[] = "Please enter request id";
             }
             if ($user_id == '') {
-            //    $errorData[] = "Please enter user id";
+                //    $errorData[] = "Please enter user id";
             }
             if (sizeof($errorData) <= 0) {
-                $returnData = $this->services->getRequestDetail($data_json,  'ARRAY');
+                $returnData = $this->services->getRequestDetail($data_json, 'ARRAY');
 
             } else {
                 $returnData = array('status' => 0, 'errorData' => $errorData);
@@ -1327,12 +1327,12 @@ class Apiuser extends CI_Controller
         if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doDeleteConsignmentImageTemp') {
 
             $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '0';
-           
+
             $image_name = (isset($data_json['image_name'])) ? $this->common->mysql_safe_string($data_json['image_name']) : '';
             if ($user_id == '') {
                 $errorData[] = "Please enter user id";
             }
-            
+
             if ($image_name == '') {
                 $errorData[] = "Please enter image name";
             }
@@ -1377,7 +1377,7 @@ class Apiuser extends CI_Controller
             $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
             $action_flag = (isset($data_json['action_flag'])) ? $this->common->mysql_safe_string($data_json['action_flag']) : '0';
             $service_provider_id = (isset($data_json['service_provider_id'])) ? $this->common->mysql_safe_string($data_json['service_provider_id']) : '0';
-           
+
             if ($user_id == '') {
                 $errorData[] = "Please enter user id";
             }
@@ -1427,8 +1427,7 @@ class Apiuser extends CI_Controller
             $driver_id = (isset($data_json['driver_id'])) ? $this->common->mysql_safe_string($data_json['driver_id']) : '0';
             $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
             $action_flag = (isset($params['action_flag'])) ? $this->common->mysql_safe_string($params['action_flag']) : '';
-        
-          
+
             if ($driver_id == '') {
                 $errorData[] = "Please enter driver id";
             }
@@ -1477,14 +1476,12 @@ class Apiuser extends CI_Controller
         if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doLiveTrackingDrver') {
 
             $driver_id = (isset($data_json['driver_id'])) ? $this->common->mysql_safe_string($data_json['driver_id']) : '0';
-           // $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
-           
-            
-           
+            // $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
+
             if ($driver_id == '') {
                 $errorData[] = "Please enter driver id";
             }
-            
+
             if ($error == "") {
 
                 $returnData = $this->services->doLiveTrackingDrver($data_json, 'ARRAY');
@@ -1524,14 +1521,12 @@ class Apiuser extends CI_Controller
 
             $driver_id = (isset($data_json['driver_id'])) ? $this->common->mysql_safe_string($data_json['driver_id']) : '0';
             $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
-           
-            
-           
+
             if ($driver_id == '') {
                 $errorData[] = "Please enter driver id";
             }
             if ($request_id == '') {
-              //  $errorData[] = "Please enter request id";
+                //  $errorData[] = "Please enter request id";
             }
             if ($error == "") {
 
@@ -1589,7 +1584,7 @@ class Apiuser extends CI_Controller
                 } catch (UnsatisfiedDependencyException $e) {
                 //  echo 'Caught exception: ' . $e->getMessage() . "\n";
                 } */
-                $filename = "comp-".$request_id."-".$driver_id . "-" . date("YmdHis");
+                $filename = "comp-" . $request_id . "-" . $driver_id . "-" . date("YmdHis");
 
                 $upload = $this->common->UploadImage('consignmentimage', 'uploads/consignmentimage/', $filename);
 
@@ -1646,15 +1641,12 @@ class Apiuser extends CI_Controller
 
         if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doGetCompletedConsignmentImage') {
 
-            
             $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
-           
-            
-           
+
             if ($request_id == '') {
                 $errorData[] = "Please enter request id";
             }
-            
+
             if ($error == "") {
 
                 $returnData = $this->services->doGetCompletedConsignmentImage($data_json, 'ARRAY');
@@ -1691,11 +1683,9 @@ class Apiuser extends CI_Controller
 
         if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doAddReview') {
 
-            
             $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
             $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '0';
-            
-           
+
             if ($request_id == '') {
                 $errorData[] = "Please enter request id";
             }
@@ -1738,15 +1728,12 @@ class Apiuser extends CI_Controller
 
         if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'getReviewsList') {
 
-            
             $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '0';
-           
-            
-           
+
             if ($user_id == '') {
                 $errorData[] = "Please enter user id";
             }
-            
+
             if ($error == "") {
 
                 $returnData = $this->services->getReviewsList($data_json, 'ARRAY');
@@ -1759,97 +1746,255 @@ class Apiuser extends CI_Controller
 
         print_r($this->common->jsonencode($returnData));
         die();
-   } 
-
-   public function doRequestCancelAction()
-   {
-
-       $returnData = array('status' => 0, 'errorMessage' => 'Something went wrong');
-       $data_json = file_get_contents('php://input');
-       /*  if(debug==1){
-       file_put_contents('debug/'.date("ymd").'.txt', $data_json, FILE_APPEND);
-       }
-       $received_signature = (isset($_SERVER['HTTP_DOICEX_SIGNATURE'])) ? $this->common->mysql_safe_string($_SERVER['HTTP_DOICEX_SIGNATURE']) : ''; // $_SERVER['HTTP_DOICEX_SIGNATURE'];
-       $computed_signature = hash_hmac('sha256', $data_json, Secret_Key);
-
-       if ($received_signature != $computed_signature) {
-       $arr = array('status' => 0, 'errorMessage' => "Invalid Signature");
-       print_r($this->common->jsonencode($arr));
-       die();
-       } */
-
-       $data_json = json_decode($data_json, true);
-
-       $error = "";
-
-       if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doRequestCancelAction') {
-
-           $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '0';
-           $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
-           $action_flag = (isset($data_json['action_flag'])) ? $this->common->mysql_safe_string($data_json['action_flag']) : '0';
-           $service_provider_id = (isset($data_json['service_provider_id'])) ? $this->common->mysql_safe_string($data_json['service_provider_id']) : '0';
-          
-           if ($user_id == '') {
-               $errorData[] = "Please enter user id";
-           }
-           if ($request_id == '') {
-               $errorData[] = "Please enter request id";
-           }
-           if ($action_flag == '') {
-               $errorData[] = "Please enter action ";
-           }
-           if ($error == "") {
-
-               $returnData = $this->services->doRequestCancelAction($data_json, 'ARRAY');
-
-           } else {
-               $returnData = array('status' => 0, 'errorMessage' => $error);
-           }
-
-       }
-
-       print_r($this->common->jsonencode($returnData));
-       die();
-
-   }
-   public function doLoginViaMedia()
-   {
-
-    $returnData = array('status' => 0, 'errorMessage' => 'Something went wrong');
-    $data_json = file_get_contents('php://input');
-    /*  if(debug==1){
-    file_put_contents('debug/'.date("ymd").'.txt', $data_json, FILE_APPEND);
     }
-    $received_signature = (isset($_SERVER['HTTP_DOICEX_SIGNATURE'])) ? $this->common->mysql_safe_string($_SERVER['HTTP_DOICEX_SIGNATURE']) : ''; // $_SERVER['HTTP_DOICEX_SIGNATURE'];
-    $computed_signature = hash_hmac('sha256', $data_json, Secret_Key);
 
-    if ($received_signature != $computed_signature) {
-    $arr = array('status' => 0, 'errorMessage' => "Invalid Signature");
-    print_r($this->common->jsonencode($arr));
-    die();
-    } */
+    public function doRequestCancelAction()
+    {
 
-    $data_json = json_decode($data_json, true);
+        $returnData = array('status' => 0, 'errorMessage' => 'Something went wrong');
+        $data_json = file_get_contents('php://input');
+        /*  if(debug==1){
+        file_put_contents('debug/'.date("ymd").'.txt', $data_json, FILE_APPEND);
+        }
+        $received_signature = (isset($_SERVER['HTTP_DOICEX_SIGNATURE'])) ? $this->common->mysql_safe_string($_SERVER['HTTP_DOICEX_SIGNATURE']) : ''; // $_SERVER['HTTP_DOICEX_SIGNATURE'];
+        $computed_signature = hash_hmac('sha256', $data_json, Secret_Key);
 
-    $error = "";
+        if ($received_signature != $computed_signature) {
+        $arr = array('status' => 0, 'errorMessage' => "Invalid Signature");
+        print_r($this->common->jsonencode($arr));
+        die();
+        } */
 
-    if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doLoginViaMidea') {
+        $data_json = json_decode($data_json, true);
 
-        $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '0';
-     
-        
-        if ($error == "") {
+        $error = "";
 
-            $returnData = $this->services->doLoginViaMidea($data_json, 'ARRAY');
+        if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doRequestCancelAction') {
 
-        } else {
-            $returnData = array('status' => 0, 'errorMessage' => $error);
+            $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '0';
+            $request_id = (isset($data_json['request_id'])) ? $this->common->mysql_safe_string($data_json['request_id']) : '0';
+            $action_flag = (isset($data_json['action_flag'])) ? $this->common->mysql_safe_string($data_json['action_flag']) : '0';
+            $service_provider_id = (isset($data_json['service_provider_id'])) ? $this->common->mysql_safe_string($data_json['service_provider_id']) : '0';
+
+            if ($user_id == '') {
+                $errorData[] = "Please enter user id";
+            }
+            if ($request_id == '') {
+                $errorData[] = "Please enter request id";
+            }
+            if ($action_flag == '') {
+                $errorData[] = "Please enter action ";
+            }
+            if ($error == "") {
+
+                $returnData = $this->services->doRequestCancelAction($data_json, 'ARRAY');
+
+            } else {
+                $returnData = array('status' => 0, 'errorMessage' => $error);
+            }
+
         }
 
+        print_r($this->common->jsonencode($returnData));
+        die();
+
     }
+    public function doLoginViaMedia()
+    {
+
+        $returnData = array('status' => 0, 'errorMessage' => 'Something went wrong');
+        $data_json = file_get_contents('php://input');
+        /*  if(debug==1){
+        file_put_contents('debug/'.date("ymd").'.txt', $data_json, FILE_APPEND);
+        }
+        $received_signature = (isset($_SERVER['HTTP_DOICEX_SIGNATURE'])) ? $this->common->mysql_safe_string($_SERVER['HTTP_DOICEX_SIGNATURE']) : ''; // $_SERVER['HTTP_DOICEX_SIGNATURE'];
+        $computed_signature = hash_hmac('sha256', $data_json, Secret_Key);
+
+        if ($received_signature != $computed_signature) {
+        $arr = array('status' => 0, 'errorMessage' => "Invalid Signature");
+        print_r($this->common->jsonencode($arr));
+        die();
+        } */
+
+        $data_json = json_decode($data_json, true);
+
+        $errorMessage = "";
+
+        if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doLoginViaMedia') {
+
+            //   $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '0';
+            $first_name = (isset($data_json['first_name'])) ? $this->common->mysql_safe_string($data_json['first_name']) : '';
+            $google_id = $google_id = (isset($data_json['google_id'])) ? $this->common->mysql_safe_string($data_json['google_id']) : '';
+            $facebook_id = $facebook_id = (isset($data_json['facebook_id'])) ? $this->common->mysql_safe_string($data_json['facebook_id']) : '';
+            if ($first_name == "") {
+                $errorMessage = "Please enter first name";
+
+            }
+            if ($google_id == "" && $facebook_id == "") {
+                $errorMessage = "Please provide the social id";
+
+            }
+            if ($errorMessage == "") {
+
+                $returnData = $this->services->doLoginViaMedia($data_json, 'ARRAY');
+
+            } else {
+                $returnData = array('status' => 0, 'errorMessage' => $errorMessage);
+            }
+
+        }
+
+        print_r($this->common->jsonencode($returnData));
+        die();
+        # code...
+    }
+    public function doAskForEmail()
+    {
+
+        $returnData = array('status' => 0, 'errorMessage' => 'Something went wrong');
+        $data_json = file_get_contents('php://input');
+        /*  if(debug==1){
+        file_put_contents('debug/'.date("ymd").'.txt', $data_json, FILE_APPEND);
+        }
+        $received_signature = (isset($_SERVER['HTTP_DOICEX_SIGNATURE'])) ? $this->common->mysql_safe_string($_SERVER['HTTP_DOICEX_SIGNATURE']) : ''; // $_SERVER['HTTP_DOICEX_SIGNATURE'];
+        $computed_signature = hash_hmac('sha256', $data_json, Secret_Key);
+
+        if ($received_signature != $computed_signature) {
+        $arr = array('status' => 0, 'errorMessage' => "Invalid Signature");
+        print_r($this->common->jsonencode($arr));
+        die();
+        } */
+
+        $data_json = json_decode($data_json, true);
+
+        $errorMessage = "";
+
+        if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doAskForEmail') {
+
+            $email = (isset($data_json['email'])) ? $this->common->mysql_safe_string($data_json['email']) : '';
+
+            $google_id = $google_id = (isset($data_json['google_id'])) ? $this->common->mysql_safe_string($data_json['google_id']) : '';
+            $facebook_id = $facebook_id = (isset($data_json['facebook_id'])) ? $this->common->mysql_safe_string($data_json['facebook_id']) : '';
+
+            if ($email == "") {
+                $errorMessage = "Please enter email";
+
+            }
+            if ($google_id == "" && $facebook_id == "") {
+                $errorMessage = "Please provide the social link id";
+
+            }
+
+            if ($errorMessage == "") {
+
+                $returnData = $this->services->doAskForEmail($data_json, 'ARRAY');
+
+            } else {
+                $returnData = array('status' => 0, 'errorMessage' => $errorMessage);
+            }
+
+        }
+
+        print_r($this->common->jsonencode($returnData));
+        die();
+        # code...
+    }
+
+    public function doOTPverificationMedia()
+    {
+
+        // $data_json = $this->common->jsonencode($_POST);
+        // print_r($data_json);
+
+        $arr = array('status' => 0, 'errorMessage' => "Warning: No data found ");
+
+        $data_json = file_get_contents('php://input');
+        /*
+        if(debug==1){
+        file_put_contents('debug/'.date("ymd").'.txt', $data_json, FILE_APPEND);
+        }
+         */
+
+        /*
+        $received_signature = (isset($_SERVER['HTTP_DOICEX_SIGNATURE'])) ? $this->common->mysql_safe_string($_SERVER['HTTP_DOICEX_SIGNATURE']) : ''; // $_SERVER['HTTP_DOICEX_SIGNATURE'];
+        $computed_signature = hash_hmac('sha256', $data_json, Secret_Key);
+        header('Content-Type: application/json');
+
+        if ($received_signature != $computed_signature) {
+        $arr = array('status' => 0, 'errorMessage' => "Invalid Signature");
+        print_r($this->common->jsonencode($arr));
+        die();
+        }
+         */
+        $data_json = json_decode($data_json, true);
+
+        $address_in = [];
+        if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'doOTPverificationMedia') {
+
+            // $add_in['uuid'] = (isset($data_json['uuid'])) ? $this->common->mysql_safe_string($data_json['uuid']) : '';
+            $add_in['email'] = (isset($data_json['email'])) ? $this->common->mysql_safe_string($data_json['email']) : '';
+            //$add_in['user_id'] = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '';
+            $add_in['temp_otp'] = (isset($data_json['temp_otp'])) ? $this->common->mysql_safe_string($data_json['temp_otp']) : '';
+            $errorData = [];
+            if ($add_in['email'] == '') {
+                $errorData[] = "Please enter email id";
+            }
+            if ($add_in['temp_otp'] == '') {
+                $errorData[] = "Please send  OTP";
+            }
+
+            if (sizeof($errorData) <= 0) {
+
+                $returnData = $this->services->doOTPverificationMedia($data_json, 'ARRAY');
+
+            } else {
+                $returnData = array('status' => 0, 'errorData' => $errorData);
+            }
 
             print_r($this->common->jsonencode($returnData));
             die();
-       # code...
-   }
+        }
+    }
+    public function resendOTPforMedia()
+    {
+        $arr = array('status' => 0, 'errorMessage' => "Warning: No data found ");
+
+        $data_json = file_get_contents('php://input');
+
+        /*  $received_signature = (isset($_SERVER['HTTP_DOICEX_SIGNATURE'])) ? $this->common->mysql_safe_string($_SERVER['HTTP_DOICEX_SIGNATURE']) : ''; // $_SERVER['HTTP_DOICEX_SIGNATURE'];
+        $computed_signature = hash_hmac('sha256', $data_json, Secret_Key);
+        header('Content-Type: application/json');
+
+        if ($received_signature != $computed_signature) {
+        $arr = array('status' => 0, 'errorMessage' => "Invalid Signature");
+        print_r($this->common->jsonencode($arr));
+        die();
+        } */
+
+        $data_json = json_decode($data_json, true);
+
+        if (isset($data_json['frm_mode']) && $data_json['frm_mode'] == 'resendOTPforMedia') {
+            //    $user_id = (isset($data_json['user_id'])) ? $this->common->mysql_safe_string($data_json['user_id']) : '';
+            $email = (isset($data_json['email'])) ? $this->common->mysql_safe_string($data_json['email']) : '';
+            $errorData = [];
+            /*  if ($user_id == '') {
+            //  $errorData[] = "Please enter user id ";
+            } */
+            if ($email == '') {
+                $errorData[] = "Please enter email ";
+            }
+            if (sizeof($errorData) <= 0) {
+
+                $returnData = $this->services->resendOTPforMedia($data_json, 'ARRAY');
+
+            } else {
+                $returnData = array('status' => 0, 'errorData' => $errorData);
+            }
+
+        }
+
+        print_r($this->common->jsonencode($returnData));
+        die();
+
+    }
 }

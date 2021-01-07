@@ -1,13 +1,3 @@
-<?php
-$session_user_data = $this->session->userdata('user_data');
- 
-if (isset($session_user_data['user_type']) && $session_user_data['user_type'] == "Customer") {
-    $controller = "customer";
-} else {
-    $controller = "serviceprovider";
-}
- 
-?>
 <!doctype html>
 <html lang=en-US>
 <head>
@@ -38,7 +28,7 @@ if (isset($session_user_data['user_type']) && $session_user_data['user_type'] ==
                 <div class="row">
                     <div class="col-6 col-xs-6 col-lg-6">
                         <div class="fb-your-restaurant-back-btn">
-                            <a href="<?php echo site_url($controller)?>"><i class="fal fa-angle-left"></i> Back</a>
+                            <a href="<?php echo site_url('serviceprovider')?>"><i class="fal fa-angle-left"></i> Back</a>
                         </div>
                     </div>
                     <div class="col-6 col-xs-6 col-lg-6">
@@ -49,13 +39,7 @@ if (isset($session_user_data['user_type']) && $session_user_data['user_type'] ==
                 </div>
 
                 <div class="row">
-                    <?php 
-                    if($controller=="customer"){
-                    $this->load->view('inc_customer_left');
-                    } else {
-                        $this->load->view('inc_service_left');
-                    }
-                    ?>
+                    <?php $this->load->view('inc_service_left');?>
                     <div class="col-sm-12 col-md-12 col-lg-9">                        
                         <div class="fb-notification-messages-main">
                             <div class="fb-noti-message-date">

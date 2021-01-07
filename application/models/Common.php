@@ -408,28 +408,29 @@ class Common extends CI_Model
         // Remove anything that isn't a number or decimal point.
         $number = $number * 1;
         return $number;
-      //  return number_format($number, $decimal, '.', '');
+        //  return number_format($number, $decimal, '.', '');
     }
-    function tep_round($number, $precision=2) {
-        if (strpos($number, '.') && (strlen(substr($number, strpos($number, '.')+1)) > $precision)) {
-          $number = substr($number, 0, strpos($number, '.') + 1 + $precision + 1);
-    
-          if (substr($number, -1) >= 5) {
-            if ($precision > 1) {
-              $number = substr($number, 0, -1) + ('0.' . str_repeat(0, $precision-1) . '1');
-            } elseif ($precision == 1) {
-              $number = substr($number, 0, -1) + 0.1;
+    public function tep_round($number, $precision = 2)
+    {
+        if (strpos($number, '.') && (strlen(substr($number, strpos($number, '.') + 1)) > $precision)) {
+            $number = substr($number, 0, strpos($number, '.') + 1 + $precision + 1);
+
+            if (substr($number, -1) >= 5) {
+                if ($precision > 1) {
+                    $number = substr($number, 0, -1) + ('0.' . str_repeat(0, $precision - 1) . '1');
+                } elseif ($precision == 1) {
+                    $number = substr($number, 0, -1) + 0.1;
+                } else {
+                    $number = substr($number, 0, -1) + 1;
+                }
             } else {
-              $number = substr($number, 0, -1) + 1;
+                $number = substr($number, 0, -1);
             }
-          } else {
-            $number = substr($number, 0, -1);
-          }
         }
-    
+
         return $number * 1;
-      }
-    
+    }
+
     public function GenerateKey($length = 15)
     {
         $key = '';
@@ -619,14 +620,14 @@ class Common extends CI_Model
         return $newDateString;
     }
 //FILE  FUNCTIONS
-#function for uploading and resizing image
-#$fileField    : file filed name
-#$path            : path where file is to be uploaded e.g. images/hotel
-#$isResize     : flag whether to resize image
-#$height_thumb : Thumnail Height
-#$width_thumb  : Thumnail Width
-#$image_name   : image to remamed to e.g. tajhotel (do not include extesion)
-#$tempDir      : temparary folder whare image to be uploaded while resizing
+    #function for uploading and resizing image
+    #$fileField    : file filed name
+    #$path            : path where file is to be uploaded e.g. images/hotel
+    #$isResize     : flag whether to resize image
+    #$height_thumb : Thumnail Height
+    #$width_thumb  : Thumnail Width
+    #$image_name   : image to remamed to e.g. tajhotel (do not include extesion)
+    #$tempDir      : temparary folder whare image to be uploaded while resizing
     public function UploadImage($fileField, $path, $image_name = '')
     {
         $errors = 0;
@@ -837,9 +838,6 @@ class Common extends CI_Model
         if (!isset($session_user_data['user_id'])) {
             //redirect( $this->config->item('site_url'));
             redirect(site_url());
-        } else {
-            
-            return $this->session->userdata('user_data');
         }
     }
     /////////////////////////////
@@ -963,22 +961,23 @@ class Common extends CI_Model
     }
     public function check_access_token($access_token = '', $user_id = '')
     {
-        $sql = "select '' from user_master_front  where  access_token='".$access_token."' ";
+        $sql = "select '' from user_master_front  where  access_token='" . $access_token . "' ";
         $query_result = $this->db->query($sql);
-        if($query_result->num_rows()>0){
+        if ($query_result->num_rows() > 0) {
             return 1;
-        } 
+        }
         return 0;
     }
     public function get_sms_data($id = 0)
     {
-        if($id==1){
+        if ($id == 1) {
             return "Dear User, your OTP for Aber registration is #REG_OTP#. Use this OTP for user verification";
         }
-        
-	}
-	
-    public function get_site_cms_master($id = 0){
+
+    }
+
+    public function get_site_cms_master($id = 0)
+    {
 
         $where_cond = "where cms_id=" . $id;
         $sel_rs = $this->common->getOneRow('site_cms_master', $where_cond);
@@ -986,8 +985,19 @@ class Common extends CI_Model
         $sel_rs['cms_desc'] = $sel_rs['cms_desc'];
         $sel_rs['cms_image'] = $sel_rs['cms_image'];
         $sel_rs['cms_title'] = $sel_rs['cms_title'];
-		
 
         return $sel_rs;
-    }	
+    }
+
+    public function daysBetweenDate($date1,$date2)
+    {
+        //date = "Y-m-d H:i" format hona chahiye
+      
+        $date1 = ($date1!="") ? $this->getDateFormat($date1,'Y-m-d') : date("Y-m-d");
+        $date2 = ($date2!="") ? $this->getDateFormat($date2,'Y-m-d'): date("Y-m-d");
+        $datetime1 = new DateTime($date1);
+        $datetime2 = new DateTime($date2);
+        $interval = $datetime1->diff($datetime2);
+        return $interval->format('%R%a');
+    }
 }

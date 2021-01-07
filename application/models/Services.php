@@ -43,6 +43,9 @@ class Services extends CI_Model
         $add_in['user_language'] = $LANGCODE = (isset($params['LANGCODE'])) ? $this->common->mysql_safe_string($params['LANGCODE']) : 'EN';
         $add_in['device_id'] = $device_id = (isset($params['device_id'])) ? $this->common->mysql_safe_string($params['device_id']) : '';
         $add_in['device_type'] = $device_type = (isset($params['device_type'])) ? $this->common->mysql_safe_string($params['device_type']) : '';
+
+        $add_in['country_code'] = (isset($params['country_code'])) ? $this->common->mysql_safe_string($params['country_code']) : '';
+
         if ($errorMessage == "") {
             $chkUserInfo = $this->common->getSingleInfoBy('user_master_front', 'email', $add_in['email'], 'email');
             if (sizeof($chkUserInfo) > 0) {
@@ -63,7 +66,7 @@ class Services extends CI_Model
             } catch (UnsatisfiedDependencyException $e) {
 
             }
-            $add_in['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(6);
+            $add_in['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(4);
             $add_in['added_date'] = date("Y-m-d H:i:s");
             $this->common->insertRecord('user_master_front', $add_in);
             $chkUserInfo = $this->common->getSingleInfoBy('user_master_front', 'uuid', $add_in['uuid'], '*');
@@ -86,17 +89,18 @@ class Services extends CI_Model
             $address_in['lastname'] = $add_in['last_name'];
             $address_in['is_default'] = 1;
 
-            $this->db->insert('customer_shipping_address', $address_in);
-            $userAddressInfo = $this->common->getSingleInfoBy('customer_shipping_address', 'uuid', $address_in['uuid'], '*');
+           // $this->db->insert('customer_shipping_address', $address_in);
+           // $userAddressInfo = $this->common->getSingleInfoBy('customer_shipping_address', 'uuid', $address_in['uuid'], '*');
 
             $userInfo = $this->userProfileData($chkUserInfo);
-            $retUserAddressInfo = $this->userAddressData($userAddressInfo);
+            $userInfo['ask_for_email'] = 0; 
+            $retUserAddressInfo = [];// $this->userAddressData($userAddressInfo);
             $arr['status'] = 1;
             $arr['errorData'] = [];
             $arr['userInfo'] = $userInfo;
             $arr['temp_otp'] = $temp_otp;
             $arr['addressInfo'] = $retUserAddressInfo;
-
+            $arr['call_next_api'] = 'doOTPverification';
             $arr['successMessage'] = 'Success! We have sent the OTP in yor mail box. Please check your mail';
 
             // $sendotp_data = $this->sendotp($user_info);
@@ -219,6 +223,7 @@ class Services extends CI_Model
             $arr['status'] = 1;
             $arr['userInfo'] = $userInfo;
             $arr['addressInfo'] = $retUserAddressInfo;
+            $arr['call_next_api'] = 'RedirectHome';
             $arr['successMessage'] = "Congratulations! OTP Verified";
 
         } else {
@@ -270,6 +275,7 @@ class Services extends CI_Model
                 $arr['status'] = 1;
                 $arr['userInfo'] = $userInfo;
                 $arr['addressInfo'] = $retUserAddressInfo;
+                $arr['call_next_api'] = 'RedirectHome';
             } else if ($chkUserInfo['is_email_verified'] == 0 && $chkUserInfo['status_flag'] == 'Inactive') {
 
                 $temp_otp = "1234";
@@ -288,7 +294,7 @@ class Services extends CI_Model
                 //$arr['errorData'] = [];
                 $arr['userInfo'] = $userInfo;
                 $arr['addressInfo'] = $retUserAddressInfo;
-
+                $arr['call_next_api'] = 'doOTPverification';
                 $arr['temp_otp'] = $temp_otp;
                 $arr['status'] = 2;
                 // $arr['userInfo'] = $userInfo;
@@ -339,7 +345,7 @@ class Services extends CI_Model
         if (sizeof($user_detail) > 0) {
             //  $passphrase = $this->common->randomWithLength(6);
 
-            $add_in_uuid['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(6);
+            $add_in_uuid['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(4);
             $where_edt_user = "email = '" . $email . "'";
             $this->common->updateRecord('user_master_front', $add_in_uuid, $where_edt_user);
 
@@ -412,6 +418,7 @@ class Services extends CI_Model
             $arr['status'] = 1;
             $arr['temp_otp'] = $temp_otp;
             $arr['userInfo'] = $user_detail;
+            $arr['call_next_api'] = 'doOTPverification';
             $arr['successMessage'] = 'Success! We have sent the OTP in yor mail box.Please check your mail';
 
         } else {
@@ -449,6 +456,7 @@ class Services extends CI_Model
 
             $arr['status'] = 1;
             $arr['temp_otp'] = $temp_otp;
+            $arr['call_next_api'] = 'doOTPverification';
             $arr['successMessage'] = 'Success! We have sent the OTP in yor mail box.Please check your mail';
 
             /* $sql = "select * from  `setting` where `group`='config_site_mail'";
@@ -924,7 +932,7 @@ class Services extends CI_Model
 
             $userInfo['user_language'] = ($chkUserInfo['user_language'] != "") ? $chkUserInfo['user_language'] : 'EN';
             $userInfo['is_otp_verified'] = $chkUserInfo['is_email_verified'];
-
+            $userInfo['country_code'] = $chkUserInfo['country_code'] . "";
             $arr['status'] = 1;
 
             $arr['userInfo'] = $userInfo;
@@ -966,6 +974,7 @@ class Services extends CI_Model
 
             $userInfo['user_language'] = ($chkUserInfo['user_language'] != "") ? $chkUserInfo['user_language'] : 'EN';
             $userInfo['is_otp_verified'] = $chkUserInfo['is_email_verified'];
+            $userInfo['country_code'] = $chkUserInfo['country_code'] . "";
 
             $arr['status'] = 1;
 
@@ -997,12 +1006,12 @@ class Services extends CI_Model
     {
 
         $user_photo = back_path . "uploads/noimage.png";
-        if ($chkUserInfo['profile_pic'] != '') {
+        if (isset($chkUserInfo['profile_pic']) && $chkUserInfo['profile_pic'] != '') {
             $user_photo = back_path . "uploads/profile_pics/" . $this->common->mysql_safe_string($chkUserInfo['profile_pic']);
         }
 
         //  $userInfo['push_notification'] = $chkUserInfo['push_notification'];
-        $userInfo['user_language'] = ($chkUserInfo['user_language'] != "") ? $chkUserInfo['user_language'] : 'EN';
+        $userInfo['user_language'] = (isset($chkUserInfo['user_language'] ) && $chkUserInfo['user_language'] != "") ? $chkUserInfo['user_language'] : 'EN';
         $userInfo['is_otp_verified'] = (int) $chkUserInfo['is_email_verified'];
 
         $userInfo['uuid'] = $chkUserInfo['uuid'] . "";
@@ -1013,8 +1022,13 @@ class Services extends CI_Model
         $userInfo['last_name'] = $chkUserInfo['last_name'] . "";
         $userInfo['email'] = $chkUserInfo['email'] . "";
         $userInfo['mobile'] = $chkUserInfo['mobile'] . "";
-        $userInfo['enterprise_name'] = $chkUserInfo['enterprise_name'] . "";
+        $userInfo['enterprise_name'] = $chkUserInfo['country_code'] . "";
         $userInfo['user_photo'] = $user_photo . "";
+        $userInfo['country_code'] = $chkUserInfo['country_code'] . "";
+        $userInfo['facebook_id'] = $chkUserInfo['facebook_id'] . "";
+        $userInfo['google_id'] = $chkUserInfo['google_id'] . "";
+        
+        
         $userInfo['temp_otp'] = $chkUserInfo['temp_otp'] . "";
 
         return $userInfo;
@@ -1587,10 +1601,17 @@ class Services extends CI_Model
             $customer_info['mobile'] = $customer_info1['userInfo']['mobile'];
             $customer_info['enterprise_name'] = $customer_info1['userInfo']['enterprise_name'] . "";
             $customer_info['user_photo'] = $customer_info1['userInfo']['user_photo'] . "";
+            $customer_info['country_code'] = $customer_info1['userInfo']['country_code'] . "";
 
             $bids_list = $this->getBidsQuotes($request_id);
             $is_editable = ($requests_val['request_status'] == 'Requested') ? 1 : 0;
+//cust_can_cancel_request =0 , means can not do cancel
+// current date -pickupdate = 2 or more than can do cancel
+            $date1  = ($requests_val['pickup_date']!="") ? $requests_val['pickup_date'] : date("Y-m-d") ;
+            $date2 = date("Y-m-d");
+            $days_diff  = $this->common->daysBetweenDate($date2, $date1);
 
+            $cust_can_cancel_request = ($days_diff >=2 && $requests_val['request_status']!="Completed") ? 1:0;
             $lt_requests = array(
                 'request_id' => $requests_val['request_id'],
                 'uuid' => $requests_val['uuid'],
@@ -1641,11 +1662,12 @@ class Services extends CI_Model
                 'cust_rating' => $requests_val['cust_rating'] * 1,
                 'cust_review' => $requests_val['cust_review'] . "",
                 'cust_review_date' => $requests_val['cust_review_date'] . "",
+                'cust_can_cancel_request' => $cust_can_cancel_request
 
             );
 
-            $lt_requests['service_pro_ratings'] = $this->getAverageReview($requests_val['service_pro_user_id'], 'servicepro') + 0;
-            $lt_requests['driver_ratings'] = $this->getAverageReview($requests_val['dri_user_id'], 'dri') + 0;
+            //$lt_requests['service_pro_ratings'] = $this->getAverageReview($requests_val['service_pro_user_id'], 'servicepro') + 0;
+           // $lt_requests['driver_ratings'] = $this->getAverageReview($requests_val['dri_user_id'], 'dri') + 0;
 
             if ($requests_val['service_pro_profile_pic'] != '') {
                 $user_photo = back_path . "uploads/profile_pics/" . $this->common->mysql_safe_string($requests_val['service_pro_profile_pic']);
@@ -1882,7 +1904,8 @@ class Services extends CI_Model
             if (strtolower($action_flag) == "delivered") {
                 $request_status = "Completed";
                 $request_sub_status = "Delivered";
-                $lt_requests['is_trip_started'] = 1;
+               
+                $lt_requests['is_trip_completed'] = 1;
             }
             if ($request_sub_status != "") {
                 $lt_requests['request_status'] = $request_status;
@@ -2014,6 +2037,7 @@ class Services extends CI_Model
         $to_user_type = (isset($params['to_user_type'])) ? $this->common->mysql_safe_string($params['to_user_type']) : '';
 
         if ($to_user_type == "Driver") {
+            $add_review = [];
             $add_review['driver_review_date'] = date("Y-m-d H:i:s");
             $add_review['driver_ratings'] = $rating;
             $add_review['driver_review'] = $review;
@@ -2023,6 +2047,7 @@ class Services extends CI_Model
             $this->common->updateRecord('lt_requests', $add_review, $where_edt);
         }
         if ($to_user_type == "Service Provider") {
+            $add_review = [];
             $add_review['service_pro_review_date'] = date("Y-m-d H:i:s");
             $add_review['service_pro_ratings'] = $rating;
             $add_review['service_pro_review'] = $review;
@@ -2031,6 +2056,7 @@ class Services extends CI_Model
             $this->common->updateRecord('lt_requests', $add_review, $where_edt);
         }
         if ($to_user_type == "Customer") {
+            $add_review = [];
             $add_review['cust_review_date'] = date("Y-m-d H:i:s");
             $add_review['cust_rating'] = $rating;
             $add_review['cust_review'] = $review;
@@ -2105,41 +2131,46 @@ class Services extends CI_Model
 
         $arr['errorMessage'] = "Some thing went wrong. Please try again";
 
-        $sql = "select *
-        from lt_request_quotes rq
-                 where rq.request_id='{$request_id}'  and request_status='Requested'  and rq.status_flag='Active'  ";
+        $sql = "select *    from lt_requests rq   where rq.request_id='{$request_id}' and rq.status_flag='Active'  ";
         $query = $this->db->query($sql);
         if ($query->num_rows() > 0) {
-
-            $request_status = 'Cancel'; // oOrder Processed
-            $request_sub_status = 'Cancel'; // oOrder Processed
-
-            $lt_requests['request_status'] = $request_status;
-            $lt_requests['status_flag'] = "Cancel";
-            $lt_requests['cancel_date'] = $today;
-            $lt_requests['cancel_reason'] = $cancel_reason;
-            $lt_requests['request_sub_status'] = $request_sub_status;
-            //
-            $where_edt = "request_id='{$request_id}' and user_id='{$user_id}'";
-            $this->common->updateRecord('lt_requests', $lt_requests, $where_edt);
-            // add order history
-
-            $this->db->query("INSERT INTO lt_requests_history SET request_id = '" . (int) $request_id . "' ,request_status = '" . $request_status . "',request_sub_status='{$request_sub_status}', comment='{$cancel_reason}', date_added = '" . $today . "'");
-
-            //  $chkRequestinfo = $this->common->getSingleInfoBy("lt_requests", 'request_id', $request_id);
-
-            /*   $arra['user_id'] = $user_id;
-            $arra['order_id'] = $order_id;
-            $arra['driver_id'] = $user_id;
-            $arra['order_status_id'] = 2;
-            $arra['invoice_no'] = $chkRequestinfo['invoice_no'];
-            $arra['order_date_added'] = $chkRequestinfo['date_added'];
-            $arra['oorder_uid'] = $chkRequestinfo['oorder_uid']; */
-
-            //   $this->sendNotificationToCustomer($arra, $chkRequestinfo['uuid'], '', '');
-            // $this->setFirebaserealtimedata("update", $arra, 'Order Accepted by driver ');
-            $arr['status'] = 1;
-            $arr['successMessage'] = 'Request order cancel successfully';
+            $query_info  = $query->row_array();
+            //and request_status='Requested'  and 
+            if($query_info['request_status'] == "Requested"){
+                $request_status = 'Cancel'; // oOrder Processed
+                $request_sub_status = 'Cancel'; // oOrder Processed
+    
+                $lt_requests['request_status'] = $request_status;
+                $lt_requests['status_flag'] = "Cancel";
+                $lt_requests['cancel_date'] = $today;
+                $lt_requests['cancel_reason'] = $cancel_reason;
+                $lt_requests['request_sub_status'] = $request_sub_status;
+                //
+                $where_edt = "request_id='{$request_id}' and user_id='{$user_id}'";
+                $this->common->updateRecord('lt_requests', $lt_requests, $where_edt);
+                // add order history
+    
+                $this->db->query("INSERT INTO lt_requests_history SET request_id = '" . (int) $request_id . "' ,request_status = '" . $request_status . "',request_sub_status='{$request_sub_status}', comment='{$cancel_reason}', date_added = '" . $today . "'");
+    
+                //  $chkRequestinfo = $this->common->getSingleInfoBy("lt_requests", 'request_id', $request_id);
+    
+                /*   $arra['user_id'] = $user_id;
+                $arra['order_id'] = $order_id;
+                $arra['driver_id'] = $user_id;
+                $arra['order_status_id'] = 2;
+                $arra['invoice_no'] = $chkRequestinfo['invoice_no'];
+                $arra['order_date_added'] = $chkRequestinfo['date_added'];
+                $arra['oorder_uid'] = $chkRequestinfo['oorder_uid']; */
+    
+                //   $this->sendNotificationToCustomer($arra, $chkRequestinfo['uuid'], '', '');
+                // $this->setFirebaserealtimedata("update", $arra, 'Order Accepted by driver ');
+                $arr['status'] = 1;
+                $arr['successMessage'] = 'Request order cancel successfully';
+            } else {
+                $arr['status'] = 0;
+                $arr['errorMessage'] = 'Ohh! Sorry you can not cancel this order. Please contact or support team';
+            }
+            
 
         }
 
@@ -2164,15 +2195,15 @@ class Services extends CI_Model
         }
         return $request_status;
     }
-
+     
     public function doLoginViaMedia($params, $returnformat = "JSON")
     {
-        $facebook_gmail_by = $facebook_gmail_by = (isset($params['facebook_gmail_by'])) ? $this->common->mysql_safe_string($params['facebook_gmail_by']) : '';
+        //$facebook_gmail_by = $facebook_gmail_by = (isset($params['facebook_gmail_by'])) ? $this->common->mysql_safe_string($params['facebook_gmail_by']) : '';
         $add_in['user_type'] = (isset($params['user_type'])) ? $this->common->mysql_safe_string($params['user_type']) : 'Customer';
 
         $google_id = $google_id = (isset($params['google_id'])) ? $this->common->mysql_safe_string($params['google_id']) : '';
         $facebook_id = $facebook_id = (isset($params['facebook_id'])) ? $this->common->mysql_safe_string($params['facebook_id']) : '';
-        $email = $email = (isset($params['email'])) ? $this->common->mysql_safe_string($params['email']) : '';
+       // $email = $email = (isset($params['email'])) ? $this->common->mysql_safe_string($params['email']) : '';
         //  $full_name = (isset($params['full_name'])) ? $this->common->mysql_safe_string($params['full_name']) : '';
         $first_name = (isset($params['first_name'])) ? $this->common->mysql_safe_string($params['first_name']) : '';
         $last_name = (isset($params['last_name'])) ? $this->common->mysql_safe_string($params['last_name']) : '';
@@ -2191,31 +2222,31 @@ class Services extends CI_Model
             $errorMessage = "Please enter first name";
 
         }
-        if ($last_name == "") {
-            $errorMessage = "Please enter last name";
-
-        }
+       
         if ($errorMessage == "") {
             $sql = "";
             if ($facebook_id != "") {
                 $sql = "SELECT user_id FROM user_master_front where facebook_id='" . $facebook_id . "' ";
+                $sqldel = "delete from user_master_front_temp where  facebook_id='" . $facebook_id . "'  ";
+                $rs_login_row = $this->db->query($sqldel);
             }
             if ($google_id != "") {
                 $sql = "SELECT user_id FROM user_master_front where google_id='" . $google_id . "' ";
+                $sqldel = "delete from user_master_front_temp where  google_id='" . $google_id . "'  ";
+                $rs_login_row = $this->db->query($sqldel);
+    
             }
-            if ($email != "") {
-                $sql = "SELECT user_id FROM user_master_front where email='" . $email . "'  ";
-            }
+             
             if($sql!=""){
                 $rschk = $this->db->query($sql);
 
                 if ($rschk->num_rows() > 0) {
                     $chkUserInfo = $rschk->row_array();
-    
+                    
                     // $user_id = $chkUserInfo['user_id'];
                     $userInfo = $this->userProfileData($chkUserInfo);
                     $retUserAddressInfo = $this->getDefaultAddress($chkUserInfo);
-    
+                   
                     if ($chkUserInfo['status_flag'] == 'Active') {
     
                         $add_in_uuid['login_time'] = date("Y-m-d H:i:s");
@@ -2228,6 +2259,7 @@ class Services extends CI_Model
                         $arr['status'] = 1;
                         $arr['userInfo'] = $userInfo;
                         $arr['addressInfo'] = $retUserAddressInfo;
+                        $arr['errorMessage'] = "";
                     } else if ($chkUserInfo['is_email_verified'] == 0 && $chkUserInfo['status_flag'] == 'Inactive') {
     
                         $temp_otp = "1234";
@@ -2291,16 +2323,7 @@ class Services extends CI_Model
 
                     $add_in['status_flag'] = 'Active';
                     
-                    if ($errorMessage == "") {
-                        $chkUserInfo = $this->common->getSingleInfoBy('user_master_front', 'email', $add_in['email'], 'email');
-                        if (sizeof($chkUserInfo) > 0) {
-                            $errorMessage = $add_in['email'] . "  is already registered";
-                        }
-                        $chkUserInfo = $this->common->getSingleInfoBy('user_master_front', 'mobile', $add_in['mobile'], 'mobile');
-                        if (sizeof($chkUserInfo) > 0) {
-                            $errorMessage = $add_in['mobile'] . "  is already registered";
-                        }
-                    }
+                    
             
                     if ($errorMessage == "") {
                         try {
@@ -2311,41 +2334,25 @@ class Services extends CI_Model
                         } catch (UnsatisfiedDependencyException $e) {
             
                         }
-                        $add_in['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(6);
+                        $add_in['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(4);
                         $add_in['added_date'] = date("Y-m-d H:i:s");
-                        $this->common->insertRecord('user_master_front', $add_in);
-                        $chkUserInfo = $this->common->getSingleInfoBy('user_master_front', 'uuid', $add_in['uuid'], '*');
+ 
+                        $this->common->insertRecord('user_master_front_temp', $add_in);
+                        $chkUserInfo = $this->common->getSingleInfoBy('user_master_front_temp', 'uuid', $add_in['uuid'], '*');
             
-                        try {
-                            // Generate a version 4 (random) UUID object
-                            $uuid4 = Uuid::uuid4();
-                            $uuid_shipping = $uuid4->toString();
-                            $address_in['uuid'] = $uuid_shipping;
-                        } catch (UnsatisfiedDependencyException $e) {
-            
-                        }
-                        $address_in['address_name'] = 'Home';
-                        $address_in['address_1'] = (isset($params['address_1'])) ? $this->common->mysql_safe_string($params['address_1']) : '';
-                        $address_in['state_id'] = (isset($params['state_id'])) ? $this->common->mysql_safe_string($params['state_id']) : '';
-                        $address_in['city_id'] = (isset($params['city_id'])) ? $this->common->mysql_safe_string($params['city_id']) : '';
-                        $address_in['postcode'] = (isset($params['postcode'])) ? $this->common->mysql_safe_string($params['postcode']) : '';
-                        $address_in['user_id'] = $chkUserInfo['user_id'];
-                        $address_in['firstname'] = $add_in['first_name'];
-                        $address_in['lastname'] = $add_in['last_name'];
-                        $address_in['is_default'] = 1;
-            
-                        $this->db->insert('customer_shipping_address', $address_in);
-                        $userAddressInfo = $this->common->getSingleInfoBy('customer_shipping_address', 'uuid', $address_in['uuid'], '*');
+                         
+                    
             
                         $userInfo = $this->userProfileData($chkUserInfo);
-                        $userInfo['is_otp_verified'] =1;
-                        $retUserAddressInfo = $this->userAddressData($userAddressInfo);
+                      //  $userInfo['is_otp_verified'] = 0;
+                        $userInfo['ask_for_email'] =1; 
                         $arr['status'] = 1;
                         $arr['errorData'] = [];
                         $arr['userInfo'] = $userInfo;
                         $arr['temp_otp'] = $temp_otp;
-                        $arr['addressInfo'] = $retUserAddressInfo;
-            
+                        $arr['call_next_api'] = 'doAskForEmail';
+                        $arr['addressInfo'] = $retUserAddressInfo = [];
+                        $arr['errorMessage'] = "";
                         $arr['successMessage'] = 'Success! We have sent the OTP in yor mail box. Please check your mail';
             
                         // $sendotp_data = $this->sendotp($user_info);
@@ -2383,5 +2390,316 @@ class Services extends CI_Model
             return $arr;
             die();
         }
+    }
+
+    //
+    public function doAskForEmail($params, $returnformat = "JSON")
+    {
+        
+       
+
+        $google_id = $google_id = (isset($params['google_id'])) ? $this->common->mysql_safe_string($params['google_id']) : '';
+        $facebook_id = $facebook_id = (isset($params['facebook_id'])) ? $this->common->mysql_safe_string($params['facebook_id']) : '';
+        $email = $email = (isset($params['email'])) ? $this->common->mysql_safe_string($params['email']) : '';
+         
+
+        $today = date("Y-m-d H:i:s");
+        $arr['status'] = 0;
+
+        $arr['errorMessage'] = "Some thing went wrong. Please try again";
+
+        $errorMessage = "";
+
+        if ($google_id == "" && $facebook_id=="") {
+            $errorMessage = "Please provide the social link id";
+
+        }
+        if ($email == "") {
+            $errorMessage = "Please enter email";
+
+        }
+        if ($errorMessage == "") {
+
+            $add_in['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(4);
+            $sql_data_array['status_flag'] = 'EmailAdded';
+            $sql_data_array['edit_date'] = date("Y-m-d H:i:s");
+            $sql_data_array['email'] = $email;
+
+            if($facebook_id!=""){
+                $where = "facebook_id = '" . $facebook_id . "'  ";
+                $this->common->updateRecord('user_master_front_temp', $sql_data_array, $where);
+            } else {
+                $where = "google_id = '" . $google_id . "' ";
+                $this->common->updateRecord('user_master_front_temp', $sql_data_array, $where);
+            }
+         
+           
+
+            $arr['status'] = 1;
+            $arr['retData'] = $params;
+            $arr['temp_otp'] = $temp_otp;
+            $arr['call_next_api'] = 'doOTPverificationMedia';
+            $arr['errorMessage'] = "";
+            $arr['successMessage'] = 'Success! We have sent the OTP in yor mail box. Please check your mail';
+
+             
+        
+           
+
+        } else {
+            $arr['status'] = 0;
+            $arr['retData'] = $params;
+            // $arr['errorData'] = $errorData;
+            $arr['errorMessage'] = $errorMessage;
+        }
+        
+
+        if ($returnformat == "JSON") {
+            return $this->common->jsonencode($arr);
+            die();
+        } else {
+            return $arr;
+            die();
+        }
+    }
+
+    public function doOTPverificationMedia($params = array(), $returnType = 'ARRAY')
+    {
+
+        $add_in = array();
+        // $add_in['user_id'] = $user_id = (isset($params['user_id'])) ? $this->common->mysql_safe_string($params['user_id']) : '';
+        $add_in['email'] = $email = (isset($params['email'])) ? $this->common->mysql_safe_string($params['email']) : '';
+        $add_in['temp_otp'] = $temp_otp = (isset($params['temp_otp'])) ? $this->common->mysql_safe_string($params['temp_otp']) : '';
+        $errorData = array();
+
+        $sql = "select * from user_master_front_temp where email='" . $email . "' and temp_otp='" . $temp_otp . "' order by user_id desc ";
+        $rs_login_row = $this->db->query($sql);
+        if ($rs_login_row->num_rows() > 0) {
+
+            $chkUserInfo = $rs_login_row->row_array();
+
+
+            
+
+            $chkUserInfo_temp = $this->common->getSingleInfoBy('user_master_front', 'email', $add_in['email'], 'email');
+            if (sizeof($chkUserInfo_temp) > 0) {
+            
+                if($chkUserInfo['google_id']!=""){
+                    $sql_data_array['google_id'] = $chkUserInfo['google_id'];
+                }
+                if($chkUserInfo['facebook_id']!=""){
+                    $sql_data_array['facebook_id'] = $chkUserInfo['facebook_id'];
+                }
+                $sql_data_array['status_flag'] = 'EmailAdded';
+                $sql_data_array['edit_date'] = date("Y-m-d H:i:s");
+                $sql_data_array['is_email_verified'] = 1;
+                $sql_data_array['is_login'] = 1;
+                $sql_data_array['email_verified_date'] = date("Y-m-d H:i:s");
+                $sql_data_array['login_time'] = date("Y-m-d H:i:s");
+
+           
+
+            $where = "email = '" . $email . "' and temp_otp='" . $temp_otp . "'";
+
+            $this->common->updateRecord('user_master_front', $sql_data_array, $where);
+
+
+            } else {
+                $add_in['is_email_verified'] = 1;
+                $add_in['email_verified_date'] = date("Y-m-d H:i:s");
+                $add_in['login_time'] = date("Y-m-d H:i:s");
+                $add_in['is_login'] = 1;
+                $add_in['status_flag'] = 'Active';
+                $add_in['is_login'] = 1;
+                $add_in['edit_date'] =  date("Y-m-d H:i:s");
+                $add_in['added_date'] =  date("Y-m-d H:i:s");
+                $add_in['uuid'] = $chkUserInfo['uuid'] . "";
+                $add_in['user_id'] = $chkUserInfo['user_id'] . "";
+                $add_in['user_type'] = $chkUserInfo['user_type'] . "";
+                $add_in['first_name'] = $chkUserInfo['first_name'] . "";
+                $add_in['middle_name'] = $chkUserInfo['middle_name'] . "";
+                $add_in['last_name'] = $chkUserInfo['last_name'] . "";
+                $add_in['email'] = $chkUserInfo['email'] . "";
+                $add_in['mobile'] = $chkUserInfo['mobile'] . "";
+                $add_in['enterprise_name'] = $chkUserInfo['country_code'] . "";
+                $add_in['user_photo'] =  "";
+                $add_in['country_code'] = $chkUserInfo['country_code'] . "";
+                $add_in['facebook_id'] = $chkUserInfo['facebook_id'] . "";
+                $add_in['google_id'] = $chkUserInfo['google_id'] . "";
+                $add_in['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(4);
+                $add_in['added_date'] = date("Y-m-d H:i:s");
+    
+                $add_in['user_language'] = $chkUserInfo['user_language'] . "";
+                $add_in['device_id'] = $chkUserInfo['device_id'] . "";
+                $add_in['device_type'] = $chkUserInfo['device_type'] . "";
+        
+                $add_in['country_code'] = $chkUserInfo['country_code'] . "";
+    
+                $this->common->insertRecord('user_master_front', $add_in);
+                
+                 /* 
+                try {
+                    // Generate a version 4 (random) UUID object
+                    $uuid4 = Uuid::uuid4();
+                    $uuid_shipping = $uuid4->toString();
+                    $address_in['uuid'] = $uuid_shipping;
+                } catch (UnsatisfiedDependencyException $e) {
+    
+                }
+               
+                $address_in['address_name'] = 'Home';
+                $address_in['address_1'] =  '';
+                $address_in['state_id'] =  '';
+                $address_in['city_id'] =  '';
+                $address_in['postcode'] =  '';
+                $address_in['user_id'] = $chkUserInfo['user_id'];
+                $address_in['firstname'] = $add_in['first_name'];
+                $address_in['lastname'] = $add_in['last_name'];
+                $address_in['is_default'] = 1;
+                $this->db->insert('customer_shipping_address', $address_in); */
+                
+
+                //delet from temp table 
+               
+            }
+
+            $sql = "delete from user_master_front_temp where  email='" . $email . "' and temp_otp='" . $temp_otp . "'";
+            $rs_login_row = $this->db->query($sql);
+            
+            $userInfo = $this->userProfileData($chkUserInfo);
+            $userInfo['is_email_verified'] = 0; 
+            $userInfo['is_otp_verified'] = 1; 
+
+            $retUserAddressInfo = [];//$this->getDefaultAddress($chkUserInfo);
+
+            $arr['status'] = 1;
+            $arr['userInfo'] = $userInfo;
+            $arr['addressInfo'] = $retUserAddressInfo;
+            $arr['call_next_api'] = 'RedirectHome';
+            $arr['errorMessage'] = "";
+            $arr['successMessage'] = "Congratulations! OTP Verified";
+            
+
+        } else {
+            $errorData[] = 'OTP mismatched';
+            $errorMessage = 'OTP mismatched';
+            $arr['status'] = 0;
+            $arr['retData'] = $params;
+            // $arr['errorData'] = $errorData;
+            $arr['call_next_api'] = 'doOTPverificationMedia';
+            $arr['errorMessage'] = $errorMessage;
+        }
+
+        if ($returnType == "JSON") {
+            return $this->common->jsonencode($arr);
+            die();
+        } else {
+            return $arr;
+            die();
+        }
+
+    }
+
+    public function resendOTPforMedia($params = array(), $returnType = "json")
+    {
+        // $user_id = (isset($params['user_id'])) ? $this->common->mysql_safe_string($params['user_id']) : '';
+        $email = (isset($params['email'])) ? $this->common->mysql_safe_string($params['email']) : '';
+        // AND user_id='{$user_id}'
+        $where = " email='{$email}'    ";
+        $chkUserInfo = $this->common->getRecord('user_master_front_temp', $where);
+
+        if (sizeof($chkUserInfo) > 0) {
+
+            $where_edt_user = "email = '" . $email . "'";
+            $add_in_uuid['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(4);
+            $this->common->updateRecord('user_master_front_temp', $add_in_uuid, $where_edt_user);
+
+            $user_info = $chkUserInfo;
+
+            $arr['status'] = 1;
+            $arr['temp_otp'] = $temp_otp;
+            $arr['call_next_api'] = 'doOTPverificationMedia';
+            $arr['successMessage'] = 'Success! We have sent the OTP in yor mail box.Please check your mail';
+
+            /* $sql = "select * from  `setting` where `group`='config_site_mail'";
+        $query = $this->db->query($sql);
+        if ($query->num_rows() > 0) {
+        $m_setting = $query->result_array();
+
+        foreach ($m_setting as $key => $val) {
+        $config_site_mail[$val['key']] = $val['value'];
+        }
+
+        $subject = "Complete your registration!";
+
+        $fileg = file_get_contents("uploads/mail_register.html");
+        $full_name = $chkUserInfo['first_name'] . " " . $chkUserInfo['last_name'];
+        $pattern = array('/{FULLNAME}/', '/{OTP}/');
+        $replacement = array($full_name, $temp_otp);
+        $mess_body = preg_replace($pattern, $replacement, $fileg);
+
+        try {
+        //Server settings
+
+        $mail = new PHPMailer(true);
+
+        $mail->SMTPDebug = 0; // Enable verbose debug output
+        $mail->isMail(); // Send using SMTP
+
+        $mail->Host = $config_site_mail['config_smtp_host']; // Set the SMTP server to send through
+        $mail->SMTPAuth = true; // Enable SMTP authentication
+        $mail->Username = $config_site_mail['config_smtp_username']; // SMTP username
+        $mail->Password = $config_site_mail['config_smtp_password']; // SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+        $mail->Port = $config_site_mail['config_smtp_port']; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+        //Recipients
+        $admin_mail_id = $config_site_mail['config_site_mail'];
+
+        $mail->setFrom($admin_mail_id, $config_site_mail['config_site_from_name']);
+        // $email = "swamiwebservices@gmail.com";
+
+        $mail->addAddress($email, $full_name); // Add a recipient
+
+        $mail->addReplyTo($admin_mail_id, $config_site_mail['config_site_from_name']);
+
+        // Content
+        $mail->isHTML(true); // Set email format to HTML
+        $mail->Subject = $subject;
+        $mail->Body = $mess_body;
+        //  $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+        $mail->send();
+        // echo 'Message has been sent';
+
+        $arr['status'] = 1;
+        $arr['successMessage'] = 'Success! We have sent the OTP in yor mail box.Please check your mail';
+
+        } catch (Exception $e) {
+        //  $error_msg = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        //  $arr['status'] = 0;
+        //  $arr['errorMessage'] = 'Ohh! Some thing went wrong please try again';
+
+        }
+
+        }
+         */
+
+        } else {
+            $errorMessage = 'Invalid email id, Please try other email id';
+            $arr['status'] = 0;
+            $arr['retData'] = $params;
+            //  $arr['errorData'] = '';
+            $arr['errorMessage'] = $errorMessage;
+        }
+
+        if ($returnType == "JSON") {
+            return $this->common->jsonencode($arr);
+            die();
+        } else {
+            return $arr;
+            die();
+        }
+
     }
 }
