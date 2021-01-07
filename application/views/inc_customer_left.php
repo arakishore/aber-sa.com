@@ -13,7 +13,7 @@ if($session_user_data['user_photo']) {
 	$sel_photo = base_url().'uploads/profile_pics/'.$session_user_data['user_photo'];
 }
 ?>
-                <img src="<?php echo $sel_photo;?>" alt="user images" />
+                <img src="<?php echo $sel_photo;?>" alt="user images" id="user-avtar-leftmenu" />
                                 </div>
                                 <div class="fb-left-bar-profile">
                                     <div class="fb-left-bar-profile-name">

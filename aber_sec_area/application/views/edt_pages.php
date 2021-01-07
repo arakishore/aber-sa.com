@@ -98,7 +98,7 @@
 <?php
 
 if($sel_rs['cms_image']!=''){
-			$photo = base_url().'uploads/para_images/'.stripslashes($sel_rs['cms_image']);
+			$photo = back_path.'uploads/para_images/'.stripslashes($sel_rs['cms_image']);
 } else {
 			$photo = 'http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image';	
 }
@@ -122,7 +122,7 @@ if($sel_rs['cms_image']!=''){
                                                     <div class="btn btn-default image-preview-input">
                                                         <span class="glyphicon glyphicon-folder-open"></span>
                                                         <span class="image-preview-input-title image-preview-input-title1">Browse</span>
-                                                        <input type="file" accept="image/png, image/jpeg, image/gif" class="browseimage" id="1" name="main_image" /> <!-- rename it -->
+                                                        <input type="file" accept="image/png, image/jpeg, image/gif" class="browseimage" id="1" name="cms_image" /> <!-- rename it -->
 
                                                     </div>
                                                 </span>

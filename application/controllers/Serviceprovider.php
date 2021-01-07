@@ -26,6 +26,7 @@ class Serviceprovider extends CI_Controller
         $this->load->model('common');
         $this->load->helper('security');
         $this->load->library('email');
+		$this->load->library('pagination');
         $this->load->helper('url_helper');
         $this->common->check_user_session();
     }
@@ -74,13 +75,14 @@ class Serviceprovider extends CI_Controller
         $session_user_data = $this->session->userdata('user_data');
         $id = $session_user_data['user_id'];
 
-        $sSql = "SELECT * FROM lt_notification WHERE user_id='" . $id . "' AND not_date > date_sub(curdate(),interval 0 day) ORDER BY not_id";
+        //$sSql = "SELECT * FROM lt_notification WHERE user_id='" . $id . "' AND not_date > date_sub(curdate(),interval 0 day) ORDER BY not_id";
+		$sSql = "SELECT * FROM lt_notification WHERE user_id='" . $id . "' ORDER BY not_id";
         $query = $this->db->query($sSql);
         $data['todays_not'] = $nitifications = $query->result_array();
 
-        $sSql = "SELECT * FROM lt_notification WHERE user_id='" . $id . "' AND not_date != date_sub(curdate(),interval 0 day) ORDER BY not_id";
+        /*$sSql = "SELECT * FROM lt_notification WHERE user_id='" . $id . "' AND not_date != date_sub(curdate(),interval 0 day) ORDER BY not_id";
         $query = $this->db->query($sSql);
-        $data['all_not'] = $nitifications = $query->result_array();
+        $data['all_not'] = $nitifications = $query->result_array();*/
 
         $this->load->view("notifications", $data);
     }
@@ -93,12 +95,21 @@ class Serviceprovider extends CI_Controller
 
         $session_user_data = $this->session->userdata('user_data');
         $id = $session_user_data['user_id'];
-
+		
+		$fr_where = '';
+		
+		if (isset($_GET['status']) && $_GET['status']!='') {
+				$status = $this->common->getDbValue($_GET['status']);
+				if($status!='All') {
+					$fr_where.= " AND rq.request_status = '".$status."' ";
+				}
+		}	
+			
         $sSql = "SELECT rq.*  FROM lt_requests rq , lt_request_quotes qt
 				WHERE rq.request_id=qt.request_id AND qt.service_provider_id='" . $id . "'
 				AND qt.quote_seeker_approval=1 AND
-				rq.status_flag='Active' ORDER BY rq.request_id DESC";
-
+				rq.status_flag='Active' ".$fr_where." ORDER BY rq.request_id DESC";
+		//die();
         $query = $this->db->query($sSql);
         $data['requests'] = $requests = $query->result_array();
 
@@ -132,11 +143,11 @@ class Serviceprovider extends CI_Controller
         $session_user_data = $this->session->userdata('user_data');
         $id = $session_user_data['user_id'];
 
-        $sSql = "SELECT us.first_name, us.last_name, us.profile_pic, rq.service_pro_overall, rq.service_pro_ratings,  rq.service_pro_review,rq.request_title, rq.insert_date
+        $sSql = "SELECT us.first_name, us.last_name, us.profile_pic, rq.service_pro_overall, rq.service_pro_ratings, rq.service_pro_review_date, rq.service_pro_review,rq.request_title, rq.insert_date
 FROM user_master_front us
  
-left join lt_requests rq on qt.request_id = rq.request_id
-WHERE rq.service_provider_id='" . $id . "'   ORDER BY qt.request_quote_id";
+left join lt_requests rq on us.user_id = rq.user_id
+WHERE rq.service_provider_id='" . $id . "'   ORDER BY rq.request_id";
         $query = $this->db->query($sSql);
         $data['reviews'] = $reviews = $query->result_array();
 
@@ -181,11 +192,15 @@ WHERE rq.service_provider_id='" . $id . "'   ORDER BY qt.request_quote_id";
             $add_in['user_type'] = 'Driver';
             $add_in['passphrase'] = $password = (isset($_POST['password'])) ? $this->common->mysql_safe_string($_POST['password']) : '';
             $cpassword = (isset($_POST['cpassword'])) ? $this->common->mysql_safe_string($_POST['cpassword']) : '';
+            $add_in['vehicle_type'] = $vehicle_type = (isset($_POST['vehicle_type'])) ? $this->common->mysql_safe_string($_POST['vehicle_type']) : '';
+            $add_in['license_no'] = $license_no = (isset($_POST['license_no'])) ? $this->common->mysql_safe_string($_POST['license_no']) : '';						
+
 
             $add_in_add['address_name'] = $address_name = (isset($_POST['address_name'])) ? $this->common->mysql_safe_string($_POST['address_name']) : '';
             $add_in_add['city_id'] = $city_id = (isset($_POST['city_id'])) ? $this->common->mysql_safe_string($_POST['city_id']) : '';
             $add_in_add['state_id'] = $state_id = (isset($_POST['state_id'])) ? $this->common->mysql_safe_string($_POST['state_id']) : '';
             $add_in_add['postcode'] = $postcode = (isset($_POST['postcode'])) ? $this->common->mysql_safe_string($_POST['postcode']) : '';
+			
 
             if ($first_name == '') {$error .= "Please enter first name<br>";}
             if ($last_name == '') {$error .= "Please enter last name<br>";}
@@ -247,12 +262,14 @@ WHERE rq.service_provider_id='" . $id . "'   ORDER BY qt.request_quote_id";
             $add_in['last_name'] = $last_name = (isset($_POST['last_name'])) ? $this->common->mysql_safe_string($_POST['last_name']) : '';
             $add_in['mobile'] = $mobile = (isset($_POST['mobile'])) ? $this->common->mysql_safe_string($_POST['mobile']) : '';
             $add_in['status_flag'] = $status_flag = (isset($_POST['status_flag'])) ? $this->common->mysql_safe_string($_POST['status_flag']) : '';
+            $add_in['vehicle_type'] = $vehicle_type = (isset($_POST['vehicle_type'])) ? $this->common->mysql_safe_string($_POST['vehicle_type']) : '';
+            $add_in['license_no'] = $license_no = (isset($_POST['license_no'])) ? $this->common->mysql_safe_string($_POST['license_no']) : '';						
 
             $add_in_add['address_name'] = $address_name = (isset($_POST['address_name'])) ? $this->common->mysql_safe_string($_POST['address_name']) : '';
             $add_in_add['city_id'] = $city_id = (isset($_POST['city_id'])) ? $this->common->mysql_safe_string($_POST['city_id']) : '';
             $add_in_add['state_id'] = $state_id = (isset($_POST['state_id'])) ? $this->common->mysql_safe_string($_POST['state_id']) : '';
             $add_in_add['postcode'] = $postcode = (isset($_POST['postcode'])) ? $this->common->mysql_safe_string($_POST['postcode']) : '';
-
+			
             if ($first_name == '') {$error .= "Please enter first name<br>";}
             if ($last_name == '') {$error .= "Please enter last name<br>";}
             if ($mobile == '') {$error .= "Please enter phone number<br>";}
@@ -400,12 +417,128 @@ WHERE rq.service_provider_id='" . $id . "'   ORDER BY qt.request_quote_id";
         $data['controller'] = $controller = $this->controller;
         $session_user_data = $this->session->userdata('user_data');
         $id = $session_user_data['user_id'];
+		$maxm = 2;
+		
+		$fr_where= "WHERE request_status='Requested' AND status_flag='Active'";
+		$fnd_set_where = "";
 
-        $sSql = "SELECT *  FROM `lt_requests` WHERE request_status='Requested' AND status_flag='Active' ORDER BY request_id DESC";
-        $query = $this->db->query($sSql);
-        $data['requests'] = $requests = $query->result_array();
+		
+        if (isset($_GET['mode_search']) && $_GET['mode_search']=='search_driver') {
+			
+			if (isset($_GET['cats']) && $_GET['cats']!='') {
+				$cats = $_GET['cats'];
+				$lp = 0;
+				
+				$fnd_set_where.= " ( ";
+				
+				foreach($cats as $det){
 
-        $this->load->view("find_business", $data);
+					if($lp==0) {
+						$fnd_set_where.= " category_id = ".$det." ";
+					} else {
+						$fnd_set_where.= " OR category_id = ".$det." ";
+					}
+				
+					$lp ++;
+				}
+				
+				$fnd_set_where.= " ) ";
+				
+				$fr_where.= " AND ".$fnd_set_where."  ";
+				
+			}
+			
+			//echo $fnd_set_where;			
+			//die();
+			
+			if (isset($_GET['pickup_location']) && $_GET['pickup_location']!='') {
+				$pickup_location = $this->common->getDbValue($_GET['pickup_location']);
+				$fr_where.= " AND pickup_location LIKE '%".$pickup_location."%'  ";
+			}			
+
+			if (isset($_GET['destination_location']) && $_GET['destination_location']!='') {
+				$destination_location = $this->common->getDbValue($_GET['destination_location']);
+				$fr_where.= " AND destination_location LIKE '%".$destination_location."%'  ";
+			}			
+
+			if (isset($_GET['pickup_date']) && $_GET['pickup_date']!='') {
+				$pickup_date = $this->common->getDbValue($_GET['pickup_date']);
+				$fr_where.= " AND pickup_date LIKE '%".$pickup_date."%'  ";
+			}			
+
+			if (isset($_GET['drop_destination_date']) && $_GET['drop_destination_date']!='') {
+				$drop_destination_date = $this->common->getDbValue($_GET['drop_destination_date']);
+				$fr_where.= " AND drop_destination_date LIKE '%".$drop_destination_date."%'  ";
+			}			
+
+		}
+
+				/*if(setting==1){
+					$config['base_url'] = base_url() . 'index.php/serviceprovider/find_business';
+				} else {
+					$config['base_url'] = base_url() . 'serviceprovider/find_business';
+				}*/
+				
+				$config['base_url'] = base_url() . 'serviceprovider/find_business';
+				
+				if (count($_GET) > 0) $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+				$config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
+				
+				//echo $start;
+				$params = array();
+				$limit_per_page = $maxm;
+				$start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+				$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+				if($maxm!=0){
+					$mimit_query = "LIMIT ".$page." ,".$limit_per_page;
+				} else {
+					$mimit_query = "";
+				}
+						
+		        $sSql = "SELECT *  FROM `lt_requests` ".$fr_where." ORDER BY request_id DESC";
+				$sSql =  $sSql . " " . $mimit_query;
+				
+				$query = $this->db->query($sSql);
+				$data['requests'] = $requests = $query->result_array();
+
+				$query = $this->db->query("SELECT COUNT(*) as cnt FROM lt_requests ".$fr_where." ORDER BY request_id DESC");
+				$result = $query->row_array();
+				$total_records = $result['cnt'];
+				$data['num_row'] = $total_records;
+
+
+				$config['total_rows'] = $total_records;
+				$config['per_page'] = $limit_per_page;
+				$config["uri_segment"] = 2;		
+				
+				//config for bootstrap pagination class integration
+				$config['full_tag_open'] = '<ul">';
+				$config['full_tag_close'] = '</ul>';
+				$config['first_link'] = false;
+				$config['last_link'] = false;
+				$config['first_tag_open'] = '<li>';
+				$config['first_tag_close'] = '</li>';
+				$config['prev_link'] = '&laquo';
+				$config['prev_tag_open'] = '<li class="prev">';
+				$config['prev_tag_close'] = '</li>';
+				$config['next_link'] = '&raquo';
+				$config['next_tag_open'] = '<li>';
+				$config['next_tag_close'] = '</li>';
+				$config['last_tag_open'] = '<li>';
+				$config['last_tag_close'] = '</li>';
+				$config['cur_tag_open'] = '<li class="active"><a href="javascript:void(0)">';
+				$config['cur_tag_close'] = '</a></li>';
+				$config['num_tag_open'] = '<li>';
+				$config['num_tag_close'] = '</li>';
+					
+				$this->pagination->initialize($config);             
+				$data["links"] = $this->pagination->create_links();
+				
+				$where_cond = " WHERE  status!='Delete' AND parent_id=0 ORDER BY sort_order";
+				$data['cats'] = $cats = $this->common->getAllRow('product_category', $where_cond);
+		
+				$this->load->view("find_business", $data);
     }
 
     public function shipment_details($request_id = 0)
@@ -436,7 +569,7 @@ WHERE rq.service_provider_id='" . $id . "'   ORDER BY qt.request_quote_id";
             if ($query->num_rows() == 0) {
                 $this->common->insertRecord('lt_request_quotes', $add_in);
                 $insert_id = $this->db->insert_id();
-                $this->session->set_flashdata('success', 'Bid request has been added succssfully sent!!');
+                $this->session->set_flashdata('success', 'Bid request has been added succssfully!!');
                 redirect($this->controller . '/shipment_details/' . $request_id);
             } else {
                 $this->session->set_flashdata('error', 'Error!');
@@ -563,6 +696,10 @@ WHERE rq.service_provider_id='" . $id . "'   ORDER BY qt.request_quote_id";
         $query = $this->db->query($sSql);
         $data['cons_images'] = $cons_images = $query->result_array();
 
+        $sSql = "SELECT *  FROM `lt_request_final_complete_images` WHERE request_id=" . $requests['request_id'] . " ORDER BY id";
+        $query = $this->db->query($sSql);
+        $data['cons_final_images'] = $cons_final_images = $query->result_array();
+
         $sSql = "SELECT *  FROM `setting` WHERE setting_id='17746' ORDER BY setting_id";
         $query = $this->db->query($sSql);
         $setting = $query->row_array();
@@ -656,5 +793,14 @@ WHERE rq.service_provider_id='" . $id . "'   ORDER BY qt.request_quote_id";
 
         // echo 'You are logged out';
     }
-
+    //added by kishore
+    public function profile_pic()
+    { 
+        $data['controller'] = $this->controller;
+        
+        if ($_FILES['profile_pic']['name'] != '') {
+           $profile_pic =  $this->services->profile_pic('profile_pic');
+        }
+        echo $profile_pic;
+    }
 }

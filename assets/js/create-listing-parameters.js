@@ -1,4 +1,4 @@
-var room = 1;
+/* var room = 1;
 function education_fields() {
 room++;
 var objTo = document.getElementById('education_fields')
@@ -11,8 +11,8 @@ objTo.appendChild(divtest)
 }
 function remove_education_fields(rid) {
 $('.removeclass'+rid).remove();
-}
-
+} */
+/* 
 //dropzone script with multiple files
 (function($) {
     function readMultiUploadURL(input, callback) {         
@@ -74,4 +74,4 @@ $('.removeclass'+rid).remove();
             }
         });
     }
-})(jQuery);      
+})(jQuery);       */

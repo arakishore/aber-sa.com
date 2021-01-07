@@ -65,12 +65,27 @@
                              <div class="card">
                             <div class="card-header">
                                 <div class="col-sm-4 form-group trans-list-para-postcode">
-                                    <select name="status" id="status">
-                                        <option value="">All</option>
-                                        <option value="Booked">Booked</option>
-                                        <option value="Dispatched">Dispatched</option>
-                                        <option value="Picked Up">Picked Up</option>
-                                        <option value="Delivered">Delivered</option>                                                                                                                        
+                                
+                                    <select name="status" id="status" onchange="javascript:location.href = this.value;">
+                                        <option value="<?php echo site_url('serviceprovider/my_shipment')?>?status=All"
+                                        <?php if (isset($_GET['status']) && $_GET['status']=='All') {?> selected <?php } ?>>All</option>
+                                        <option value="<?php echo site_url('serviceprovider/my_shipment')?>?status=Booked"
+                                        <?php if (isset($_GET['status']) && $_GET['status']=='Booked') {?> selected <?php } ?>
+                                        >Booked</option>
+                                        <option value="<?php echo site_url('serviceprovider/my_shipment')?>?status=Dispatched"
+                                        <?php if (isset($_GET['status']) && $_GET['status']=='Dispatched') {?> selected <?php } ?>
+                                        >Dispatched</option>
+                                        <option value="<?php echo site_url('serviceprovider/my_shipment')?>?status=Picked Up"
+                                        <?php if (isset($_GET['status']) && $_GET['status']=='Picked Up') {?> selected <?php } ?>
+                                        >Picked Up</option>
+                                        <option value="<?php echo site_url('serviceprovider/my_shipment')?>?status=Delivered"
+                                        <?php if (isset($_GET['status']) && $_GET['status']=='Delivered') {?> selected <?php } ?>
+                                        >Delivered</option>          
+                                        <option value="<?php echo site_url('serviceprovider/my_shipment')?>?status=Completed"
+                                        <?php if (isset($_GET['status']) && $_GET['status']=='Completed') {?> selected <?php } ?>
+                                        >Completed</option>          
+
+                                                                                                                                                      
                                     </select>
                                     <span><i class="fal fa-angle-down"></i></span>
                                 </div>

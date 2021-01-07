@@ -81,7 +81,15 @@
                                         Ends
                                     </div>
                                     <div class="shipment-listing-contnet">
-                                        <?php echo $this->common->getDbValue($requests['expected_travelling_time']); ?>  <br> <?php echo $this->common->getDateFormat($requests['latest_pickup_date'], 'd M Y'); ?> 
+<?php
+ $date1 = date('Y-m-d',strtotime($this->common->getDbValue($requests['pickup_date'])));
+ $date2 = date('Y-m-d',strtotime($this->common->getDbValue($requests['insert_date'])));
+ $diff = abs(strtotime($date2) - strtotime($date1));
+ $years = floor($diff / (365*60*60*24));
+ $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+ $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+?>                                    
+                                        <?php echo $this->common->getDbValue($days); ?> Days
                                     </div>
                                 </div>
 								<div class="shipment-listing-main">
@@ -139,7 +147,7 @@
                                                 <?php echo $this->common->getDbValue($requests['pickup_location']); ?>
                                             </div>
                                             <div class="colection-content-txt">
-                                                Collection <?php echo $this->common->getDateFormat($requests['pickup_date'], 'd M Y'); ?> to <?php echo $this->common->getDateFormat($requests['latest_pickup_date'], 'd M Y'); ?>
+                                                Collection <?php echo $this->common->getDateFormat($requests['pickup_date'], 'd M Y'); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -157,7 +165,7 @@
                                                 <?php echo $this->common->getDbValue($requests['destination_location']); ?>
                                             </div>
                                             <div class="colection-content-txt">
-                                                Collection <?php echo $this->common->getDateFormat($requests['drop_destination_date'], 'd M Y'); ?> to <?php echo $this->common->getDateFormat($requests['latest_drop_destination_date'], 'd M Y'); ?>
+                                                Collection <?php echo $this->common->getDateFormat($requests['drop_destination_date'], 'd M Y'); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -196,7 +204,14 @@
                     Route Information
                 </div>               
                 <div class="route-information-map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d121048.04380827247!2d73.82958079999999!3d18.5401344!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1607749861136!5m2!1sen!2sin" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                      <!--<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d121048.04380827247!2d73.82958079999999!3d18.5401344!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1607749861136!5m2!1sen!2sin" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>-->
+                      
+<!--<iframe width="100%" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=40.7127837,-74.0059413&amp;key=YOUR_API_KEY"></iframe>-->
+<?php //echo $this->common->getDbValue($requests['pickup_latitude']); ?>   |
+<?php //echo $this->common->getDbValue($requests['pickup_longitude']); ?>
+<iframe width="100%" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=<?php echo $this->common->getDbValue($requests['destination_latitude']); ?>,<?php echo $this->common->getDbValue($requests['destination_longitude']); ?>&amp;key=AIzaSyBs3Ci13XYyV1cPcs88UVbkOjn05c1r4gY"></iframe>
+
+
                 </div> 
             </div>
             <div class="shipment-listing-info">
@@ -314,7 +329,7 @@
                                     Enter Bid Amount
                                 </div>
                                 <div class="starting-input">
-                                    <input type="text" name="quote_amount" id="quote_amount" value=""  required/>
+                                    <input type="number" name="quote_amount" id="quote_amount" value=""  required/>
                                 </div>
                             </div>
                             

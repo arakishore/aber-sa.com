@@ -111,7 +111,6 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                         <table class="table dashboarddatatable1" width="100%">
                                             <thead>
                                                 <tr class="bg-blue ">
-                                                    <th width="21%">Name</th>
                                                     <th width="8%">Qty</th>
                                                     <th width="31%">Desc</th>
                                                     <th width="40%">Detail</th>
@@ -123,7 +122,6 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
 									$i++;
 								?>
                                                 <tr class="  border-left-3">
-                                                    <td valign="top"><?php echo $this->common->getDbValue($value['consignment_name']); ?></td>
                                                     <td valign="top"><?php echo $this->common->getDbValue($value['consignment_qty']); ?></td>
                                                     <td valign="top"><?php echo $this->common->getDbValue($value['consignment_details']); ?></td>
                                                     <td valign="top">                                                    
@@ -136,7 +134,7 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                                 <?php } ?>
                                             </tbody>
                                         </table>
-                              </div>
+                          </div>
                                     <?php } else {
                         ?>
                                     <div class=" text-center  card-body border-top-info1">
@@ -155,8 +153,6 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                             <thead>
                                                 <tr class="bg-blue ">
                                                     <th width="20%">Image</th>
-                                                    <th width="70%">Description</th>
-                                                    <th width="10%">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -164,9 +160,9 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                //  print_r($child_user);
 								foreach($consignment_images as $key => $value){
 								$i++;
-								$status = $this->common->getDbValue($value['status']);
+								//$status = $this->common->getDbValue($value['status_flag']);
 								?>
-                                                <tr class="  border-left-3  <?php echo ($status == "Active") ? 'border-left-success' : 'border-left-danger' ?>  tr<?php echo $this->common->getDbValue($value['status']); ?>">
+                                                <tr class="  border-left-3 ">
                                                     <td valign="top">
                                             <?php 
 										if($value['image_name']!=''){
@@ -177,20 +173,11 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
 									?>
                                             <img src="<?php echo $photo?>" height="50">                                                    
                                                     </td>
-                                                    <td valign="top"><?php echo $this->common->getDbValue($value['image_description']); ?></td>
-                                                    <td valign="top">
-                                                        <?php
-                                        if($status=="Active"){echo '<span class="badge badge-success">Active</span>';}
-                                        ?>
-                                                        <?php
-                                        if($status=="Inactive"){echo '<span class="badge badge-danger">Inactive</span>';}
-                                        ?>
-                                                    </td>
                                                 </tr>
                                                 <?php } ?>
                                             </tbody>
                                         </table>
-                              </div>
+                      </div>
                                     <?php } else {
                         ?>
                                     <div class=" text-center  card-body border-top-info1">

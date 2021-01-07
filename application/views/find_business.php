@@ -23,130 +23,19 @@
         <div class="trans-caet-banner-bottom-img"></div>      
     </div>  
     <div class="trans-select-cate-section-main">
-        <div class="container">  
 
-                                          
+        <div class="container">  
+    <div class="col-6 col-xs-6 col-lg-6">
+                        <div class="fb-your-restaurant-back-btn">
+                            <a href="<?php echo site_url('serviceprovider')?>"><i class="fal fa-angle-left"></i> Back</a>
+                        </div>
+                    </div>          
             <div class="row">
-                <div class="col-sm-12 col-md-4 col-lg-3">
-                    <div class="find-business-left-bar">
-                        <ul>
-                            <li class="find-business-main-li">
-                                <a href="javascript:void(0);" class="main-category-head">
-                                    Categories <span><i class="fal fa-angle-down"></i></span>
-                                </a>
-                                <ul class="checkbox-menus">
-                                    <li>
-                                        <div class="check-box">
-                                            <input id="blanket" class="filled-in" type="checkbox">
-                                            <label for="blanket">Household Goods</label>
-                                            <span class="check-box-plus"><i class="fal fa-plus"></i></span>
-                                        </div>
-                                        <ul class="checkbox-inner-section">
-                                            <li><a href="javascript:void(0);">New Menu</a></li>
-                                            <li><a href="javascript:void(0);">Menu New</a></li>
-                                            <li><a href="javascript:void(0);">Inner Checkbox</a></li>
-                                            <li><a href="javascript:void(0);">New Menu</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="check-box">
-                                            <input id="blanket" class="filled-in" type="checkbox">
-                                            <label for="blanket">Moving</label>
-                                            <span class="check-box-plus"><i class="fal fa-plus"></i></span>
-                                        </div>
-                                        <ul class="checkbox-inner-section">
-                                            <li><a href="javascript:void(0);">New Menu</a></li>
-                                            <li><a href="javascript:void(0);">Menu New</a></li>
-                                            <li><a href="javascript:void(0);">Inner Checkbox</a></li>
-                                            <li><a href="javascript:void(0);">New Menu</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="check-box">
-                                            <input id="blanket" class="filled-in" type="checkbox">
-                                            <label for="blanket">Vehicles</label>
-                                            <span class="check-box-plus"><i class="fal fa-plus"></i></span>
-                                        </div>
-                                        <ul class="checkbox-inner-section">
-                                            <li><a href="javascript:void(0);">New Menu</a></li>
-                                            <li><a href="javascript:void(0);">Menu New</a></li>
-                                            <li><a href="javascript:void(0);">Inner Checkbox</a></li>
-                                            <li><a href="javascript:void(0);">New Menu</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="check-box">
-                                            <input id="blanket" class="filled-in" type="checkbox">
-                                            <label for="blanket">Motercyles</label>
-                                            <span class="check-box-plus"><i class="fal fa-plus"></i></span>
-                                        </div>
-                                        <ul class="checkbox-inner-section">
-                                            <li><a href="javascript:void(0);">New Menu</a></li>
-                                            <li><a href="javascript:void(0);">Menu New</a></li>
-                                            <li><a href="javascript:void(0);">Inner Checkbox</a></li>
-                                            <li><a href="javascript:void(0);">New Menu</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>   
-                            <li class="find-business-main-li">
-                                <a href="javascript:void(0);" class="main-category-head">
-                                    Origin <span><i class="fal fa-angle-down"></i></span>
-                                </a>
-                                <ul class="checkbox-menus">
-                                    <div class="origination-address">
-                                        Origination address
-                                    </div>
-                                    <div class="origination-address-textarea">
-                                        <textarea name="origination address" placeholder="Enter Origination Address"></textarea>
-                                    </div>
-                                </ul>
-                            </li>
-                            <li class="find-business-main-li">
-                                <a href="javascript:void(0);" class="main-category-head">
-                                    Destination <span><i class="fal fa-angle-down"></i></span>
-                                </a>
-                                <ul class="checkbox-menus">
-                                    <div class="origination-address">
-                                        Destination address
-                                    </div>
-                                    <div class="origination-address-textarea">
-                                        <textarea name="origination address" placeholder="Enter Destination Address"></textarea>
-                                    </div>
-                                </ul>
-                            </li>  
-                            <li class="find-business-main-li">
-                                <a href="javascript:void(0);" class="main-category-head">
-                                    Date of listing <span><i class="fal fa-angle-down"></i></span>
-                                </a>
-                                <ul class="checkbox-menus">
-                                    <div class="date-listing-inputs">
-                                        <div class="row">
-                                            <div class="col-sm-12 col-md-12 col-lg-12">
-                                                <div class="form-group trans-shipment-city-postcode">
-                                                    <input type="text" name="city post code" class="form-control datepicker" placeholder="Earliest">
-                                                    <img src="<?php echo base_url();?>assets/images/input-calender-icon.png" alt="input-up-arrow-icon" />
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12 col-md-12 col-lg-12">
-                                                <div class="form-group trans-shipment-city-postcode">
-                                                    <input type="text" name="city post code" class="form-control datepicker" placeholder="Latest">
-                                                    <img src="<?php echo base_url();?>assets/images/input-calender-icon.png" alt="input-up-arrow-icon" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="submit-date-btn">
-                                            <a href="javascript:void(0);" class="btn-submit-date">Go</a>
-                                        </div>
-                                    </div>
-                                </ul>
-                            </li>                          
-                        </ul>                    
-                    </div>
-                </div>
+          
+                <?php $this->load->view('inc_find_buss');?>
 <?php if (isset($requests) && sizeof($requests)>0) {  ?>                  
                 <div class="col-sm-12 col-md-8 col-lg-9">
-                    <div class="select-sort-btn">
+                    <!--<div class="select-sort-btn">
                         <a href="javascript:void(0);" class="btn-select-sort">
                             Select Sort 
                             <span>
@@ -155,7 +44,7 @@
                             </span>
                             <div class="clearfix"></div>
                         </a>
-                    </div>
+                    </div>-->
 					<?php foreach($requests as $key => $value){ 
 					
 		$sSql = "SELECT *  FROM `lt_request_consignment_imgs` WHERE request_id=".$value['request_id']." ORDER BY consignment_img_id";
@@ -166,7 +55,14 @@
 		if($cons_images) {
 			$sel_photo = base_url().'uploads/consignmentimage/'.$cons_images['image_name'];
 		}
-				?>
+		
+ $date1 = date('Y-m-d',strtotime($this->common->getDbValue($value['pickup_date'])));
+ $date2 = date('Y-m-d',strtotime($this->common->getDbValue($value['insert_date'])));
+ $diff = abs(strtotime($date2) - strtotime($date1));
+ $years = floor($diff / (365*60*60*24));
+ $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+ $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+?>
                     <div class="find-business-list-section-main">
                         <div class="find-business-list-section">
                             <div class="find-business-list-img">
@@ -184,7 +80,7 @@
                                         </div>
                                         <div class="list-cate-icon-one list-cate-icon-one-small">
                                             <span><i class="fal fa-clock"></i></span>
-                                            <span><?php echo $this->common->getDbValue($value['expected_travelling_time']); ?></span>
+                                            <span><?php echo $this->common->getDbValue($days); ?> Days</span>
                                         </div>
                                         <div class="list-cate-icon-one">
                                             <span><i class="fas fa-weight-hanging"></i></span>
@@ -215,35 +111,9 @@
                         <?php } ?>
                         
                         
-                        <div class="pagination-seciton">
-                            <ul>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <i class="fal fa-angle-left"></i> 
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        1
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        2
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        3
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <i class="fal fa-angle-right"></i> 
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <?php if (isset($links)) { ?>
+                            <div class="pagination-seciton"><?php echo $links ?></div>
+                        <?php } ?>
                     </div>
                 </div>
                 <?php } else { ?>

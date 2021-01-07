@@ -48,6 +48,8 @@
                         <div class="login-form-main-section signup-form-main-section">
      <form name="frm-edit" id="frm-edit" action="<?php echo site_url($controller.'/driver_signup') ?>" method="post" enctype="multipart/form-data"  >
                                 <input type="hidden" name="mode_add" id="mode_add" value="adddriver">
+                                <input type="hidden" name="status_flag" id="status_flag" value="Active">
+                                
         <div class="forgat-section">
 
             <div class="row">
@@ -110,17 +112,9 @@
                      </div>
                 </div>
 
-                <div class="col-sm-6 col-md-6 col-lg-6">
-                    <div class="form-group">
-                        <label for="user">Status </label>
-                        <select name="status_flag" id="status_flag">
-                            <option value="Active" >Active</option>
-                            <option value="Inactive" >Inactive</option>                        
-                        </select>
-                     </div>
-                </div>
+                 
                                 
-				<div class="col-sm-8 col-md-8 col-lg-6">
+				<div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="form-group">
                         <input type="text" class="form-control rounded-0" readonly placeholder="ID Proof">
                         <label class="input-group-btn my-0">
@@ -131,7 +125,14 @@
                         </label>
                      </div>
                 </div>
-
+                
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group">
+                        <label for="licenseno">License No. </label>
+                         <input type="text" id="license_no" name="license_no">
+                         <!-- <div class="error-red">This field is required</div> -->
+                     </div>
+                </div>
                 <div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="form-group">
                         <label for="password">Password <span>*</span></label>

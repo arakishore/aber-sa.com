@@ -23,7 +23,8 @@ class Home extends CI_Controller
     {
             parent::__construct();
 			$this->load->library('session');
-			$this->load->model('common');
+            $this->load->model('common');
+            $this->load->model('services');
 			$this->load->helper('security');
 			$this->load->library('email');
 			$this->load->helper('url_helper');
@@ -52,7 +53,16 @@ class Home extends CI_Controller
         $data['cms_data_1'] = $this->common->get_site_cms_master(2);
 		$data['cms_data_3'] = $this->common->get_site_cms_master(3);
 
-		         
+       // $session_user_data = $this->session->userdata('user_data');
+       
+       
+        $data['categorySubcategory'] = [];
+        $params['is_parent_only'] = 1;
+        $categorySubcategory= $this->services->categorySubcategory($params,'ARRAY');
+        if($categorySubcategory['status'] == 1){
+            $data['categorySubcategory']= $categorySubcategory['result'];
+        }
+       
         $this->load->view("home", $data);
 
     }

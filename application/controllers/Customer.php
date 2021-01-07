@@ -205,7 +205,16 @@ class Customer extends CI_Controller
         $this->load->view("edit_profile", $data);
     }	
 
-	
+    public function profile_pic()
+    { 
+        $data['controller'] = $this->controller;
+        
+        if ($_FILES['profile_pic']['name'] != '') {
+           $profile_pic =  $this->services->profile_pic('profile_pic');
+        }
+        echo $profile_pic;
+    }
+
     public function logout()
     {
         $newdata = array(

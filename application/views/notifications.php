@@ -40,61 +40,32 @@
 
                 <div class="row">
                     <?php $this->load->view('inc_service_left');?>
-                    <div class="col-sm-12 col-md-12 col-lg-9">                        
+                    <div class="col-sm-12 col-md-12 col-lg-9">    
+<?php if (isset($todays_not) && sizeof($todays_not)>0) {  ?>                                        
                         <div class="fb-notification-messages-main">
                             <div class="fb-noti-message-date">
-                                Today
+                                Notifications list
                             </div>
+<?php foreach($todays_not as $key => $value){  ?>                            
                             <div class="fb-noti-msg-section">   
                                 <div class="fb-noti-msg-time">
-                                    7:31 pm
+                                    <?php echo $this->common->getDateFormat($value['not_date'], 'd-M-Y h:i');; ?>
                                 </div>
                                 <div class="fb-noti-msg-head">
-                                    Message from your Delivery Guy
+                                    <?php echo $this->common->getDbValue($value['not_title']); ?>
                                 </div>
                                 <div class="fb-noti-msg-txt">
-                                    I'm waiting at the door, please collect your order.
+                                    <?php echo $this->common->getDbValue($value['not_text']); ?>
                                 </div>
                             </div>
-                            <div class="fb-noti-msg-section">   
-                                <div class="fb-noti-msg-time">
-                                    7:22 pm
-                                </div>
-                                <div class="fb-noti-msg-head">
-                                    Your order is arriving soon
-                                </div>
-                                <div class="fb-noti-msg-txt">
-                                    Your order form Food Mania will be there at your door soon.
-                                </div>
-                            </div>
+<?php } ?>                            
+                            
                         </div> 
-                        <div class="fb-notification-messages-main">
-                            <div class="fb-noti-message-date">
-                                Yesterday
-                            </div>
-                            <div class="fb-noti-msg-section">   
-                                <div class="fb-noti-msg-time">
-                                    7:31 pm
-                                </div>
-                                <div class="fb-noti-msg-head">
-                                    Message from your Delivery Guy
-                                </div>
-                                <div class="fb-noti-msg-txt">
-                                    I'm waiting at the door, please collect your order.
-                                </div>
-                            </div>
-                            <div class="fb-noti-msg-section">   
-                                <div class="fb-noti-msg-time">
-                                    7:22 pm
-                                </div>
-                                <div class="fb-noti-msg-head">
-                                    Your order is arriving soon
-                                </div>
-                                <div class="fb-noti-msg-txt">
-                                    Your order form Food Mania will be there at your door soon.
-                                </div>
-                            </div>
-                        </div>    
+<?php } else { ?>
+<div class="alert alert-warning" role="alert">
+  No notifications found!
+</div>
+<?php } ?>                        
                     </div>
                 </div>                                
             </div>

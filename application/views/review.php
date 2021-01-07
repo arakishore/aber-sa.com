@@ -45,86 +45,30 @@
                              </div>
                             </div>
                             <ul class="list-group list-group-flush">
+                              <?php
+                              if(isset($reviews) && sizeof($reviews)>0){
+
+                                foreach($reviews as $key => $val){
+                              ?>
                               <li class="list-group-item bg-transparent">
                                 <div class="media align-items-center">
                                   <img src="<?php echo base_url();?>assets/images/user-img.jpg" alt="user avatar" class="customer-img rounded-circle">
                                 <div class="media-body ml-3">
-                                  <h6 class="mb-0">iPhone X <small class="ml-4">08.34 AM</small></h6>
-                                  <p class="mb-0 small-font">Sara Jhon : This i svery Nice phone in low budget.</p>
+                                  <h6 class="mb-0"><?php echo $val['request_title']?> <small class="ml-4"><?php echo $val['service_pro_review_date']?></small></h6>
+                                  <p class="mb-0 small-font"><?php echo $val['service_pro_review']?></p>
                                 </div>
                                 <div class="star">
+                                  <?php
+                                  for($i=1;$i<$val['service_pro_ratings'];$i++){
+                                  ?>
                                   <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
+                                   <?php }?>
                                 </div>
                               </div>
                               </li>
-                              <li class="list-group-item bg-transparent">
-                                <div class="media align-items-center">
-                                  <img src="<?php echo base_url();?>assets/images/user-img.jpg" alt="user avatar" class="customer-img rounded-circle">
-                                <div class="media-body ml-3">
-                                  <h6 class="mb-0">Air Pod <small class="ml-4">05.26 PM</small></h6>
-                                  <p class="mb-0 small-font">Danish Josh : The brand apple is original !</p>
-                                </div>
-                                 <div class="star">
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                </div>
-                              </div>
-                              </li>
-                              <li class="list-group-item bg-transparent">
-                                <div class="media align-items-center">
-                                  <img src="<?php echo base_url();?>assets/images/user-img.jpg" alt="user avatar" class="customer-img rounded-circle">
-                                <div class="media-body ml-3">
-                                  <h6 class="mb-0">Mackbook Pro <small class="ml-4">06.45 AM</small></h6>
-                                  <p class="mb-0 small-font">Jhon Doe : Excllent product and awsome quality</p>
-                                </div>
-                                 <div class="star">
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                </div>
-                              </div>
-                              </li>
-                              <li class="list-group-item bg-transparent">
-                                <div class="media align-items-center">
-                                  <img src="<?php echo base_url();?>assets/images/user-img.jpg" alt="user avatar" class="customer-img rounded-circle">
-                                <div class="media-body ml-3">
-                                  <h6 class="mb-0">Air Pod <small class="ml-4">08.34 AM</small></h6>
-                                  <p class="mb-0 small-font">Christine : The brand apple is original !</p>
-                                </div>
-                                 <div class="star">
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                </div>
-                              </div>
-                              </li>
-                              <li class="list-group-item bg-transparent">
-                                <div class="media align-items-center">
-                                  <img src="<?php echo base_url();?>assets/images/user-img.jpg" alt="user avatar" class="customer-img rounded-circle">
-                                <div class="media-body ml-3">
-                                  <h6 class="mb-0">Mackbook <small class="ml-4">08.34 AM</small></h6>
-                                  <p class="mb-0 small-font">Michle : The brand apple is original !</p>
-                                </div>
-                                 <div class="star">
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                  <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                </div>
-                              </div>
-                              </li>
+                              <?php
+                                }
+                            }?>
                             </ul>
                         </div>
                     </div>

@@ -86,7 +86,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
  
 if($_SERVER['HTTP_HOST']=="127.0.0.1" || $_SERVER['HTTP_HOST']=="localhost"){
-    define('back_path', 'http://127.0.0.1/aber/');
+    define('back_path', 'http://127.0.0.1/aber-sa.com/');
 } else {
     define('back_path', 'http://aber-sa.com/');
 }

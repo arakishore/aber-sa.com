@@ -827,7 +827,7 @@ class Services extends CI_Model
 
         where   csa.user_id='" . $user_id . "' order by csa.address_id desc";
         $address_query = $this->db->query($sql);
-
+$address_data = [];
         if ($address_query->num_rows() > 0) {
             $address_query_rows = $address_query->result_array();
 
@@ -835,23 +835,24 @@ class Services extends CI_Model
                 $retUserAddressInfo = $this->userAddressData($result);
                 $address_data[] = $retUserAddressInfo;
 
-                /*  $address_data[] = array(
-            'address_id' => $result['address_id'],
-            'address_name' => $result['address_name'],
-            'firstname' => $result['firstname'],
-            'lastname' => $result['lastname'],
-            'address_1' => $result['address_1'],
-            'state_id' => $result['state_id'],
-            'postcode' => $result['postcode'],
-            'district_id' => $result['district_id'],
-            'state_name' => "",
-            'district_name' => "",
-            'longitude' => $result['longitude'],
-            'latitude' => $result['latitude'],
-            'mobile' => $result['mobile'],
-            'is_default' => $result['is_default'],
-
-            ); */
+            /*
+                $address_data[] = array(
+                'address_id' => $result['address_id'],
+                'address_name' => $result['address_name'],
+                'firstname' => $result['firstname'],
+                'lastname' => $result['lastname'],
+                'address_1' => $result['address_1'],
+                'state_id' => $result['state_id'],
+                'postcode' => $result['postcode'],
+                'district_id' => $result['district_id'],
+                'state_name' => "",
+                'district_name' => "",
+                'longitude' => $result['longitude'],
+                'latitude' => $result['latitude'],
+                'mobile' => $result['mobile'],
+                'is_default' => $result['is_default'],
+                );
+             */
 
             }
 
@@ -1063,6 +1064,9 @@ class Services extends CI_Model
         $add_in['user_language'] = $LANGCODE = (isset($params['LANGCODE'])) ? $this->common->mysql_safe_string($params['LANGCODE']) : 'EN';
         $language_ext = $this->getLanguageExt($LANGCODE);
 
+
+        $is_parent_only = (isset($params['is_parent_only'])) ? $this->common->mysql_safe_string($params['is_parent_only']) : '0';
+
         $sql_cate_join = "";
 
         $sub_cat_arr = array();
@@ -1071,9 +1075,9 @@ class Services extends CI_Model
         } else {
             $sql_cate_join = "  and  c.parent_id = '0'  ";
         }
-
+        
         $sort_order_by = "c.name asc";
-        $sql = "select c.category_id,c.name,c.description ,c.name_en,c.description_en, c.main_image  from product_category c    where c.status='Active'  " . $sql_cate_join . " order by " . $sort_order_by;
+          $sql = "select c.category_id,c.name,c.description ,c.name_en,c.description_en, c.main_image  from product_category c    where c.status='Active'  " . $sql_cate_join ." order by " . $sort_order_by;
         //$ddd =getRecordsLimit
         $categoryListQuery = $this->db->query($sql);
         if ($categoryListQuery->num_rows() > 0) {
@@ -1087,24 +1091,29 @@ class Services extends CI_Model
                     $main_image = back_path . "uploads/noimage.png";
                 }
 
-                $sql_sub = "select c.category_id,c.name,c.description ,c.name_en,c.description_en, c.main_image   from product_category c    where c.status='Active'  and  c.parent_id = '" . $categoryVal['category_id'] . "'  order by " . $sort_order_by;
-                $sub_categoryListQuery = $this->db->query($sql_sub);
-                $subCategoryRows = $sub_categoryListQuery->result_array();
                 $sub_cat_arr = array();
-                foreach ($subCategoryRows as $subCategoryVal) {
-                    if ($subCategoryVal['main_image'] != '') {
-                        $main_image_sub = back_path . "uploads/category/" . $this->common->mysql_safe_string($subCategoryVal['main_image']);
-                    } else {
-                        $main_image_sub = back_path . "uploads/noimage.png";
-                    }
-                    $sub_cat_arr[] = array(
-                        'category_id' => $subCategoryVal['category_id'],
-                        'name' => $subCategoryVal['name' . $language_ext],
-                        'image' => $main_image_sub,
-                        'description' => $subCategoryVal['description' . $language_ext],
 
-                    );
-                }
+                if($is_parent_only == 0){
+                    $sql_sub = "select c.category_id,c.name,c.description ,c.name_en,c.description_en, c.main_image   from product_category c    where c.status='Active'  and  c.parent_id = '" . $categoryVal['category_id'] . "'  order by " . $sort_order_by;
+                    $sub_categoryListQuery = $this->db->query($sql_sub);
+                    $subCategoryRows = $sub_categoryListQuery->result_array();
+                   
+                    foreach ($subCategoryRows as $subCategoryVal) {
+                        if ($subCategoryVal['main_image'] != '') {
+                            $main_image_sub = back_path . "uploads/category/" . $this->common->mysql_safe_string($subCategoryVal['main_image']);
+                        } else {
+                            $main_image_sub = back_path . "uploads/noimage.png";
+                        }
+                        $sub_cat_arr[] = array(
+                            'category_id' => $subCategoryVal['category_id'],
+                            'name' => $subCategoryVal['name' . $language_ext],
+                            'image' => $main_image_sub,
+                            'description' => $subCategoryVal['description' . $language_ext],
+    
+                        );
+                    }
+                }  
+             
 
                 $category[] = array(
                     'category_id' => $categoryVal['category_id'],
@@ -2226,12 +2235,12 @@ class Services extends CI_Model
         if ($errorMessage == "") {
             $sql = "";
             if ($facebook_id != "") {
-                $sql = "SELECT user_id FROM user_master_front where facebook_id='" . $facebook_id . "' ";
+                $sql = "SELECT * FROM user_master_front where facebook_id='" . $facebook_id . "' ";
                 $sqldel = "delete from user_master_front_temp where  facebook_id='" . $facebook_id . "'  ";
                 $rs_login_row = $this->db->query($sqldel);
             }
             if ($google_id != "") {
-                $sql = "SELECT user_id FROM user_master_front where google_id='" . $google_id . "' ";
+                $sql = "SELECT * FROM user_master_front where google_id='" . $google_id . "' ";
                 $sqldel = "delete from user_master_front_temp where  google_id='" . $google_id . "'  ";
                 $rs_login_row = $this->db->query($sqldel);
     
@@ -2245,6 +2254,7 @@ class Services extends CI_Model
                     
                     // $user_id = $chkUserInfo['user_id'];
                     $userInfo = $this->userProfileData($chkUserInfo);
+                    $userInfo['ask_for_email'] = 0; 
                     $retUserAddressInfo = $this->getDefaultAddress($chkUserInfo);
                    
                     if ($chkUserInfo['status_flag'] == 'Active') {
@@ -2421,7 +2431,7 @@ class Services extends CI_Model
         if ($errorMessage == "") {
 
             $add_in['temp_otp'] = $temp_otp = "1234"; //$this->common->RandomNameki(4);
-            $sql_data_array['status_flag'] = 'EmailAdded';
+            $sql_data_array['status_flag'] = 'Active';
             $sql_data_array['edit_date'] = date("Y-m-d H:i:s");
             $sql_data_array['email'] = $email;
 
@@ -2481,7 +2491,7 @@ class Services extends CI_Model
 
             
 
-            $chkUserInfo_temp = $this->common->getSingleInfoBy('user_master_front', 'email', $add_in['email'], 'email');
+            $chkUserInfo_temp = $this->common->getSingleInfoBy('user_master_front', 'email', $add_in['email'], '*');
             if (sizeof($chkUserInfo_temp) > 0) {
             
                 if($chkUserInfo['google_id']!=""){
@@ -2490,7 +2500,7 @@ class Services extends CI_Model
                 if($chkUserInfo['facebook_id']!=""){
                     $sql_data_array['facebook_id'] = $chkUserInfo['facebook_id'];
                 }
-                $sql_data_array['status_flag'] = 'EmailAdded';
+                $sql_data_array['status_flag'] = 'Active';
                 $sql_data_array['edit_date'] = date("Y-m-d H:i:s");
                 $sql_data_array['is_email_verified'] = 1;
                 $sql_data_array['is_login'] = 1;
@@ -2499,12 +2509,13 @@ class Services extends CI_Model
 
            
 
-            $where = "email = '" . $email . "' and temp_otp='" . $temp_otp . "'";
+            $where = "email = '" . $email . "' and email!=''  ";
 
             $this->common->updateRecord('user_master_front', $sql_data_array, $where);
-
+            $chkUserInfo = $chkUserInfo_temp;
 
             } else {
+                $add_in = [];
                 $add_in['is_email_verified'] = 1;
                 $add_in['email_verified_date'] = date("Y-m-d H:i:s");
                 $add_in['login_time'] = date("Y-m-d H:i:s");
@@ -2514,7 +2525,7 @@ class Services extends CI_Model
                 $add_in['edit_date'] =  date("Y-m-d H:i:s");
                 $add_in['added_date'] =  date("Y-m-d H:i:s");
                 $add_in['uuid'] = $chkUserInfo['uuid'] . "";
-                $add_in['user_id'] = $chkUserInfo['user_id'] . "";
+               // $add_in['user_id'] = $chkUserInfo['user_id'] . "";
                 $add_in['user_type'] = $chkUserInfo['user_type'] . "";
                 $add_in['first_name'] = $chkUserInfo['first_name'] . "";
                 $add_in['middle_name'] = $chkUserInfo['middle_name'] . "";
@@ -2522,7 +2533,7 @@ class Services extends CI_Model
                 $add_in['email'] = $chkUserInfo['email'] . "";
                 $add_in['mobile'] = $chkUserInfo['mobile'] . "";
                 $add_in['enterprise_name'] = $chkUserInfo['country_code'] . "";
-                $add_in['user_photo'] =  "";
+                //$add_in['user_photo'] =  "";
                 $add_in['country_code'] = $chkUserInfo['country_code'] . "";
                 $add_in['facebook_id'] = $chkUserInfo['facebook_id'] . "";
                 $add_in['google_id'] = $chkUserInfo['google_id'] . "";
@@ -2536,7 +2547,7 @@ class Services extends CI_Model
                 $add_in['country_code'] = $chkUserInfo['country_code'] . "";
     
                 $this->common->insertRecord('user_master_front', $add_in);
-                
+                $chkUserInfo = $this->common->getSingleInfoBy('user_master_front', 'uuid', $chkUserInfo['uuid'], '*');
                  /* 
                 try {
                     // Generate a version 4 (random) UUID object
@@ -2702,4 +2713,46 @@ class Services extends CI_Model
         }
 
     }
+
+    public function profile_pic($form_filename)
+    { 
+        
+        //image_for 1 = profile main
+        $this->load->library('Kishoreimagelib');
+        
+        //photo1
+        $session_user_data = $this->session->userdata('user_data');
+        $image_name = "";
+       $error_msg = "";
+       $status = false;
+        if ($_FILES[$form_filename]['name'] != '') {
+            $image_old_path_only = 'uploads/profile_pics/';
+            //  $image_replace_name = $_FILES["main_image"]['name'];
+            $filename = "profile" . $session_user_data['user_id'] . "org" . $this->common->gen_key(4);
+            $upload = $this->common->UploadImageCheck($form_filename, $filename);
+            if ($upload['uploaded'] == 'false') {
+                $error_msg = $upload['uploadMsg'];
+                $status = false;
+                echo base_url() . "assets/images/no-img.jpg";
+                //echo '<img src="'.base_url().'images/no-img.jpg">';
+                die();
+            } else {
+                $sql_data_array['profile_pic'] = $upload['imageFile'];
+                $this->kishoreimagelib->load($_FILES[$form_filename]['tmp_name'])->set_background_colour("#fff")->resize(300, 300, true)->save($image_old_path_only . $sql_data_array['profile_pic']);
+                $status = true;
+                $error_msg = "Image is uploadded successfully....";
+                //die();
+                $where = "user_id = '" . $session_user_data['user_id'] . "'";
+                $this->common->updateRecord('user_master_front', $sql_data_array, $where);
+                
+            }
+            return  base_url() . "uploads/profile_pics/" . $sql_data_array['profile_pic'];
+            //  echo '<img src="'.$full_path.'">';
+            die();
+            $arr = array("uploaded" => $status, "uploadMsg" => $error_msg, "imageFile" => $sql_data_array['profile_pic']);
+            echo json_encode($arr);
+            die();
+        }
+    }
+
 }

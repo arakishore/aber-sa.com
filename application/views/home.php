@@ -36,84 +36,31 @@
         <div class="container">
             <div class="trans-cate-section-respo swiper-container trans-cate-respo-slider">
                 <div class="swiper-wrapper">
+                <?php
+                if(isset($categorySubcategory) && sizeof($categorySubcategory)>0){
+
+                    foreach($categorySubcategory as $key => $result){
+                        $category_id = $result['category_id'];
+                        $name = $result['name'];
+                         $image = $result['image'];
+                ?>
                     <div class="swiper-slide">
                         <div class="trans-cate-content-section wow bounce" data-wow-delay="0.2s">
-                            <a href="javascript:void(0);">
+                            <a href="<?php echo site_url("request/subcategory/".$category_id);?>">
                                 <div class="trans-cate-content-img">
-                                    <img src="<?php echo base_url();?>assets/images/cate-car-gray.png" class="trans-cate-gray-img" alt="cate-car-gray" />
-                                    <img src="<?php echo base_url();?>assets/images/cate-car-white.png" class="trans-cate-white-img" alt="cate-car-gray" />
+                                    <img src="<?php echo $image;?>" class="trans-cate-gray-img" alt="<?php echo $name?>" />
+                                    <img src="<?php echo $image;?>" class="trans-cate-white-img" alt="<?php echo $name?>" />
                                 </div>
                                 <div class="trans-cate-content-name">
-                                    Vehicles & Boats
+                                    <?php echo $name?>
                                 </div>
                             </a>
                         </div>
                     </div>
-                    <div class="swiper-slide">
-                        <div class="trans-cate-content-section wow bounce" data-wow-delay="0.4s">
-                            <a href="javascript:void(0);">
-                                <div class="trans-cate-content-img">
-                                    <img src="<?php echo base_url();?>assets/images/cate-househole-item-gray.png" class="trans-cate-gray-img" alt="cate-car-gray" />
-                                    <img src="<?php echo base_url();?>assets/images/cate-househole-item-white.png" class="trans-cate-white-img" alt="cate-car-gray" />
-                                </div>
-                                <div class="trans-cate-content-name">
-                                    Households Items
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="trans-cate-content-section wow bounce" data-wow-delay="0.6s">
-                            <a href="javascript:void(0);">
-                                <div class="trans-cate-content-img">
-                                    <img src="<?php echo base_url();?>assets/images/cate-heavyequpment-gray.png" class="trans-cate-gray-img" alt="cate-car-gray" />
-                                    <img src="<?php echo base_url();?>assets/images/cate-heavyequpment-white.png" class="trans-cate-white-img" alt="cate-car-gray" />
-                                </div>
-                                <div class="trans-cate-content-name">
-                                    Heavy Equipments
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="trans-cate-content-section wow bounce" data-wow-delay="0.8s">
-                            <a href="javascript:void(0);">
-                                <div class="trans-cate-content-img">
-                                    <img src="<?php echo base_url();?>assets/images/cate-fragile-gray.png" class="trans-cate-gray-img" alt="cate-car-gray" />
-                                    <img src="<?php echo base_url();?>assets/images/cate-fragile-white.png" class="trans-cate-white-img" alt="cate-car-gray" />
-                                </div>
-                                <div class="trans-cate-content-name">
-                                    Fragile
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="trans-cate-content-section wow bounce" data-wow-delay="1.0s">
-                            <a href="javascript:void(0);">
-                                <div class="trans-cate-content-img">
-                                    <img src="<?php echo base_url();?>assets/images/cate-animals-gray.png" class="trans-cate-gray-img" alt="cate-car-gray" />
-                                    <img src="<?php echo base_url();?>assets/images/cate-animals-white.png" class="trans-cate-white-img" alt="cate-car-gray" />
-                                </div>
-                                <div class="trans-cate-content-name">
-                                    Animals
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="trans-cate-content-section wow bounce" data-wow-delay="1.2s">
-                            <a href="javascript:void(0);">
-                                <div class="trans-cate-content-img">
-                                    <img src="<?php echo base_url();?>assets/images/cate-freight-gray.png" class="trans-cate-gray-img" alt="cate-car-gray" />
-                                    <img src="<?php echo base_url();?>assets/images/cate-freight-white.png" class="trans-cate-white-img" alt="cate-car-gray" />
-                                </div>
-                                <div class="trans-cate-content-name">
-                                    Freight
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                    <?php 
+                    }
+                }
+                ?>     
                 </div>
             </div>
         </div>

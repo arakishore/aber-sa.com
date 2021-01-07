@@ -49,7 +49,7 @@
                         
      <form name="frm-edit" id="frm-edit" action="<?php echo site_url($controller.'/edit_driver/'.$user_id) ?>" method="post" enctype="multipart/form-data"  >
                                 <input type="hidden" name="mode" id="mode" value="updatedriver">
-
+                                <input type="hidden" name="status_flag" id="status_flag" value="<?php echo isset($results['status_flag'])?$this->common->getDbValue($results['status_flag']):''; ?>">
         <div class="forgat-section">
 
             <div class="row">
@@ -112,17 +112,29 @@
                      </div>
                 </div>
 
-                <div class="col-sm-6 col-md-6 col-lg-6">
+
+
+<div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="form-group">
-                        <label for="user">Status </label>
-                        <select name="status_flag" id="status_flag">
-                            <option value="Active" <?php if($results['status_flag']=="Active"){?> selected <?php } ?>>Active</option>
-                            <option value="Inactive" <?php if($results['status_flag']=="Inactive"){?> selected <?php } ?>>Inactive</option>                        
+                        <label for="user">Vehicle Type </label>
+                        <select name="vehicle_type" id="vehicle_type">
+                            <option value="Type 1" <?php if($results['vehicle_type']=="Type 1"){?> selected <?php } ?>>Type 1</option>
+                            <option value="Type 2" <?php if($results['vehicle_type']=="Type 2"){?> selected <?php } ?>>Type 2</option>
+                            <option value="Type 3" <?php if($results['vehicle_type']=="Type 3"){?> selected <?php } ?>>Type 3</option>
+                            <option value="Type 4" <?php if($results['vehicle_type']=="Type 4"){?> selected <?php } ?>>Type 4</option>
+                            <option value="Type 5" <?php if($results['vehicle_type']=="Type 5"){?> selected <?php } ?>>Type 5</option>                                                        
                         </select>
                      </div>
                 </div>
-                                
-				<div class="col-sm-8 col-md-8 col-lg-6">
+                                 
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group">
+                        <label for="licenseno">License No. </label>
+                         <input type="text" id="license_no" name="license_no" value="<?php echo isset($results['license_no'])?$this->common->getDbValue($results['license_no']):''; ?>">
+                         <!-- <div class="error-red">This field is required</div> -->
+                     </div>
+                </div>                 
+				<div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="form-group">
                         <input type="text" class="form-control rounded-0" readonly placeholder="ID Proof">
                         <label class="input-group-btn my-0">

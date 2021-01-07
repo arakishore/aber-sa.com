@@ -40,7 +40,7 @@ if (isset($session_user_data['user_type']) && $session_user_data['user_type'] ==
                 <li><a href="<?php echo site_url('about_us')?>"
                         class="<?php if(isset($act_id) && $act_id==2){ echo 'active';}?>">About Us</a></li>
                 <li><a href="<?php echo site_url($controller.'/my_shipment')?>"
-                        class="<?php if(isset($act_id) && $act_id==3){ echo 'active';}?>">My Deliveries</a></li>
+                        class="<?php if(isset($act_id) && $act_id==3){ echo 'active';}?>">My Shipment</a></li>
             </ul>
         </div>
         <div class="clearfix"></div>

@@ -7,7 +7,7 @@ $session_user_data = $this->session->userdata('user_data');
                             <div class="fb-left-bar-profile-section">
                                 <div class="fb-left-bar-profile-img">
                               
-                                    <img src="<?php echo $session_user_data['user_photo'];?>" alt="user images"/>
+                                    <img src="<?php echo $session_user_data['user_photo'];?>" alt="user images" id="user-avtar-leftmenu"/>
                                 </div>
                                 <div class="fb-left-bar-profile">
                                     <div class="fb-left-bar-profile-name">

@@ -1000,4 +1000,57 @@ class Common extends CI_Model
         $interval = $datetime1->diff($datetime2);
         return $interval->format('%R%a');
     }
+
+ 
+#function for uploading and resizing image
+
+#$fileField    : file filed name
+
+#$path            : path where file is to be uploaded e.g. images/hotel
+
+#$isResize     : flag whether to resize image
+
+#$height_thumb : Thumnail Height
+
+#$width_thumb  : Thumnail Width
+
+#$image_name   : image to remamed to e.g. tajhotel (do not include extesion)
+
+#$tempDir      : temparary folder whare image to be uploaded while resizing
+
+public function UploadImageCheck($fileField, $image_name = '')
+{
+    $errors = 0;
+
+    $filename = $_FILES[$fileField]['name'];
+
+    if ($filename != '') {
+        $extension = $this->getExtension($filename);
+
+        $extension = strtolower($extension);
+        if (($extension != "jpg") && ($extension != "jpeg") && ($extension != "png") && ($extension != "gif")) {
+            $errors = 1;
+            $returnArray = array("uploaded" => "false", "uploadMsg" => "Invalid File Extension!", "imageFile" => "");
+        } else {
+            if ($image_name == '') {
+                $image_name = time() . '.' . $extension;
+            } else {
+                $image_name .= '.' . $extension;
+            }
+
+        } //else
+    } else {
+        $returnArray = array("uploaded" => "false", "uploadMsg" => "Image is Required", "imageFile" => "");
+        return $returnArray;
+    }
+
+    if ($errors != 1) {
+        $returnArray = array("uploaded" => "true", "uploadMsg" => "Image is uploadded successfully....", "imageFile" => $image_name);
+    }
+    return $returnArray;
+
+} 
+
 }
+
+
