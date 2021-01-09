@@ -594,31 +594,31 @@ class Apiuser extends CI_Controller
             $add_in['latitude'] = $latitude = (isset($data_json['latitude'])) ? $this->common->mysql_safe_string($data_json['latitude']) : '';
 
             $add_in['is_default'] = $is_default = (isset($data_json['is_default'])) ? $this->common->mysql_safe_string($data_json['is_default']) : '0';
-            $errorData = [];
+            $errorData = "";
             if ($firstname == '') {
-                $errorData[] = "Please enter first name";
+               // $errorData = "Please enter first name";
             }
             if ($lastname == '') {
-                $errorData[] = "Please enter last name";
+              //  $errorData = "Please enter last name";
             }
             if ($address_1 == '') {
-                $errorData[] = "Please enter  address";
+              //  $errorData = "Please enter  address";
             }
             if ($state_id == '') {
-                $errorData[] = "Please select  state";
+              //  $errorData = "Please select  state";
             }
             if ($city_id == '') {
-                $errorData[] = "Please select  city_id";
+             //   $errorData = "Please select  city_id";
             }
             if ($postcode == '') {
-                $errorData[] = "Please enter  postcode";
+               // $errorData = "Please enter  postcode";
             }
 
-            if (sizeof($errorData) <= 0) {
+            if ($errorData =="") {
                 $returnData = $this->services->doAddAddress($data_json, 'ARRAY');
 
             } else {
-                $returnData = array('status' => 0, 'errorData' => $errorData);
+                $returnData = array('status' => 0, 'errorMessage' => $errorData);
             }
 
         }

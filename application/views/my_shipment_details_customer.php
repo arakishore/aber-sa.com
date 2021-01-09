@@ -227,7 +227,7 @@
                     </div>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-3">
-                    <div class="right-payment-section">
+                   <!--  <div class="right-payment-section">
                         <div class="payment-section-head">
                             Quote
                         </div>
@@ -276,7 +276,7 @@
                     <div class="price-action-btn-section">
                         <a href="after-accept-offer-my_shipment_details.html" class="bid-accept-btn">Accept</a>
                         <a href="javascript:void(0);" class="bid-reject-btn">Reject</a>
-                    </div>
+                    </div> -->
                                        
 <?php 
 $cons_images = $requests['consignment_image'];

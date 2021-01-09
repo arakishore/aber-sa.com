@@ -35,9 +35,9 @@ $i=0;
                 <div class="trans-listing-back-save-btn">
                     <?php
                 $category_id = isset($postdata1['category_id']) ? $postdata1['category_id'] : '';
-                $sub_categoryid = isset($postdata1['sub_categoryid']) ? $postdata1['sub_categoryid'] : '';
+                $subcategory_id = isset($postdata1['subcategory_id']) ? $postdata1['subcategory_id'] : '';
                 ?>
-                    <a href="<?php echo site_url("request/step1/{$category_id}/{$sub_categoryid}");?>"
+                    <a href="<?php echo site_url("request/step1/{$category_id}/{$subcategory_id}");?>"
                         class="btn-over-effect trans-listing-back-btn">
                         <img src="<?php echo base_url();?>assets/images/back-btn-arrow.png" alt="save-btn-icon" />
                         <span>Go

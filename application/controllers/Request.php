@@ -55,7 +55,7 @@ class Request extends CI_Controller
 
         $this->load->view("subcategory_view", $data);
     }
-    public function step1($category_id=0,$sub_categoryid=0){
+    public function step1($category_id=0,$subcategory_id=0){
         
         $session_user_data = $this->session->userdata('user_data');
        
@@ -63,7 +63,7 @@ class Request extends CI_Controller
 	 
        
         $data['categorySubcategory'] = [];
-        $data['sub_categoryid'] = (int)$sub_categoryid;
+        $data['subcategory_id'] = (int)$subcategory_id;
         $data['category_id'] = (int)$category_id; 
 
         $data['postdata'] = []; 
@@ -76,11 +76,21 @@ class Request extends CI_Controller
            $session_req_data_post = $this->session->userdata('req_data_post1');
            if(isset($session_req_data_post) && sizeof($session_req_data_post)>0){
                $data['postdata'] =  $session_req_data_post;
+               $data['postdata']['category_id'] = $category_id;
+               $data['postdata']['subcategory_id'] = $subcategory_id;
+               $paramtemp['category_id'] = $category_id;
+               $category_name1 = $this->services->getCategoryName($paramtemp);
+               $paramtemp['category_id'] = $subcategory_id;
+               $category_name2 = $this->services->getCategoryName($paramtemp);
+
+               $data['postdata']['category_name'] = $category_name1['name'];
+               $data['postdata']['subcategory_name'] = $category_name2['name'];
+
            }
         } 
         
        // $data['postdata']['category_id']  = $category_id;
-       // $data['postdata']['sub_categoryid']  = $sub_categoryid;
+       // $data['postdata']['subcategory_id']  = $subcategory_id;
 
         $this->load->view("step1", $data);
     }
@@ -104,7 +114,15 @@ class Request extends CI_Controller
          $data['postdata1'] = []; 
        
          if(sizeof($_POST)>0){
-            $this->session->set_userdata(array('req_data_post2' => $_POST));
+             $postdata_temp = $_POST;
+             //requests_items
+            //$postdata_temp['requests_items'] = $_POST['consignment_qty'];
+            foreach($_POST['consignment_qty'] as $key => $value){
+                $temp_array = array('consignment_qty'=>$_POST['consignment_qty'][$key],'consignment_width'=>$_POST['consignment_width'][$key],'consignment_height'=>$_POST['consignment_height'][$key],'consignment_weight'=>$_POST['consignment_weight'][$key],'consignment_length'=>$_POST['consignment_length'][$key]);
+                $postdata_temp['requests_items'][] = $temp_array;
+            }
+
+            $this->session->set_userdata(array('req_data_post2' => $postdata_temp));
           //  $data['postdata2'] =  $_POST;
             redirect("request/step3");
          } else {
@@ -135,12 +153,14 @@ class Request extends CI_Controller
         $user_id = $session_user_data['user_id'];
      
         $data['postdata'] = []; 
+        $data['postdata1'] = []; 
+        $data['postdata2'] = []; 
+        $data['postdata3'] = []; 
        
          if(sizeof($_POST)>0){
+            $data_json['user_id'] = $user_id;
            // $this->session->set_userdata(array('req_data_post3' => $_POST));
-           // $data['postdata'] =  $_POST;
-            
-         } else {
+            $data['postdata3'] =  $_POST;
             $session_req_data_post2 = $this->session->userdata('req_data_post2');
             if(isset($session_req_data_post2) && sizeof($session_req_data_post2)>0){
                 $data['postdata2'] =  $session_req_data_post2;
@@ -149,8 +169,47 @@ class Request extends CI_Controller
             if(isset($session_req_data_post1) && sizeof($session_req_data_post1)>0){
                 $data['postdata1'] =  $session_req_data_post1;
             }
+
+            foreach($data['postdata3'] as $key3 => $postValue3){
+                $data_json[$key3] = $postValue3;
+            } 
+            foreach($data['postdata2'] as $key2 => $postValue2){
+                $data_json[$key2] = $postValue2;
+            } 
+            foreach($data['postdata1'] as $key1 => $postValue1){
+                $data_json[$key1] = $postValue1;
+            } 
+            $sql = "select * from consignmentimage_temp where   user_id='{$user_id}' ";
+            $request_query = $this->db->query($sql) ;
+            if($request_query->num_rows()>0){
+               $consignmentimage_temp = $request_query->result_array();
+               foreach($consignmentimage_temp as $imgkey => $imagValue){
+                $data_json['consignment_image'][] = back_path . "uploads/consignmentimage_temp/" . $imagValue['image_name'];
+            }
+
+            } else {
+                $data_json['consignment_image'] = [];
+
+            }
+            $data_json['request_via']= 'web';
             
-         } 
+            $returnData = $this->services->doRequest($data_json, 'ARRAY');
+            if($returnData['status']==1){
+                redirect("customer");
+            } else {
+                print_r($returnData);
+            }
+            
+         }  else {
+            $session_req_data_post2 = $this->session->userdata('req_data_post2');
+            if(isset($session_req_data_post2) && sizeof($session_req_data_post2)>0){
+                $data['postdata2'] =  $session_req_data_post2;
+            }
+            $session_req_data_post1 = $this->session->userdata('req_data_post1');
+            if(isset($session_req_data_post1) && sizeof($session_req_data_post1)>0){
+                $data['postdata1'] =  $session_req_data_post1;
+            }
+         }
     
         $this->load->view("step3", $data);
     }

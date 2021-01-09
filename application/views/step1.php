@@ -33,9 +33,9 @@
             <div class="trans-listing-back-save-btn">
             <?php
                 $category_id = isset($postdata['category_id']) ? $postdata['category_id'] : '';
-                $sub_categoryid = isset($postdata['sub_categoryid']) ? $postdata['sub_categoryid'] : '';
+                $subcategory_id = isset($postdata['subcategory_id']) ? $postdata['subcategory_id'] : '';
                 ?>
-                <a href="<?php echo site_url("request/subcategory/".$category_id."/".$sub_categoryid);?>"
+                <a href="<?php echo site_url("request/subcategory/".$category_id."/".$subcategory_id);?>"
                     class="btn-over-effect trans-listing-back-btn">
                     <img src="<?php echo base_url();?>assets/images/back-btn-arrow.png" alt="save-btn-icon" /> <span>Go
                         Back </span>
@@ -45,7 +45,9 @@
             <div class="trans-listing-parameters-main">
                 <form class="frm-vendor-search" name="request_step1" id="request_step1" action="<?php echo site_url("request/step1");?>" method="post">
                     <input type="hidden" name="category_id" id="category_id" value="<?php echo (isset($postdata['category_id'])) ? $postdata['category_id'] : ''?>">
-                    <input type="hidden" name="sub_categoryid" id="sub_categoryid" value="<?php echo (isset($postdata['sub_categoryid'])) ? $postdata['sub_categoryid'] : ''?>">
+                    <input type="hidden" name="subcategory_id" id="subcategory_id" value="<?php echo (isset($postdata['subcategory_id'])) ? $postdata['subcategory_id'] : ''?>">
+                    <input type="hidden" name="category_name" id="category_name" value="<?php echo (isset($postdata['category_name'])) ? $postdata['category_name'] : ''?>">
+                    <input type="hidden" name="subcategory_name" id="subcategory_name" value="<?php echo (isset($postdata['subcategory_name'])) ? $postdata['subcategory_name'] : ''?>">
                     <div class="trans-shipment-info-head">
                         Shipment Information
                     </div>

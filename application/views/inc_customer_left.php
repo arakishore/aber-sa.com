@@ -1,6 +1,6 @@
 <?php
 $session_user_data = $this->session->userdata('user_data');
- 
+ //print_r($session_user_data);
 ?>
 <div class="col-sm-12 col-md-12 col-lg-3">                        
                         <div class="fb-left-bar-section-main">
@@ -10,7 +10,7 @@ $session_user_data = $this->session->userdata('user_data');
                                 <?php
 $sel_photo = base_url().'assets/images/user-img.jpg';
 if($session_user_data['user_photo']) {
-	$sel_photo = base_url().'uploads/profile_pics/'.$session_user_data['user_photo'];
+	$sel_photo =$session_user_data['user_photo'];
 }
 ?>
                 <img src="<?php echo $sel_photo;?>" alt="user images" id="user-avtar-leftmenu" />
@@ -20,7 +20,7 @@ if($session_user_data['user_photo']) {
                                     <?php echo (isset($session_user_data['first_name']))?$session_user_data['first_name']:''?>
                     <?php echo (isset($session_user_data['last_name']))?$session_user_data['last_name']:''?>
                                     </div>
-                                    <a class="fb-left-bar-edit-profile" href="#<?php echo site_url('customer/edit_profile')?>">Edit
+                                    <a class="fb-left-bar-edit-profile" href="<?php echo site_url('customer/edit_profile')?>">Edit
                     profile</a>
                                 </div>
                             </div>

@@ -102,7 +102,8 @@ class Customer extends CI_Controller
         }
         
         $request_status = $this->services->get_request_status_history($params['request_id'],'ARRAY');
-        $data['request_status'] = $request_status['request_sub_status'];
+       // print_r($request_status);
+        $data['request_status'] = (isset($request_status['request_sub_status'])) ? $request_status['request_sub_status'] : [];
         
         $sSql = "SELECT *  FROM `setting` WHERE setting_id='17746' ORDER BY setting_id";
         $query = $this->db->query($sSql);

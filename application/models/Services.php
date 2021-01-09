@@ -1054,7 +1054,18 @@ $address_data = [];
 
         return $retUserAddressInfo;
     }
-
+    public function getCategoryName($params, $returnType = "json")
+    {
+        $category_id = $params['category_id'];
+        $categoryRow =  [];
+        $sql = "select c.category_id,c.name,c.description ,c.name_en,c.description_en, c.main_image  from product_category c    where c.category_id='{$category_id}' ";
+        //$ddd =getRecordsLimit
+        $categoryListQuery = $this->db->query($sql);
+        if ($categoryListQuery->num_rows() > 0) {
+            $categoryRow = $categoryListQuery->row_array();
+            return $categoryRow;
+        }
+    }
     public function categorySubcategory($params, $returnType = "json")
     {
 
@@ -1172,25 +1183,39 @@ $address_data = [];
 
         }
         $user_temp['user_id'] = $user_id;
-        $user_temp['address_id'] = $add_in['pickup_location_id'];
-        $pickup_address = $this->getSingleAddress($user_temp, 0, 'ARRAY');
 
-        $user_temp['address_id'] = $add_in['destination_location_id'];
-        $destination_address = $this->getSingleAddress($user_temp, 0, 'ARRAY');
+        if(isset($params['request_via']) && $params['request_via']=="web"){
+            
+            $add_in['pickup_location'] = $params['pickup_location'];
+            $add_in['pickup_longitude'] = $params['pickup_longitude'];
+            $add_in['pickup_latitude'] = $params['pickup_latitude'];
 
-        if (sizeof($pickup_address) > 0) {
-            $add_in['pickup_location'] = $pickup_address['results']['address_1'];
-            $add_in['pickup_longitude'] = $pickup_address['results']['longitude'];
-            $add_in['pickup_latitude'] = $pickup_address['results']['latitude'];
+            $add_in['destination_location'] = $params['destination_location'];
+            $add_in['destination_longitude'] = $params['destination_longitude'];
+            $add_in['destination_latitude'] = $params['destination_latitude'];
 
+        } else {
+            $user_temp['address_id'] = $add_in['pickup_location_id'];
+            $pickup_address = $this->getSingleAddress($user_temp, 0, 'ARRAY');
+    
+            $user_temp['address_id'] = $add_in['destination_location_id'];
+            $destination_address = $this->getSingleAddress($user_temp, 0, 'ARRAY');
+    
+            if (sizeof($pickup_address) > 0) {
+                $add_in['pickup_location'] = $pickup_address['results']['address_1'];
+                $add_in['pickup_longitude'] = $pickup_address['results']['longitude'];
+                $add_in['pickup_latitude'] = $pickup_address['results']['latitude'];
+    
+            }
+    
+            if (sizeof($destination_address) > 0) {
+                $add_in['destination_location'] = $destination_address['results']['address_1'];
+                $add_in['destination_longitude'] = $destination_address['results']['longitude'];
+                $add_in['destination_latitude'] = $destination_address['results']['latitude'];
+    
+            }
         }
-
-        if (sizeof($destination_address) > 0) {
-            $add_in['destination_location'] = $destination_address['results']['address_1'];
-            $add_in['destination_longitude'] = $destination_address['results']['longitude'];
-            $add_in['destination_latitude'] = $destination_address['results']['latitude'];
-
-        }
+     
 
         $add_in['insert_date'] = date("Y-m-d H:i:s");
         $this->common->insertRecord('lt_requests', $add_in);
@@ -1233,6 +1258,10 @@ $address_data = [];
                 $this->common->insertRecord('lt_requests_items', $add_in_items);
             }
         }
+        $param_status['action_flag'] = 'requested';
+        $param_status['request_id'] = $requestsInfo['request_id'];
+       // $returnData_nouse = $this->services->doRequestStatusActionByDriver($param_status, 'ARRAY');
+
         $arr['status'] = 1;
         $arr['successMessage'] = 'Success! your request placed successfully. ';
 
@@ -1900,6 +1929,12 @@ $address_data = [];
         $query = $this->db->query($sql);
         if ($query->num_rows() > 0) {
 
+            if (strtolower($action_flag) == "requested") {
+                $request_status = "Requested";
+                $request_sub_status = "Active";
+                $lt_requests['is_trip_started'] = 0;
+            }
+            
             if (strtolower($action_flag) == "dispatched") {
                 $request_status = "Scheduled";
                 $request_sub_status = "Dispatched";
