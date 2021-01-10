@@ -24,7 +24,6 @@ class Serviceprovider extends CI_Controller
         parent::__construct();
         $this->load->library('session');
         $this->load->model('common');
-        $this->load->model('services');
         $this->load->helper('security');
         $this->load->library('email');
 		$this->load->library('pagination');

@@ -48,7 +48,7 @@ class Request extends CI_Controller
         $params['category_id'] = (int)$categoryid;
         $data['category_id'] = (int)$categoryid;
         $categorySubcategory= $this->services->categorySubcategory($params,'ARRAY');
-        if($categorySubcategory['status'] == 1){
+        if(isset($categorySubcategory['status']) && $categorySubcategory['status'] == 1){
             $data['categorySubcategory']= $categorySubcategory['result'];
         }
        
