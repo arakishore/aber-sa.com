@@ -69,13 +69,13 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
 
                     <div class="card">
                         <div class="card-header header-elements-inline">
-                            <h6 class="card-title"><?php echo (isset($sub_heading))?$sub_heading:''?> </h6>
+                            <h6 class="card-title"><?php echo (isset($sub_heading))?$sub_heading:''?> (<?php echo $this->common->getDbValue($customer['first_name']); ?> <?php echo $this->common->getDbValue($customer['last_name']); ?>) </h6>
                         </div>
                      
                         <div class="card-body">
                             <ul class="nav nav-tabs nav-tabs-highlight">
                                 <li class="nav-item"><a href="<?php echo site_url('customers/view_customer/'.$id.'/?tab=1') ?>" class="nav-link <?php echo ($tab==1)?'active':'' ?>"><i class="icon-user mr-2"></i> Customer Info</a></li>
-                                <li class="nav-item"><a href="<?php echo site_url('customers/view_customer/'.$id.'/?tab=2') ?>" class="nav-link <?php echo ($tab==2)?'active':'' ?>"><i class="icon-users2  mr-2"></i>Trips</a></li>
+                                <li class="nav-item"><a href="<?php echo site_url('customers/view_customer/'.$id.'/?tab=2') ?>" class="nav-link <?php echo ($tab==2)?'active':'' ?>"><i class="icon-users2  mr-2"></i>Trips (<?php echo sizeof($requests)?>)</a></li>
                             </ul>
 
                             <div class="tab-content">
@@ -85,65 +85,296 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
 <form name="frm-edit" id="frm-edit" action="<?php echo site_url($this->ctrl_name.'/view_customer/'.$id) ?>" method="post">
                                         <input type="hidden" name="mode" id="mode" value="submitform">
 
+<div class="tab-content">
+                                <div class="tab-pane fade <?php echo ($tab==1)?'show active':'' ?>" id="highlighted-tab1">
+                                    <form name="frm-edit" id="frm-edit" action="<?php echo site_url($this->ctrl_name.'/view_customer/'.$id) ?>" method="post">
+                                        <input type="hidden" name="mode" id="mode" value="submitform">
+<legend class="font-weight-semibold text-uppercase font-size-sm">Shipment Listing Information</legend>
 
-                                        <div class="form-group row">
-                                            <label class="col-form-label col-lg-2" for="first_name">Title :</label>
-                                            <div class="col-lg-9">
-                                                <?php echo isset($requests_det['request_title'])?$this->common->getDbValue($requests_det['request_title']):''; ?>
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="first_name">Request Status :</label>
+                                            <div class="col-lg-6">
+                                                <?php echo $this->common->getDbValue($requests['request_status']); ?>
                                             </div>
-                                        </div>
+                                </div>
+          <div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="first_name">Delivery Title :</label>
+                                            <div class="col-lg-6">
+                                                <label><?php echo $this->common->getDbValue($requests['request_title']); ?></label>
+                                            </div>
+                                </div>
 
                                         <div class="form-group row">
-                                            <label class="col-form-label col-lg-2" for="email">Description :</label>
+                                            <label class="col-form-label col-lg-2" for="email">Shipment ID :</label>
                                             <div class="col-lg-9">
-                                                <?php echo isset($requests_det['request_description'])?$this->common->getDbValue($requests_det['request_description']):''; ?>
+                                                #<?php echo $this->common->getDbValue($requests['shipment_id']); ?>
                                             </div>
                                         </div>
                                         
-                                </form>                                    
-<br/>
-<h4>Request Items</h4>
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Date Listed :</label>
+                                            <div class="col-lg-9">
+                                                <?php echo $this->common->getDateFormat($requests['insert_date'], 'd-M-Y h:i');; ?> 
+                                          </div>
+                                        </div>
 
-                                <?php
-						 if (isset($requests_items) && sizeof($requests_items)>0) { 
-					    ?>
-                                    <div class="table-responsive">
-                                        <table class="table dashboarddatatable1" width="100%">
-                                            <thead>
-                                                <tr class="bg-blue ">
-                                                    <th width="8%">Qty</th>
-                                                    <th width="31%">Desc</th>
-                                                    <th width="40%">Detail</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                 <?php  $i=0;
-									foreach($requests_items as $key => $value){
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="business_type">Ends :</label>
+                                            <div class="col-lg-9">
+<?php
+ $date1 = date('Y-m-d',strtotime($this->common->getDbValue($requests['pickup_date'])));
+ $date2 = date('Y-m-d',strtotime($this->common->getDbValue($requests['insert_date'])));
+ $diff = abs(strtotime($date2) - strtotime($date1));
+ $years = floor($diff / (365*60*60*24));
+ $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+ $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+?>                                       
+                                       <?php echo $this->common->getDbValue($days); ?> Days
+                                          </div>
+                                        </div>
+                                        
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Miles :</label>
+                                            <div class="col-lg-9">
+                                                 <?php echo $this->common->getDbValue($requests['distance_mile']); ?>
+                                            </div>
+                                      </div>                                        
+
+
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Travel Time :</label>
+                                            <div class="col-lg-9">
+                                                 <?php echo $this->common->getDbValue($requests['expected_travelling_time']); ?> HRS
+                                            </div>
+                                      </div>
+                                        
+
+                                                 
+                                                 
+                                        
+
+                                        
+<legend class="font-weight-semibold text-uppercase font-size-sm">Origin, Destination</legend>
+
+
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Collection :</label>
+                                            <div class="col-lg-9">
+                                                 <?php echo $this->common->getDbValue($requests['pickup_location']); ?><br/>
+                                                 Collection : <?php echo $this->common->getDateFormat($requests['pickup_date'], 'd M Y'); ?>
+                                            </div>
+                                      </div>
+                                        
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Delivery :</label>
+                                            <div class="col-lg-9">
+                                                 <?php echo $this->common->getDbValue($requests['destination_location']); ?><br/>
+                                                 Delivery : <?php echo $this->common->getDateFormat($requests['drop_destination_date'], 'd M Y'); ?>
+                                            </div>
+                                      </div>  
+                                        
+<legend class="font-weight-semibold text-uppercase font-size-sm"><?php echo $this->common->getDbValue($requests['category_name']); ?> & <?php echo $this->common->getDbValue($requests['subcategory_name']); ?></legend>
+
+<?php if (isset($items) && sizeof($items)>0) {  
+$total_weight = 0;
+?> 
+<div class="table-responsive">
+                            <table class="table dashboarddatatable" width="100%">
+                                <thead>
+                                    <tr class="bg-blue ">
+                                        <th width="3%">#</th>
+                                        <th width="28%" align="left">Length</th>
+                                        <th width="25%" align="left">Width</th>
+                                        <th width="30%" align="left">Height</th>
+                                        <th width="14%" align="left">Kerb Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+									$i=1;
+									foreach($items as $key => $itm){
+										
+									$total_weight = $total_weight + $this->common->getDbValue($itm['consignment_weight']);	
+									?>
+                                    <tr class="  border-left-3">
+                                        <td valign="top"><?php echo $i?></td>
+                                        <td align="left" valign="top"><strong><?php echo $this->common->getDbValue($itm['consignment_length']); ?> <?php echo $this->common->getDbValue($itm['consignment_length_unit']); ?></strong></td>
+                                        <td align="left" valign="top"><?php echo $this->common->getDbValue($itm['consignment_width']); ?> <?php echo $this->common->getDbValue($itm['consignment_width_unit']); ?></td>
+                                        <td align="left" valign="top"><?php echo $this->common->getDbValue($itm['consignment_height']); ?> <?php echo $this->common->getDbValue($itm['consignment_height_unit']); ?></td>
+                                        <td align="left" valign="top"><?php echo $this->common->getDbValue($itm['consignment_weight']); ?> <?php echo $this->common->getDbValue($itm['consignment_weight_unit']); ?></td>
+                                    </tr>
+                                    <?php 
 									$i++;
-								?>
-                                                <tr class="  border-left-3">
-                                                    <td valign="top"><?php echo $this->common->getDbValue($value['consignment_qty']); ?></td>
-                                                    <td valign="top"><?php echo $this->common->getDbValue($value['consignment_details']); ?></td>
-                                                    <td valign="top">                                                    
-                                                    <strong>WIDTH :</strong> <?php echo $this->common->getDbValue($value['consignment_width']); ?><br/>
-                                                    <strong>HEIGHT :</strong> <?php echo $this->common->getDbValue($value['consignment_height']); ?><br/>
-                                                    <strong>WEIGHT :</strong> <?php echo $this->common->getDbValue($value['consignment_weight']); ?><br/>
-                                                    <strong>LENGTH :</strong> <?php echo $this->common->getDbValue($value['consignment_length']); ?>
-                                                    </td>
-                                                </tr>
-                                                <?php } ?>
-                                            </tbody>
-                                        </table>
-                          </div>
-                                    <?php } else {
-                        ?>
-                                    <div class=" text-center  card-body border-top-info1">
-                                        No record found
-                                    </div>
-                                    <?php    
-                            }?>
+									} ?>
+                                    
+                                    <tr class="  border-left-3">
+                                      <td valign="top">&nbsp;</td>
+                                      <td valign="top">&nbsp;</td>
+                                      <td valign="top">&nbsp;</td>
+                                      <td valign="top"><strong>Total Weight : </strong></td>
+                                      <td valign="top"><?php echo $total_weight?> KG</td>
+                                    </tr>                                    
+                                </tbody>
+                            </table>                            
+            </div>
+<?php } ?>            
+                   
+                   
+                                        
+                                                                                                                        
+                                                                                                                                                                
+                                  </form>
+
+                                    
+                                </div>
+
+                                        <input type="hidden" name="mode" id="mode" value="submitform">
+<legend class="font-weight-semibold text-uppercase font-size-sm">Shipment Listing Information</legend>
+
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="first_name">Request Status :</label>
+                                            <div class="col-lg-6">
+                                                <?php echo $this->common->getDbValue($requests_det['request_status']); ?>
+                                            </div>
+                                </div>
+          <div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="first_name">Delivery Title :</label>
+                                            <div class="col-lg-6">
+                                                <?php echo $this->common->getDbValue($requests_det['request_title']); ?>
+                                            </div>
+                                </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="email">Shipment ID :</label>
+                                            <div class="col-lg-9">
+                                                #<?php echo $this->common->getDbValue($requests_det['shipment_id']); ?>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="mobile">Customer :</label>
+                                            <div class="col-lg-9">
+                                                <?php echo $this->common->getDbValue($customer['first_name']); ?> <?php echo $this->common->getDbValue($customer['last_name']); ?>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Date Listed :</label>
+                                            <div class="col-lg-9">
+                                                <?php echo $this->common->getDateFormat($requests_det['insert_date'], 'd-M-Y h:i');; ?> 
+                                          </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="business_type">Ends :</label>
+                                            <div class="col-lg-9">
+<?php
+ $date1 = date('Y-m-d',strtotime($this->common->getDbValue($requests_det['pickup_date'])));
+ $date2 = date('Y-m-d',strtotime($this->common->getDbValue($requests_det['insert_date'])));
+ $diff = abs(strtotime($date2) - strtotime($date1));
+ $years = floor($diff / (365*60*60*24));
+ $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+ $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+?>                                       
+                                       <?php echo $this->common->getDbValue($days); ?> Days
+                                          </div>
+                                        </div>
+                                        
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Miles :</label>
+                                            <div class="col-lg-9">
+                                                 <?php echo $this->common->getDbValue($requests_det['distance_mile']); ?>
+                                            </div>
+                                      </div>                                        
+
+
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Travel Time :</label>
+                                            <div class="col-lg-9">
+                                                 <?php echo $this->common->getDbValue($requests_det['expected_travelling_time']); ?> HRS
+                                            </div>
+                                      </div>
+                                        
+
+                                                 
+                                                 
+
+                                        
+<legend class="font-weight-semibold text-uppercase font-size-sm">Origin, Destination</legend>
+
+
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Collection :</label>
+                                            <div class="col-lg-9">
+                                                 <?php echo $this->common->getDbValue($requests_det['pickup_location']); ?><br/>
+                                                 Collection : <?php echo $this->common->getDateFormat($requests_det['pickup_date'], 'd M Y'); ?>
+                                            </div>
+                                      </div>
+                                        
+<div class="form-group row">
+                                            <label class="col-form-label col-lg-2" for="gender">Delivery :</label>
+                                            <div class="col-lg-9">
+                                                 <?php echo $this->common->getDbValue($requests_det['destination_location']); ?><br/>
+                                                 Delivery : <?php echo $this->common->getDateFormat($requests_det['drop_destination_date'], 'd M Y'); ?>
+                                            </div>
+                                      </div>  
+                                        
+<legend class="font-weight-semibold text-uppercase font-size-sm">
+Request Items : 
+<?php echo $this->common->getDbValue($requests_det['category_name']); ?> & <?php echo $this->common->getDbValue($requests_det['subcategory_name']); ?></legend>
+
+<?php if (isset($requests_items) && sizeof($requests_items)>0) {  
+$total_weight = 0;
+?> 
+<div class="table-responsive">
+                            <table class="table dashboarddatatable" width="100%">
+                                <thead>
+                                    <tr class="bg-blue ">
+                                        <th width="3%">#</th>
+                                        <th width="28%" align="left">Length</th>
+                                        <th width="25%" align="left">Width</th>
+                                        <th width="30%" align="left">Height</th>
+                                        <th width="14%" align="left">Kerb Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+									$i=1;
+									foreach($requests_items as $key => $itm){
+										
+									$total_weight = $total_weight + $this->common->getDbValue($itm['consignment_weight']);	
+									?>
+                                    <tr class="  border-left-3">
+                                        <td valign="top"><?php echo $i?></td>
+                                        <td align="left" valign="top"><strong><?php echo $this->common->getDbValue($itm['consignment_length']); ?> <?php echo $this->common->getDbValue($itm['consignment_length_unit']); ?></strong></td>
+                                        <td align="left" valign="top"><?php echo $this->common->getDbValue($itm['consignment_width']); ?> <?php echo $this->common->getDbValue($itm['consignment_width_unit']); ?></td>
+                                        <td align="left" valign="top"><?php echo $this->common->getDbValue($itm['consignment_height']); ?> <?php echo $this->common->getDbValue($itm['consignment_height_unit']); ?></td>
+                                        <td align="left" valign="top"><?php echo $this->common->getDbValue($itm['consignment_weight']); ?> <?php echo $this->common->getDbValue($itm['consignment_weight_unit']); ?></td>
+                                    </tr>
+                                    <?php 
+									$i++;
+									} ?>
+                                    
+                                    <tr class="  border-left-3">
+                                      <td valign="top">&nbsp;</td>
+                                      <td valign="top">&nbsp;</td>
+                                      <td valign="top">&nbsp;</td>
+                                      <td valign="top"><strong>Total Weight : </strong></td>
+                                      <td valign="top"><?php echo $total_weight?> KG</td>
+                                    </tr>                                    
+                                </tbody>
+                            </table>                            
+            </div>
+<?php } ?>            
+                   
+                   
+                                        
+                                                                                                                        
+                                                                                                                                                                
+                                                          
+                            </div>
+                                        
+                                                              
 <br/>
-<h4>Request Consignment Images</h4>
+<h4>Shipment Pictures</h4>
 <br/>
                                     <?php
 						 if (isset($consignment_images) && sizeof($consignment_images)>0) { 
@@ -166,12 +397,12 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                                     <td valign="top">
                                             <?php 
 										if($value['image_name']!=''){
-											$photo = back_path.'uploads/category/'.stripslashes($value['image_name']);
+											$photo = back_path.'uploads/consignmentimage/'.stripslashes($value['image_name']);
 										} else {
 											$photo = 'http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image';	
 										}
 									?>
-                                            <img src="<?php echo $photo?>" height="50">                                                    
+                                            <img src="<?php echo $photo?>" width="150" height="150">                                                    
                                                     </td>
                                                 </tr>
                                                 <?php } ?>
@@ -197,8 +428,6 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                             <thead>
                                                 <tr class="bg-blue ">
                                                     <th width="20%">Image</th>
-                                                    <th width="70%">Description</th>
-                                                    <th width="10%">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -206,33 +435,24 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                //  print_r($child_user);
 								foreach($consignment_images_comp as $key => $value){
 								$i++;
-								$status = $this->common->getDbValue($value['status']);
+								//$status = $this->common->getDbValue($value['status']);
 								?>
-                                                <tr class="  border-left-3  <?php echo ($status == "Active") ? 'border-left-success' : 'border-left-danger' ?>  tr<?php echo $this->common->getDbValue($value['status']); ?>">
+                                                <tr class="  border-left-3">
                                                     <td valign="top">
                                             <?php 
 										if($value['image_name']!=''){
-											$photo = back_path.'uploads/category/'.stripslashes($value['image_name']);
+											$photo = back_path.'uploads/consignmentimage/'.stripslashes($value['image_name']);
 										} else {
 											$photo = 'http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image';	
 										}
 									?>
-                                            <img src="<?php echo $photo?>" height="50">                                                    
-                                                    </td>
-                                                    <td valign="top"><?php echo $this->common->getDbValue($value['image_description']); ?></td>
-                                                    <td valign="top">
-                                                        <?php
-                                        if($status=="Active"){echo '<span class="badge badge-success">Active</span>';}
-                                        ?>
-                                                        <?php
-                                        if($status=="Inactive"){echo '<span class="badge badge-danger">Inactive</span>';}
-                                        ?>
+                                            <img src="<?php echo $photo?>" width="150" height="150">                                                    
                                                     </td>
                                                 </tr>
                                                 <?php } ?>
                                             </tbody>
                                         </table>
-                              </div>
+          </div>
                                     <?php } else {
                         ?>
                                     <div class=" text-center  card-body border-top-info1">

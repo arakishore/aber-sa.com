@@ -100,7 +100,36 @@ class Customer extends CI_Controller
         } else {
             $data['requests'] = [];
         }
-        
+        if(isset($_POST['mode']) && $_POST['mode']=="doRequestAction"){
+            
+          
+            $action_flag = (isset($_POST['action_flag'])) ? $this->common->mysql_safe_string($_POST['action_flag']) : '0';
+            $service_provider_id = (isset($_POST['service_provider_id'])) ? $this->common->mysql_safe_string($_POST['service_provider_id']) : '0';
+            $data_json['user_id'] = $user_id;
+            $data_json['request_id'] = $request_id;
+            $data_json['action_flag'] = $action_flag;
+            $data_json['service_provider_id'] = $service_provider_id;
+
+            $returnData = $this->services->doRequestAction($data_json, 'ARRAY');
+            if($returnData['status']==1){
+                $this->session->set_flashdata('success', $returnData['successMessage']);
+            }
+            if($returnData['status']==2){
+                $this->session->set_flashdata('success', $returnData['errorMessage']);
+            }
+            if($returnData['status']==0){
+                $this->session->set_flashdata('success', $returnData['errorMessage']);
+            }
+           redirect($this->controller . '/my_shipment_details/' . $request_id);
+        }
+     // print_r($getRequestDetail);
+
+      $sSql = "SELECT *  FROM `lt_request_final_complete_images` WHERE request_id=" . $request_id . " ORDER BY id";
+      $query = $this->db->query($sSql);
+      $data['cons_final_images'] = $cons_final_images = $query->result_array();
+
+
+
         $request_status = $this->services->get_request_status_history($params['request_id'],'ARRAY');
        // print_r($request_status);
         $data['request_status'] = (isset($request_status['request_sub_status'])) ? $request_status['request_sub_status'] : [];
@@ -120,6 +149,9 @@ class Customer extends CI_Controller
 
     public function notifications()
     {
+  
+ 
+
         $data['l_s_act'] = 2;
         $error = '';
         $data['controller'] = $controller = $this->controller;
@@ -252,5 +284,84 @@ class Customer extends CI_Controller
 
         // echo 'You are logged out';
     }	
+    public function review()
+    {
+        $data['l_s_act'] = 4;
+        $error = '';
+        $data['controller'] = $controller = $this->controller;
+        $session_user_data = $this->session->userdata('user_data');
+        $id = $session_user_data['user_id'];
+// 
+//rq.service_pro_review, rq.service_pro_overall, rq.service_pro_ratings, rq.service_pro_review_date
+         $sSql = "SELECT us.first_name, us.last_name, us.profile_pic,
+        rq.cust_review as review_text, rq.cust_overall as overall, rq.cust_rating as rating, rq.cust_review_date  as review_date,rq.request_title, rq.insert_date
+FROM user_master_front us
+ 
+inner join lt_requests rq on us.user_id = rq.service_provider_id
+WHERE rq.user_id='" . $id . "'  AND(  cust_rating IS NOT NULL && cust_rating > 0 ) ORDER BY rq.request_id";
+        $query = $this->db->query($sSql);
+        $data['reviews'] = $reviews = $query->result_array();
+
+        $this->load->view("review", $data);
+    }   
+
+
+    public function shipment_details_edit($req_uuid=""){
+        $req_uuid = (isset($req_uuid)) ? $this->common->mysql_safe_string($req_uuid) : '';
+        
+        $sql = "select * from lt_requests  where uuid='{$req_uuid}'";
+        $query = $this->db->query($sql);
+        if($query->num_rows()>0){
+            $reqInfo = $query->row_array();
+            $req_data_post1['request_id'] = $reqInfo['request_id'];
+            $req_data_post1['category_id'] = $reqInfo['category_id'];
+            $req_data_post1['category_name'] = $reqInfo['category_name'];
+            $req_data_post1['subcategory_id'] = $reqInfo['subcategory_id'];
+            $req_data_post1['subcategory_name'] = $reqInfo['subcategory_name'];
+            $req_data_post1['pickup_longitude'] = $reqInfo['pickup_longitude'];
+            $req_data_post1['pickup_latitude'] = $reqInfo['pickup_latitude'];
+            $req_data_post1['pickup_location'] = $reqInfo['pickup_location'];
+            $req_data_post1['pickup_date'] =  $this->common->getDateFormat($reqInfo['pickup_date'],'d-m-Y');
+            $req_data_post1['destination_longitude'] = $reqInfo['destination_longitude'];
+            $req_data_post1['destination_latitude'] = $reqInfo['destination_latitude'];
+            $req_data_post1['destination_location'] = $reqInfo['destination_location'];
+            $req_data_post1['drop_destination_date'] =  $this->common->getDateFormat($reqInfo['drop_destination_date'],'d-m-Y');
+            $req_data_post1['distance_mile'] = $reqInfo['distance_mile'];
+            $req_data_post1['expected_travelling_time'] = $reqInfo['expected_travelling_time'];
+
+            $this->session->set_userdata(array('req_data_post1' => $req_data_post1));
+
+            $postdata_temp['request_title'] = $reqInfo['request_title'];
+            $sql = "select * from lt_requests_items  where request_id='".$reqInfo['request_id']."'";
+            $queryItems = $this->db->query($sql);
+            if($queryItems->num_rows()>0){
+                $reqItemInfo = $queryItems->result_array();
+
+                foreach($reqItemInfo as $key => $value){
+                   
+                    $temp_array = array('consignment_qty'=>$value['consignment_qty'],'consignment_width'=>$value['consignment_width'],'consignment_height'=>$value['consignment_height'],'consignment_weight'=>$value['consignment_weight'],'consignment_length'=>$value['consignment_length'],'consignment_details'=>$value['consignment_details']);
+                    $postdata_temp['requests_items'][] = $temp_array;
+                }
     
+                
+            }
+            $sql = "select * from lt_request_consignment_imgs  where  request_id='".$reqInfo['request_id']."'";
+            $request_query = $this->db->query($sql) ;
+            if($request_query->num_rows()>0){
+                $reqItemInfo = $request_query->result_array();
+                 $postdata_temp['lt_request_consignment_imgs'] = $reqItemInfo;
+            } 
+
+            $this->session->set_userdata(array('req_data_post2' => $postdata_temp));
+            
+             $req_data_post3['request_description'] = $reqInfo['request_description'];
+            $this->session->set_userdata(array('req_data_post3' => $req_data_post3));
+
+            $this->session->set_userdata(array('req_uuid' => $req_uuid));
+            redirect("request/category");
+        } else {
+            redirect("home");
+        }
+        
+    }
 }

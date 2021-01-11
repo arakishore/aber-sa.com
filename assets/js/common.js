@@ -14,7 +14,7 @@ $(document).ready(function(){
            $("header").removeClass("sticky");
         }
     }); 
-                        
+	                        
 })   
 
 $('#login-button').click(function() {

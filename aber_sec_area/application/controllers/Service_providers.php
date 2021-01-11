@@ -85,7 +85,7 @@ class Service_providers extends CI_Controller
         $where_edt = "user_id = $id";
 
         if (isset($_POST['mode_pop']) && $_POST['mode_pop'] == "addchildpoup") {
-            $add_in['status_flag'] =  'Active';
+            $add_in['status'] =  'Active';
            
             $add_in['first_name'] = $first_name = (isset($_POST['first_name'])) ? $this->common->mysql_safe_string($_POST['first_name']) : '';
             $add_in['last_name'] = $last_name = (isset($_POST['last_name'])) ? $this->common->mysql_safe_string($_POST['last_name']) : '';
@@ -101,12 +101,12 @@ class Service_providers extends CI_Controller
             if ($error == '') {
                 $add_in['parent_id'] = $id;
                 $add_in['user_type'] = 'CUST';
-                //$add_in['business_type'] = 'Branch';
+                $add_in['business_type'] = 'Branch';
                 $this->common->insertRecord($this->tbl_name,$add_in);
                   
                 $this->session->set_flashdata('success', 'Information added succssfully!');
                 $data['msg'] = 'success';
-                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=2");
+                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=2");
                 $this->session->set_flashdata('error', $error);
             } else {
                 $data['msg'] = $error;
@@ -114,7 +114,7 @@ class Service_providers extends CI_Controller
         }
 
         if (isset($_POST['mode_pop']) && $_POST['mode_pop'] == "frmUpdateData") {
-            $add_in['status_flag'] = $status = (isset($_POST['status'])) ? $this->common->mysql_safe_string($_POST['status']) : 'Active';
+            $add_in['status'] = $status = (isset($_POST['status'])) ? $this->common->mysql_safe_string($_POST['status']) : 'Active';
            
            
 			$childid = (isset($_POST['childid'])) ? $this->common->mysql_safe_string($_POST['childid']) : '';
@@ -125,7 +125,7 @@ class Service_providers extends CI_Controller
                 $update_status = $this->common->updateRecord($this->tbl_name, $add_in, $where_edt);
                 $this->session->set_flashdata('success', 'Information updated succssfully!');
                 $data['msg'] = 'success';
-                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=2");
+                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=2");
                 $this->session->set_flashdata('error', $error);
             } else {
                 $data['msg'] = $error;
@@ -145,26 +145,26 @@ class Service_providers extends CI_Controller
                 $where_edt = "user_id = '" . $childid . "'";
                 $update_status = $this->common->updateRecord($this->tbl_name, $array, $where_edt);
                 $this->session->set_flashdata('success', 'Information updated succssfully..');
-                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=2");
+                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=2");
             }
         }
        
         if (isset($_POST['mode']) && $_POST['mode'] == "submitform") {
 
-            $add_in['status_flag'] = $status = (isset($_POST['status'])) ? $this->common->mysql_safe_string($_POST['status']) : 'Active';
-           // $add_in['business_type'] = $business_type = (isset($_POST['business_type'])) ? $this->common->mysql_safe_string($_POST['business_type']) : 'General';
+            $add_in['status'] = $status = (isset($_POST['status'])) ? $this->common->mysql_safe_string($_POST['status']) : 'Active';
+            $add_in['business_type'] = $business_type = (isset($_POST['business_type'])) ? $this->common->mysql_safe_string($_POST['business_type']) : 'General';
             $add_in['enterprise_name'] = $enterprise_name = (isset($_POST['enterprise_name'])) ? $this->common->mysql_safe_string($_POST['enterprise_name']) : '';
-         //   $add_in['bo_ice_id'] = $bo_ice_id = (isset($_POST['bo_ice_id'])) ? $this->common->mysql_safe_string($_POST['bo_ice_id']) : '';
+            $add_in['bo_ice_id'] = $bo_ice_id = (isset($_POST['bo_ice_id'])) ? $this->common->mysql_safe_string($_POST['bo_ice_id']) : '';
             $add_in['user_language'] = $user_language = (isset($_POST['user_language'])) ? $this->common->mysql_safe_string($_POST['user_language']) : 'EN';
             $add_in['push_notification'] = $push_notification = (isset($_POST['push_notification'])) ? $this->common->mysql_safe_string($_POST['push_notification']) : '1';
-           // $add_in['credit_limit_status'] = $credit_limit_status = (isset($_POST['credit_limit_status'])) ? $this->common->mysql_safe_string($_POST['credit_limit_status']) : 'Active';
-          //  $add_in['credit_limit'] = $credit_limit = (isset($_POST['credit_limit'])) ? $this->common->mysql_safe_string($_POST['credit_limit']) : '0';
+            $add_in['credit_limit_status'] = $credit_limit_status = (isset($_POST['credit_limit_status'])) ? $this->common->mysql_safe_string($_POST['credit_limit_status']) : 'Active';
+            $add_in['credit_limit'] = $credit_limit = (isset($_POST['credit_limit'])) ? $this->common->mysql_safe_string($_POST['credit_limit']) : '0';
             
             if ($error == '') {
                 $update_status = $this->common->updateRecord($this->tbl_name, $add_in, $where_edt);
                 $this->session->set_flashdata('success', 'Information updated succssfully!');
                 $data['msg'] = 'success';
-                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=1");
+                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=1");
                 $this->session->set_flashdata('error', $error);
             } else {
                 $data['msg'] = $error;
@@ -182,7 +182,7 @@ class Service_providers extends CI_Controller
 
                 $update_status = $this->common->updateRecord($this->tbl_name, $array, $where_edt);
                 $this->session->set_flashdata('success', 'Information updated succssfully..');
-                redirect($this->ctrl_name . '/view_service_provider/' . $id . "?tab=1");
+                redirect($this->ctrl_name . '/view_customer/' . $id . "?tab=1");
             }
         }
         //$where_cond = "where user_id=".$id;
@@ -223,8 +223,14 @@ class Service_providers extends CI_Controller
 		}
 		// inner join user_master_front um on o.customer_id = um.user_id
 		
-
-	  
+        $sSql = "SELECT rq.*  FROM lt_requests rq , lt_request_quotes qt
+				WHERE rq.request_id=qt.request_id AND qt.service_provider_id='" . $id . "'
+				AND qt.quote_seeker_approval=1 AND
+				rq.status_flag='Active' ORDER BY rq.request_id DESC";
+		//die();
+        $query = $this->db->query($sSql);
+        $data['order_completed'] = $order_completed = $query->result_array();
+			  
         $data['start'] = 0;
         $data['maxm'] = $maxm = 50;
        
@@ -248,12 +254,20 @@ class Service_providers extends CI_Controller
         
 		$data['start'] = $page;
 	 
-		$fun_name = $this->ctrl_name ."/view_service_provider/".$id;
+		$fun_name = $this->ctrl_name ."/view_customer/".$id;
 		$data['other_para'] = "tab=3";
 		
 		$data['fun_name'] = $fun_name . "?" . $data['other_para'];
 
-        
+
+		$sSql = "SELECT us.first_name, us.last_name, us.profile_pic, rq.service_pro_overall, rq.service_pro_ratings, rq.service_pro_review_date, rq.service_pro_review,rq.request_title, rq.insert_date
+		FROM user_master_front us
+		 
+		inner join lt_requests rq on us.user_id = rq.user_id
+		WHERE rq.service_provider_id='" . $id . "'   ORDER BY rq.request_id";
+		
+		$query = $this->db->query($sSql);
+		$data['reviews'] = $reviews = $query->result_array();
 
         $this->load->view('view_service_provider', $data);
         $this->session->unset_userdata('success');
@@ -261,4 +275,61 @@ class Service_providers extends CI_Controller
         $this->session->unset_userdata('error');
 
     }
+	
+    public function view_trip($request_id=0, $id = 0)
+    {
+        $data['msg'] = '';
+        $data['id'] = $id;
+        $data['l_s_act'] = 2;
+        $data['sub_heading'] = 'View Customer';
+        $data['controller'] = $this->ctrl_name;
+        
+        $error = '';
+        $data['tab'] = (isset($_GET['tab'])) ? filter_var($_GET['tab'], FILTER_SANITIZE_STRING) : 1;
+		$data['tab'] = 3;
+        $where_edt = "user_id = $id";
+
+
+        /*$search_qry = " WHERE um.status_flag in ('Active','Inactive')  and user_type='Customer'  and user_id='" . $id . "'   ";
+        // inner join user_master_front um on o.customer_id = um.user_id
+        $sSql = "SELECT um.*,mp.name as state_name, mp.name_en as state_name_en, md.name as district_name , md.name_en as district_name_en  FROM `user_master_front` um
+		left join master_province mp on um.state_id = mp.id
+		left join master_city md on um.district_id = md.id $search_qry  ORDER BY um.user_id DESC";
+        $query = $this->db->query($sSql);
+        $data['records'] = $query->row_array();*/
+		
+        $sSql = " SELECT * FROM lt_requests WHERE request_id=".$request_id." ";
+        $query = $this->db->query($sSql);
+        $data['requests_det'] = $query->row_array();
+
+        $sSql = " SELECT * FROM  lt_requests_items WHERE request_id=".$request_id."  ";
+        $query = $this->db->query($sSql);
+        $data['requests_items'] = $query->result_array();
+
+        $sSql = " SELECT * FROM  lt_request_consignment_imgs WHERE request_id=".$request_id." ";
+        $query = $this->db->query($sSql);
+        $data['consignment_images'] = $query->result_array();
+
+        $sSql = " SELECT * FROM  lt_request_final_complete_images WHERE request_id=".$request_id." ";
+        $query = $this->db->query($sSql);
+        $data['consignment_images_comp'] = $query->result_array();
+
+        $sSql = " SELECT * FROM  user_master_front WHERE user_id=".$id." ORDER BY user_id DESC ";
+        $query = $this->db->query($sSql);
+        $data['customer'] = $customer = $query->row_array();
+
+        $sSql = "SELECT rq.*  FROM lt_requests rq , lt_request_quotes qt
+				WHERE rq.request_id=qt.request_id AND qt.service_provider_id='" . $id . "'
+				AND qt.quote_seeker_approval=1 AND
+				rq.status_flag='Active' ORDER BY rq.request_id DESC";
+		//die();
+        $query = $this->db->query($sSql);
+        $data['order_completed'] = $order_completed = $query->result_array();
+		
+        $this->load->view('view_ser_trip', $data);
+        $this->session->unset_userdata('success');
+        $this->session->unset_userdata('warning');
+        $this->session->unset_userdata('error');
+
+    }		
 }

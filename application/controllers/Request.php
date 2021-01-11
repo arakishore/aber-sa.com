@@ -28,15 +28,31 @@ class Request extends CI_Controller
 			$this->load->helper('security');
 			$this->load->library('email');
 			$this->load->helper('url_helper');
-            $session_user_data = $this->common->check_user_session('login');
+         //   $session_user_data = $this->common->check_user_session('login');
           //  print_r($session_user_data);
-            if (isset($session_user_data['user_type']) && $session_user_data['user_type'] != "Customer") {
+           /*  if (isset($session_user_data['user_type']) && $session_user_data['user_type'] != "Customer") {
                // redirect("login");
                // exit;
-            }  
+            }  */ 
     }
 	
-	
+	public function category(){
+        
+        $session_user_data = $this->session->userdata('user_data');
+       
+        $user_id = $session_user_data['user_id'];
+        $data['l_s_act'] = 4;
+       
+        $data['categorySubcategory'] = [];
+        $params['category_id'] = 0;
+        $params['is_parent_only'] = 1;
+       
+        $categorySubcategory= $this->services->categorySubcategory($params,'ARRAY');
+        if(isset($categorySubcategory['status']) && $categorySubcategory['status'] == 1){
+            $data['categorySubcategory']= $categorySubcategory['result'];
+        }
+        $this->load->view("category_view", $data);
+    }
     public function subcategory($categoryid=0){
         
         $session_user_data = $this->session->userdata('user_data');
@@ -74,10 +90,12 @@ class Request extends CI_Controller
            redirect("request/step2");
         } else {
            $session_req_data_post = $this->session->userdata('req_data_post1');
+         //  print_r($session_req_data_post);
            if(isset($session_req_data_post) && sizeof($session_req_data_post)>0){
                $data['postdata'] =  $session_req_data_post;
                $data['postdata']['category_id'] = $category_id;
                $data['postdata']['subcategory_id'] = $subcategory_id;
+               
                $paramtemp['category_id'] = $category_id;
                $category_name1 = $this->services->getCategoryName($paramtemp);
                $paramtemp['category_id'] = $subcategory_id;
@@ -98,7 +116,6 @@ class Request extends CI_Controller
         
         $session_user_data = $this->session->userdata('user_data');
        
-    
         $user_id = $session_user_data['user_id'];
 	 
    /*  print_r($_REQUEST);
@@ -112,13 +129,14 @@ class Request extends CI_Controller
          die();  */     
          $data['postdata'] = []; 
          $data['postdata1'] = []; 
-       
+         $data['consignmentimage_temp'] = [];
+
          if(sizeof($_POST)>0){
              $postdata_temp = $_POST;
              //requests_items
             //$postdata_temp['requests_items'] = $_POST['consignment_qty'];
             foreach($_POST['consignment_qty'] as $key => $value){
-                $temp_array = array('consignment_qty'=>$_POST['consignment_qty'][$key],'consignment_width'=>$_POST['consignment_width'][$key],'consignment_height'=>$_POST['consignment_height'][$key],'consignment_weight'=>$_POST['consignment_weight'][$key],'consignment_length'=>$_POST['consignment_length'][$key]);
+                $temp_array = array('consignment_qty'=>$_POST['consignment_qty'][$key],'consignment_width'=>$_POST['consignment_width'][$key],'consignment_height'=>$_POST['consignment_height'][$key],'consignment_weight'=>$_POST['consignment_weight'][$key],'consignment_length'=>$_POST['consignment_length'][$key],'consignment_details'=>$_POST['consignment_details'][$key]);
                 $postdata_temp['requests_items'][] = $temp_array;
             }
 
@@ -127,6 +145,7 @@ class Request extends CI_Controller
             redirect("request/step3");
          } else {
             $session_req_data_post = $this->session->userdata('req_data_post2');
+           
             if(isset($session_req_data_post) && sizeof($session_req_data_post)>0){
                 $data['postdata'] =  $session_req_data_post;
             }
@@ -141,13 +160,17 @@ class Request extends CI_Controller
          if($request_query->num_rows()>0){
             $data['consignmentimage_temp'] = $request_query->result_array();
          } else {
-             $data['consignmentimage_temp'] = [];
+            $session_req_data_post = $this->session->userdata('req_data_post2');
+          //  print_r($session_req_data_post);
+
+             $data['consignmentimage_temp'] = isset($session_req_data_post['lt_request_consignment_imgs']) ? $session_req_data_post['lt_request_consignment_imgs'] : [];
          }
          
         $this->load->view("step2", $data);
     }
     public function step3(){
     
+      //  print_r($this->session->userdata('req_uuid'));
         $session_user_data = $this->session->userdata('user_data');
        
         $user_id = $session_user_data['user_id'];
@@ -192,15 +215,29 @@ class Request extends CI_Controller
 
             }
             $data_json['request_via']= 'web';
+            $req_uuid =  $this->session->userdata('req_uuid');
+            if($req_uuid==""){
+                 $returnData = $this->services->doRequest($data_json, 'ARRAY');
+            } else {
+                
+                 $returnData = $this->services->doRequestUpdate($data_json, 'ARRAY');
+            }
             
-            $returnData = $this->services->doRequest($data_json, 'ARRAY');
             if($returnData['status']==1){
-                redirect("customer");
+
+                $this->session->unset_userdata('req_data_post3');
+                $this->session->unset_userdata('req_data_post2');
+                $this->session->unset_userdata('req_data_post1');
+                $this->session->unset_userdata('req_uuid');
+        
+            redirect("customer");
             } else {
                 print_r($returnData);
             }
             
          }  else {
+            $data['postdata3'] = $this->session->userdata('req_data_post3');
+
             $session_req_data_post2 = $this->session->userdata('req_data_post2');
             if(isset($session_req_data_post2) && sizeof($session_req_data_post2)>0){
                 $data['postdata2'] =  $session_req_data_post2;

@@ -29,6 +29,8 @@
     <div class="trans-select-cate-section-main">
         <form class="frm-vendor-search" name="request_step2" id="request_step2"
             action="<?php echo site_url("request/step3");?>" method="post" enctype="multipart/form-data">
+
+            <input type="hidden" name="request_id" id="request_id" value="<?php echo (isset($postdata1['request_id'])) ? $postdata1['request_id'] : ''?>">
             <div class="container">
                 <div class="trans-shipment-details-main">
                     <div class="trans-shipment-name-section">
@@ -101,7 +103,11 @@
                         </div>
                         <div class="order-top-details-tab">
                             <div class="btn-modify-section">
-                                <a href="<?php echo site_url("request/step1");?>" class="modify-btn-section">
+                            <?php
+                $category_id = isset($postdata1['category_id']) ? $postdata1['category_id'] : '';
+                $subcategory_id = isset($postdata1['subcategory_id']) ? $postdata1['subcategory_id'] : '';
+                ?>
+                                <a href="<?php echo site_url("request/step1/".$category_id."/".$subcategory_id);?>" class="modify-btn-section">
                                     <span><i class="fas fa-pencil"></i></span> Modify
                                 </a>
                             </div>
@@ -139,7 +145,7 @@
                         <div class="form-group trans-shipment-city-postcode">
                             <label>Add Additional Details (Optional)</label>
                             <textarea name="request_description" id="request_description"
-                                class="trans-textarea-descri formclass"><?php echo (isset($postdata['request_description'])) ? $postdata['request_description'] : ''?></textarea>
+                                class="trans-textarea-descri formclass"><?php echo (isset($postdata3['request_description'])) ? $postdata3['request_description'] : ''?></textarea>
                         </div>
                         <div class="submit-btn-section">
                             <button type="submit" id="btnstep3" name="btnstep2" class="btn-submit-section">

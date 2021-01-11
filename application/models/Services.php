@@ -1216,10 +1216,19 @@ $address_data = [];
             }
         }
      
-
+        $add_in['pickup_date'] = $this->common->getDateFormat($add_in['pickup_date'],"Y-m-d");
+        $add_in['drop_destination_date'] = $this->common->getDateFormat($add_in['drop_destination_date'],"Y-m-d");
         $add_in['insert_date'] = date("Y-m-d H:i:s");
+       
         $this->common->insertRecord('lt_requests', $add_in);
         $requestsInfo = $this->common->getSingleInfoBy('lt_requests', 'uuid', $add_in['uuid'], '*');
+
+
+        $add_up['shipment_id'] = 1000+$requestsInfo['request_id'];
+        
+        $where = "request_id='".$requestsInfo['request_id']."'";
+
+        $this->common->updateRecord('lt_requests', $add_up, $where);
 
         $consignment_image = (isset($params['consignment_image'])) ? $params['consignment_image'] : [];
 
@@ -1512,6 +1521,9 @@ $address_data = [];
         $add_in['category_name'] = (isset($params['category_name'])) ? $this->common->mysql_safe_string($params['category_name']) : '';
         $add_in['subcategory_name'] = (isset($params['subcategory_name'])) ? $this->common->mysql_safe_string($params['subcategory_name']) : '';
 
+        $add_in['pickup_date'] = $this->common->getDateFormat($add_in['pickup_date'],"Y-m-d");
+        $add_in['drop_destination_date'] = $this->common->getDateFormat($add_in['drop_destination_date'],"Y-m-d");
+        
         $add_in['update_date'] = date("Y-m-d H:i:s");
 
         $where = "user_id = '{$user_id}' and request_id='{$request_id}' and request_status='Requested'";
@@ -1591,7 +1603,7 @@ $address_data = [];
 
         $sql = "select rq.* ,
 
-        uf1.user_id as service_pro_user_id, uf1.first_name as service_pro_first_name ,uf1.middle_name as service_pro_middle_name ,uf1.last_name as service_pro_last_name ,uf1.mobile as service_pro_mobile ,uf1.profile_pic as service_pro_profile_pic ,
+        uf1.user_id as service_pro_user_id, uf1.first_name as service_pro_first_name ,uf1.middle_name as service_pro_middle_name ,uf1.last_name as service_pro_last_name ,uf1.mobile as service_pro_mobile,uf1.email as service_pro_email,uf1.enterprise_name as enterprise_name ,uf1.profile_pic as service_pro_profile_pic ,
         uf2.user_id as dri_user_id, uf2.first_name as dri_first_name ,uf2.middle_name as dri_middle_name ,uf2.last_name as dri_last_name ,uf2.mobile as dri_mobile ,uf2.profile_pic as dri_profile_pic
         from lt_requests rq
           left join user_master_front uf1 on rq.service_provider_id= uf1.user_id
@@ -1726,6 +1738,8 @@ $address_data = [];
             $lt_requests['service_pro_middle_name'] = $requests_val['service_pro_middle_name'] . "";
             $lt_requests['service_pro_last_name'] = $requests_val['service_pro_last_name'] . "";
             $lt_requests['service_pro_mobile'] = $requests_val['service_pro_mobile'] . "";
+            $lt_requests['service_pro_email'] = $requests_val['service_pro_email'] . "";
+            $lt_requests['enterprise_name'] = $requests_val['enterprise_name'] . "";
             $lt_requests['dri_first_name'] = $requests_val['dri_first_name'] . "";
             $lt_requests['dri_middle_name'] = $requests_val['dri_middle_name'] . "";
             $lt_requests['dri_last_name'] = $requests_val['dri_last_name'] . "";
@@ -1851,10 +1865,11 @@ $address_data = [];
 
         $arr['errorMessage'] = "Some thing went wrong. Please try again";
 
-        $sql = "select *
+         $sql = "select *
         from lt_request_quotes rq
                  where rq.request_id='{$request_id}' and quote_seeker_approval =1   and rq.status_flag='Active'  ";
         $query = $this->db->query($sql);
+        
         if ($query->num_rows() <= 0) {
             if ($action_flag == 1) {
 
@@ -1896,7 +1911,7 @@ $address_data = [];
 
             $arr['status'] = $action_flag;
             $arr['successMessage'] = ($action_flag == 1) ? 'Offer accepted successfully' : '';
-            $arr['errorMessage'] = ($action_flag == 2) ? 'Offer! Order denied ' : '';
+            $arr['errorMessage'] = ($action_flag == 2) ? 'Offer! Order denied successfully' : '';
 
             $update_data['quote_seeker_approval'] = $action_flag;
             $update_data['quote_approval_date'] = $today;

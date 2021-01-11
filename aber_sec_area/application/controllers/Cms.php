@@ -142,9 +142,15 @@ class Cms extends CI_Controller
 
         if (isset($_POST['mode']) && $_POST['mode'] == "submitform") {
 
-            $add_in = array();
-            $add_in['email_description'] = $email_description = (isset($_POST['email_description'])) ? $this->common->mysql_safe_string($_POST['email_description']) : '';
+            $add_in = array();            
             $add_in['email_subject'] = $email_subject = (isset($_POST['email_subject'])) ? $this->common->mysql_safe_string($_POST['email_subject']) : '';
+			$add_in['email_description'] = $email_description = (isset($_POST['email_description'])) ? $this->common->mysql_safe_string($_POST['email_description']) : '';
+			$add_in['notification_text_cust'] = $notification_text_cust = (isset($_POST['notification_text_cust'])) ? $this->common->mysql_safe_string($_POST['notification_text_cust']) : '';
+			$add_in['notification_text_driv'] = $notification_text_driv = (isset($_POST['notification_text_driv'])) ? $this->common->mysql_safe_string($_POST['notification_text_driv']) : '';
+			$add_in['admin_email_body'] = $admin_email_body = (isset($_POST['admin_email_body'])) ? $this->common->mysql_safe_string($_POST['admin_email_body']) : '';
+			$add_in['driver_email_body'] = $driver_email_body = (isset($_POST['driver_email_body'])) ? $this->common->mysql_safe_string($_POST['driver_email_body']) : '';
+			
+			
             if ($email_description == '') {
                 $error .= "Please enter description<br>";
             }

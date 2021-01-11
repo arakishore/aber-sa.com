@@ -5,7 +5,7 @@
 class Requests_bids extends CI_Controller
 {
     public $db;
-    public $ctrl_name = 'customers';
+    public $ctrl_name = 'requests_bids';
     public $tbl_name = 'user_master_front';
     public $tbl_name_one = 'assets_master';
     public $pg_title = 'Requests';
@@ -47,7 +47,7 @@ class Requests_bids extends CI_Controller
         $data['msg'] = '';
         $error = '';
 
-        $sSql = " SELECT * FROM  lt_requests WHERE status_flag!='Delete' ORDER BY request_id DESC ";
+        $sSql = " SELECT * FROM  lt_requests  ORDER BY request_id DESC ";
         $query = $this->db->query($sSql);
         $data['requests_rs'] = $query->result_array();
 
@@ -58,27 +58,42 @@ class Requests_bids extends CI_Controller
         $this->session->unset_userdata('error');
     }
 
-    public function view_bids($id = 1)
+    public function view_request_detail($id = 1)
     {
         $data['msg'] = '';
         $data['id'] = $id;
         $data['l_s_act'] = 1;
-        $data['sub_heading'] = 'View Customer';
+        $data['sub_heading'] = 'View Request Details';
         $data['controller'] = $this->ctrl_name;
         $error = '';
 
-
-
-        $sSql = "SELECT csa.*,mp.name as cat_name, md.name as sub_cat_name FROM `lt_requests` csa
-		left join product_category mp on csa.category_id = mp.category_id
-		left join product_category md on csa.subcategory_id = md.category_id  where user_id='" . $id . "'   ORDER BY csa.request_id DESC";
+        $sSql = " SELECT * FROM  lt_requests WHERE request_id=".$id." ORDER BY request_id DESC ";
         $query = $this->db->query($sSql);
-        $data['requests'] = $query->result_array();
-		//die();
+        $data['requests'] = $requests = $query->row_array();
 
+        $sSql = "SELECT *  FROM `user_master_front` WHERE user_id=" . $requests['user_id'] . " ORDER BY user_id";
+        $query = $this->db->query($sSql);
+        $data['customer'] = $customer = $query->row_array();
 
-
-        $this->load->view('view_customer', $data);
+        $sql = "SELECT us.first_name, us.last_name, qt.quote_amount  FROM user_master_front us , lt_request_quotes qt
+			WHERE us.user_id=qt.service_provider_id AND
+			qt.request_id=" . $id . "
+			ORDER BY qt.request_quote_id DESC";
+        $rschk = $this->db->query($sql);
+        $data['req_quotes'] = $req_quotes = $rschk->result_array();
+		
+        $sSql = "SELECT *  FROM `lt_requests_items` WHERE request_id=" . $requests['request_id'] . " ORDER BY lt_requests_items_id";
+        $query = $this->db->query($sSql);
+        $data['items'] = $items = $query->result_array();
+	
+        $sql = "SELECT us.first_name, us.last_name, qt.*  FROM user_master_front us , lt_request_quotes qt
+			WHERE us.user_id=qt.service_provider_id AND
+			qt.request_id=" . $requests['request_id'] . "
+			ORDER BY qt.request_quote_id DESC";
+        $rschk = $this->db->query($sql);
+        $data['req_quotes'] = $req_quotes = $rschk->result_array();
+				
+        $this->load->view('view_request', $data);
         $this->session->unset_userdata('success');
         $this->session->unset_userdata('warning');
         $this->session->unset_userdata('error');

@@ -66,7 +66,7 @@
                             <div class="card-header">
                                 <div class="col-sm-4 form-group trans-list-para-postcode">
                                 
-                                    <select name="status" id="status" onchange="javascript:location.href = this.value;">
+                                    <select name="status" id="status" onChange="javascript:location.href = this.value;">
                                         <option value="<?php echo site_url('serviceprovider/my_shipment')?>?status=All"
                                         <?php if (isset($_GET['status']) && $_GET['status']=='All') {?> selected <?php } ?>>All</option>
                                         <option value="<?php echo site_url('serviceprovider/my_shipment')?>?status=Booked"
@@ -98,7 +98,6 @@
                                  <th>Shipment Title</th>
                                  <th>Photo</th>
                                  <th>Shipment ID</th>
-                                 <th>Total Amount</th>
                                  <th>Date</th>
                                  <th>Status</th>
                                </tr>
@@ -122,7 +121,6 @@
 								<?php echo $this->common->getDbValue($value['request_title']); ?></a></td>
                                 <td><img src="<?php echo $sel_photo?>" class="product-img" alt="product img"></td>
                                 <td><?php echo $this->common->getDbValue($value['shipment_id']); ?></td>
-                                <td>SR <?php echo $this->common->getDbValue($value['budget_amount']); ?></td>
                                 <td><?php echo $this->common->getDateFormat($value['insert_date'], 'd M Y');; ?></td>
                                 <td><?php echo $this->common->getDbValue($value['request_status']); ?></td>
                                </tr>

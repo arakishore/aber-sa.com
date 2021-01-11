@@ -80,10 +80,44 @@ if ($warning) {
                                         <!-- <div id="basic-error" class="validation-invalid-label" for="basic">This field is required.</div> -->
                                     </div>
                                 </div>
+                                
                                 <div class="form-group row">
-                                    <label class="col-form-label col-lg-2" for="name">Email Template :<span class="text-danger">*</span></label>
+                                    <label class="col-form-label col-lg-2" for="name">Email Body :<span class="text-danger">*</span></label>
                                     <div class="col-lg-9">
                                     <textarea rows="10" cols="3" class="form-control" placeholder="Email Template" id="email_description" name="email_description"><?php echo isset($records['email_description'])?$this->common->getDbValue($records['email_description']):''; ?></textarea>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-2" for="name">Notification Text (Customer)  :</label>
+                                    <div class="col-lg-9">
+                                    <textarea rows="10" cols="3" class="form-control" placeholder="Notification Text (Customer)" id="notification_text_cust" name="notification_text_cust"><?php echo isset($records['notification_text_cust'])?$this->common->getDbValue($records['notification_text_cust']):''; ?></textarea>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-2" for="name">Notification Text (Driver)  :</label>
+                                    <div class="col-lg-9">
+                                    <textarea rows="10" cols="3" class="form-control" placeholder="Notification Text (Driver)" id="notification_text_driv" name="notification_text_driv"><?php echo isset($records['notification_text_driv'])?$this->common->getDbValue($records['notification_text_driv']):''; ?></textarea>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-2" for="name">Admin Email Body  :</label>
+                                    <div class="col-lg-9">
+                                    <textarea rows="10" cols="3" class="form-control" placeholder="Admin Email Body" id="admin_email_body" name="admin_email_body"><?php echo isset($records['admin_email_body'])?$this->common->getDbValue($records['admin_email_body']):''; ?></textarea>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-2" for="name">Driver Email Body  :</label>
+                                    <div class="col-lg-9">
+                                    <textarea rows="10" cols="3" class="form-control" placeholder="Driver Email Body" id="driver_email_body" name="driver_email_body"><?php echo isset($records['driver_email_body'])?$this->common->getDbValue($records['driver_email_body']):''; ?></textarea>
 
                                     </div>
                                 </div>

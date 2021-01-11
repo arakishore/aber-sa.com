@@ -94,7 +94,7 @@
                                 </div>
 								<div class="shipment-listing-main">
                                     <div class="shipment-listing-head">
-                                        Miles
+                                        KMs.
                                     </div>
                                     <div class="shipment-listing-contnet">
                                         <?php echo $this->common->getDbValue($requests['distance_mile']); ?>
@@ -110,14 +110,7 @@
                                     </div>
                                 </div>
                                                                 
-                                <div class="shipment-listing-main">
-                                    <div class="shipment-listing-head">
-                                        Budget
-                                    </div>
-                                    <div class="shipment-listing-contnet">
-                                        SR <?php echo $this->common->getDbValue($requests['budget_amount']); ?>
-                                    </div>
-                                </div>
+                                
                                 <div class="shipment-listing-main">
                                     <div class="shipment-listing-head">
                                         # of Quotes
@@ -348,9 +341,36 @@
                         <input id="terms" name="terms" class="filled-in" type="checkbox" required>
                         <label for="terms">Accept Term & Conditions</label>                        
                     </div>
+                    
+                    
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <div class="note-shipping-customer">
+                                    <textarea name="quote_note" id="quote_note" placeholder="Note to Shipint Customer"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <div class="enter-lowest-amount-txt">
+                                    <div class="details-matter-icon">
+                                        <i class="fal fa-exclamation-circle"></i>
+                                    </div> 
+                                    <div class="notes-head">Notes:</div>
+                                    <span>
+                                        This note will be shown to customer when bid will be viewed.
+                                    </span>                                
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+<div class="forgat-button">
+                <button type="submit" class="forgat-button-style">BID</button>
+            </div>  
+            </div>  
+                                      
+                        </div>
+                                     
                 </div>
 
-                <div class="quote-service-seciton-main">
+                <!--<div class="quote-service-seciton-main">
                     <div class="quote-service-head">
                         Transport Timeframe <span><i class="fal fa-angle-down"></i></span>
                     </div>
@@ -397,7 +417,7 @@
                             </div>                        
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!--<div class="quote-service-seciton-main quote-expiration-main">
                     <div class="quote-service-head">
                         Quote Expiration <span><i class="fal fa-angle-down"></i></span>
@@ -446,38 +466,7 @@
                         </div>
                     </div>
                 </div>-->
-                <div class="quote-service-seciton-main quote-expiration-main">
-                    <div class="quote-service-head">
-                        Note to Shipint Customer <span><i class="fal fa-angle-down"></i></span>
-                    </div>
-                    <div class="drop-section-block-main">
-                        <div class="row">
-                            <div class="col-sm-6 col-md-6 col-lg-6">
-                                <div class="note-shipping-customer">
-                                    <textarea name="quote_note" id="quote_note"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-6">
-                                <div class="enter-lowest-amount-txt">
-                                    <div class="details-matter-icon">
-                                        <i class="fal fa-exclamation-circle"></i>
-                                    </div> 
-                                    <div class="notes-head">Notes:</div>
-                                    <span>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the.
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem.
-                                    </span>                                
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-6">
-<div class="forgat-button">
-                <button type="submit" class="forgat-button-style">BID</button>
-            </div>  
-            </div>  
-                                      
-                        </div>
-                    </div>
-                </div>
+                
             </div>
 </form>            
         </div>

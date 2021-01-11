@@ -69,12 +69,12 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
 
                     <div class="card">
                         <div class="card-header header-elements-inline">
-                            <h6 class="card-title"><?php echo (isset($sub_heading))?$sub_heading:''?> </h6>
+                            <h6 class="card-title"><?php echo (isset($sub_heading))?$sub_heading:''?> (<?php echo $this->common->getDbValue($customer['first_name']); ?> <?php echo $this->common->getDbValue($customer['last_name']); ?>)</h6>
                         </div>
                         <div class="card-body">
                             <ul class="nav nav-tabs nav-tabs-highlight">
                                 <li class="nav-item"><a href="#highlighted-tab1" class="nav-link <?php echo ($tab==1)?'active':'' ?>" data-toggle="tab"><i class="icon-user mr-2"></i> Customer Info</a></li>
-                                <li class="nav-item"><a href="#highlighted-tab2" class="nav-link <?php echo ($tab==2)?'active':'' ?>" data-toggle="tab"><i class="icon-users2  mr-2"></i>Trips</a></li>
+                                <li class="nav-item"><a href="#highlighted-tab2" class="nav-link <?php echo ($tab==2)?'active':'' ?>" data-toggle="tab"><i class="icon-users2  mr-2"></i>Trips (<?php echo sizeof($requests)?>)</a></li>
                             </ul>
 
                             <div class="tab-content">
@@ -224,7 +224,45 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                         </div>
                                     </form>
 
-                                    <form class="form-horizontal" action="<?php echo site_url($controller.'/view_customer/'.$id) ?>" method="post" enctype="multipart/form-data">
+<?php
+ if(isset($reviews) && sizeof($reviews)>0){ ?>
+<legend class="font-weight-semibold text-uppercase font-size-sm">Rating</legend>
+<table width="100%" class="table table-hover datatablecustom">
+                                        <thead>
+                                            <tr class="bg-blue ">
+
+                                                <th colspan="2" style="width:auto">Review By</th>
+                                                <th style="width:auto">Shipment Title</th>
+                                                <th width="21%" style="width:auto">Date</th>
+                                                <th width="25%" style="width:auto">Review</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+<?php  foreach($reviews as $key => $val){ 
+$photo = back_path.'uploads/profile_pics/'.stripslashes($val['profile_pic']);
+  ?>
+                                            <tr>
+                                                <td width="14%">
+                                                <img src="<?php echo $photo;?>" alt="user avatar" class="customer-img rounded-circle" height="50" width="50"><br/></td>
+                                                <td width="17%"><?php echo $val['first_name']?> <?php echo $val['last_name']?></td>
+                                                <td width="23%"><?php echo $val['request_title']?></td>
+                                                <td><?php echo $val['cust_review_date']?></td>
+                                                <td>
+<div class="star">
+                                  <?php
+                                  for($i=1;$i<=$val['cust_rating'];$i++){
+                                  ?>
+                                  <i class="fa fa-star" aria-hidden="true"></i>
+                                   <?php }?>
+                                </div>                                                
+                                                </td>
+                                            </tr>
+                                            <?php }?>
+                                        </tbody>
+                                    </table>
+<?php } ?> 
+
+      <form class="form-horizontal" action="<?php echo site_url($controller.'/view_customer/'.$id) ?>" method="post" enctype="multipart/form-data">
                                         <input type="hidden" name="mode" id="mode" value="edit_content_password">
 
                                         <fieldset>
@@ -264,9 +302,6 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                                     <th width="25%">Category</th>
                                                     <th width="12%">Pickup Date</th>
                                                     <th width="9%">Drop Date</th>
-                                                    <th width="10%">Budget</th>
-
-
                                                     <th width="7%">Status</th>
                                                     <th width="6%">Actions</th>
                                                 </tr>
@@ -290,9 +325,6 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                                     </td>
                                                     <td valign="top"><?php echo $this->common->getDateFormat($value['pickup_date'], 'Y-m-d'); ?></td>
                                                     <td valign="top"><?php echo $this->common->getDateFormat($value['drop_destination_date'], 'Y-m-d'); ?></td>
-                                                    <td valign="top"><?php echo $this->common->getDbValue($value['budget_amount']); ?></td>
-
-
                                                     <td valign="top">
                                                         <?php
                                         if($status=="Active"){echo '<span class="badge badge-success">Active</span>';}
@@ -303,14 +335,14 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                                     </td>
                                                     <td valign="top">
                                                         <div class="list-icons">
-<a href="<?php echo site_url($this->ctrl_name . '/view_trip/' . $this->common->getDbValue($value['request_id']).'/'.$id) ?>" class="list-icons-item text-primary-600" data-popup="tooltip" title="" data-original-title="VIEW"><i class="icon-pencil7"></i></a>                                                        
+<a href="<?php echo site_url($this->ctrl_name . '/view_trip/' . $this->common->getDbValue($value['request_id']).'/'.$id) ?>" class="list-icons-item text-primary-600" data-popup="tooltip" title="" data-original-title="VIEW"><i class="icon-pencil7"></i></a>
                                                         </div>
                                                     </td>
                                                 </tr>
                                                 <?php } ?>
                                             </tbody>
                                         </table>
-                              </div>
+                            </div>
                                     <?php } else {
                         ?>
                                     <div class=" text-center  card-body border-top-info1">
@@ -319,18 +351,9 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
                                     <?php    
                             }?>
                                 </div>
-
-                                
-
-                                
-                                
-
                             </div>
-
-
                         </div>
                     </div>
-
                 </div>
                 <!-- /content area -->
                 <!-- Footer -->
@@ -342,199 +365,11 @@ $tab = (isset($tab) && $tab!="")?$tab :'1';
         <!-- /page content -->
 
         <!-- Primary modal -->
-        <div id="modal_theme_primary_addchildpoup" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary">
-                        <h6 class="modal-title">Add Branch User</h6>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-
-                    <div class="modal-body">
-                    <div id="err_div_addpop" class="hidedefault alert bg-danger text-white alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert"><span>×</span></button>
-                                <span class="font-weight-semibold">Warning! <span id="span_err_div_addpop"></span> </span>
-                            </div>
-                        <form name="addchildpoup" id="addchildpoup" class="form-horizontal" action="<?php echo site_url($controller.'/view_customer/'.$id.'?tab=2') ?>" method="post" enctype="multipart/form-data">
-                            <div id="err_info_div_pop" class="hidedefault alert bg-danger text-white alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert"><span>×</span></button>
-                                <span class="font-weight-semibold">Warning! <span id="span_err_info_div_pop"></span> </span>
-                            </div>
-                            <input type="hidden" name="mode_pop" id="mode_pop" value="addchildpoup">
-                            <input type="hidden" name="tab" id="tab" value="2">
-
-                            <div class="modal-body">
-
-                                <div class="row">
-
-
-                                    <div class="col-md-12">
-                                        <fieldset>
-
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 col-form-label">Name:</label>
-                                                <div class="col-lg-9">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <input type="text" id="first_name_pop" name="first_name"  placeholder="First name" class="form-control">
-                                                        </div>
-
-                                                        <div class="col-md-6">
-                                                            <input type="text" id="last_name_pop" name="last_name" placeholder="Last name" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 col-form-label">Email:</label>
-                                                <div class="col-lg-9">
-                                                    <input type="text" id="email_pop" name="email"  placeholder="email"  class="form-control">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 col-form-label">Phone #:</label>
-                                                <div class="col-lg-9">
-                                                    <input type="text" id="mobile_pop" name="mobile"  placeholder="Mobile" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 col-form-label">Password:</label>
-                                                <div class="col-lg-9">
-                                                    <input type="text" id="passphrase_pop" name="passphrase"  placeholder="Password" class="form-control">
-                                                </div>
-                                            </div>
-
-
-                                        </fieldset>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                <button type="button" name="btnaddchildpoup" id="btnaddchildpoup" class="btn bg-primary">Submit</button>
-                            </div>
-
-
-
-
-
-                        </form>
-
-
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
+        
         <!-- /primary modal -->
 
         <!-- Primary modal -->
-        <div id="modal_theme_primary" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary">
-                        <h6 class="modal-title"></h6>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-
-                    <div class="modal-body">
-
-                        <form name="frmUpdateData" id="frmUpdateData" class="form-horizontal" action="<?php echo site_url($controller.'/view_customer/'.$id.'?tab=2') ?>" method="post" enctype="multipart/form-data">
-                            <div id="err_info_div_pop" class="hidedefault alert bg-danger text-white alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert"><span>×</span></button>
-                                <span class="font-weight-semibold">Warning! <span id="span_err_info_div_pop"></span> </span>
-                            </div>
-                            <input type="hidden" name="mode_pop" id="mode_pop" value="frmUpdateData">
-                            <input type="hidden" name="tab" id="tab" value="2">
-                            <input type="hidden" name="childid" id="childid" value="">
-                            <div class="modal-body">
-                                <!--  <div class="form-group row">
-
-                                    <div class="col-sm-6">
-                                        <label>First name</label>
-                                        <input type="text" id="first_name_pop" name="first_name"  placeholder="First name" class="form-control">
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <label>Last name</label>
-                                        <input type="text" id="last_name_pop" name="last_name"  placeholder="Last name" class="form-control">
-                                    </div>
-
-                                </div> -->
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-
-
-
-                                        <div class="row">
-                                            <label class="col-form-label col-lg-2">Status </label>
-                                            <div class="col-lg-10">
-                                                <div class="form-check form-check-inline">
-                                                    <label class="form-check-label">
-                                                        <input type="radio" class="form-check-input-styled-success" value="Active" name="status" id="status1_pop">
-                                                        Active
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check form-check-inline">
-                                                    <label class="form-check-label">
-                                                        <input type="radio" class="form-check-input-styled-danger" value="Inactive" name="status" id="status2_pop">
-                                                        In-Active
-                                                    </label>
-                                                </div>
-                                                <div class="hidedefault validation-invalid-label mt-2" id="error_phonenumber">Please select status</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                <button type="button" name="btnUpdateData" id="btnUpdateData" class="btn bg-primary">Save changes</button>
-                            </div>
-
-
-
-                            <div id="err_div_pop" class="hidedefault alert bg-danger text-white alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert"><span>×</span></button>
-                                <span class="font-weight-semibold">Warning! <span id="span_err_div_pop"></span> </span>
-                            </div>
-
-
-
-                            <fieldset>
-                                <legend class="font-weight-semibold text-uppercase font-size-sm">Edit Login Details</legend>
-
-                                <div class="form-group row">
-                                    <label class="col-form-label col-lg-2" for="password">Password :<span class="text-danger">*</span></label>
-                                    <div class="col-lg-9"><input type="password" class="form-control" id="login_password_pop" name="login_password" placeholder="Enter Password" value="" autocomplete="off" required> </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-form-label col-lg-2"></label>
-                                    <div class="col-lg-9">
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                            <button type="button" name="btnChangePassword" id="btnChangePassword" class="btn bg-primary">Save changes</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-
-
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
+        
         <!-- /primary modal -->
 
 

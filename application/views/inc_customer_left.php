@@ -32,7 +32,7 @@ if($session_user_data['user_photo']) {
                                 <li><a href="#payment-options.html" >Payment Options <span><i class="fal fa-angle-right"></i> </span></a></li>
                                 <li><a href="<?php echo site_url('customer/notifications')?>" <?php if(isset($l_s_act) && $l_s_act==2){ echo 'class="active"';}?>>Notifications <span><i class="fal fa-angle-right"></i> </span></a></li>
                                 <li><a href="<?php echo site_url('customer/my_shipment/Requested')?>"  <?php if(isset($l_s_act) && $l_s_act==3){ echo 'class="active"';}?>>My Shipment<span><i class="fal fa-angle-right"></i> </span></a></li>
-                                <li><a href="#review.html">Review<span><i class="fal fa-angle-right"></i> </span></a></li>   
+                                <li><a href="<?php echo site_url('customer/review')?>" <?php if(isset($l_s_act) && $l_s_act==4){ echo 'class="active"';}?>>Review<span><i class="fal fa-angle-right"></i> </span></a></li> 
                                 <li><a href="<?php echo site_url('customer/log_out')?>">Log Out</a></li>
                             </ul>
                         </div>

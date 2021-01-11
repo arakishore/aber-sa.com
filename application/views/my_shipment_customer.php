@@ -46,6 +46,17 @@
                     <div class="fb-dashbord">
                         <div class="card-dash mt-3">
                             <div class="card-content">
+                                <div class="row">
+                                <div class="col-12 col-lg-12 col-xl-12 border-light">
+                                    <a href="<?php echo site_url('request/category')?>">
+                                    <div
+                                                class="card-body  ">
+                                                <h5 class="mb-0">Add New Request</h5>
+                                            </div>
+                                  
+                                        </a>
+                                </div>
+                                </div>
                                 <div class="row row-group">
                                     <div class="col-3 col-lg-3 col-xl-3 border-light">
                                         <a href="<?php echo site_url('customer/my_shipment/Requested')?>">
@@ -96,7 +107,7 @@
                                             <th>Shipment Title</th>
                                             <th>Photo</th>
                                             <th>Shipment ID</th>
-                                            <th>Total Amount</th>
+                                            
                                             <th>Date</th>
                                             <th>Status</th>
                                         </tr>
@@ -122,7 +133,7 @@
 								<?php echo $this->common->getDbValue($value['request_title']); ?></a></td>
                                 <td><img src="<?php echo $cons_images?>" class="<?php echo $this->common->getDbValue($value['request_title']); ?>" alt="<?php echo $this->common->getDbValue($value['request_title']); ?>"></td>
                                                     <td><?php echo $this->common->getDbValue($value['shipment_id']); ?></td>
-                                            <td>SR <?php echo $this->common->getDbValue($value['budget_amount']); ?></td>
+                                            
                                             <td><?php echo $this->common->getDateFormat($value['insert_date'], 'd M Y');; ?></td>
                                             <td><?php echo $this->common->getDbValue($value['request_status']); ?></td>
                                         </tr>

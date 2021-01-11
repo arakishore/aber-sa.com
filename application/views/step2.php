@@ -4,7 +4,7 @@
 <head>
     <?php $this->load->view('inc_header_commoncss');?>
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-datepicker.min.css">
-    <?php
+<?php
 $i=0;
 ?>
 </head>
@@ -31,6 +31,8 @@ $i=0;
     <div class="trans-select-cate-section-main">
         <form class="frm-vendor-search" name="request_step2" id="request_step2"
             action="<?php echo site_url("request/step2");?>" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="request_id" id="request_id"
+                value="<?php echo (isset($postdata1['request_id'])) ? $postdata1['request_id'] : ''?>">
             <div class="container">
                 <div class="trans-listing-back-save-btn">
                     <?php
@@ -56,6 +58,7 @@ $i=0;
                             value="<?php echo (isset($postdata['request_title'])) ? $postdata['request_title'] : ''?>"
                             required class="form-control formclass" placeholder="e.g. USA">
                     </div>
+                     
                     <div class="text-block">
                         <div class="trans-item-section-main">
                             <div class="trans-item-section-head">
@@ -99,7 +102,7 @@ $i=0;
                                     <div class="form-group trans-list-para-postcode">
                                         <input type="text" name="consignment_weight[]" id="consignment_weight1"
                                             class="form-control formclass" placeholder="Kg"
-                                            value="<?php echo (isset($postdata['consignment_weight'][$i])) ? $postdata['consignment_weight'][$i] : ''?>"
+                                            value="<?php echo (isset($postdata['requests_items'][$i]['consignment_weight'])) ? $postdata['requests_items'][$i]['consignment_weight'] : ''?>"
                                             required>
                                     </div>
                                     <div class="clearfix"></div>
@@ -115,7 +118,7 @@ $i=0;
                                     <div class="form-group trans-list-para-postcode">
                                         <input type="text" name="consignment_length[]" id="consignment_length1"
                                             class="form-control formclass" placeholder="cm"
-                                            value="<?php echo (isset($postdata['consignment_length'][$i])) ? $postdata['consignment_length'][$i] : ''?>"
+                                            value="<?php echo (isset($postdata['requests_items'][$i]['consignment_length'])) ? $postdata['requests_items'][$i]['consignment_length'] : ''?>"
                                             required>
                                     </div>
                                     <div class="clearfix"></div>
@@ -131,7 +134,7 @@ $i=0;
                                     <div class="form-group trans-list-para-postcode">
                                         <input type="text" name="consignment_width[]" id="consignment_width1"
                                             class="form-control formclass" placeholder="cm"
-                                            value="<?php echo (isset($postdata['consignment_width'][$i])) ? $postdata['consignment_width'][$i] : ''?>"
+                                            value="<?php echo (isset($postdata['requests_items'][$i]['consignment_width'])) ? $postdata['requests_items'][$i]['consignment_width'] : ''?>"
                                             required>
                                     </div>
                                     <div class="clearfix"></div>
@@ -147,7 +150,7 @@ $i=0;
                                     <div class="form-group trans-list-para-postcode">
                                         <input type="text" name="consignment_height[]" id="consignment_height1"
                                             class="form-control formclass" placeholder="cm"
-                                            value="<?php echo (isset($postdata['consignment_height'][$i])) ? $postdata['consignment_height'][$i] : ''?>"
+                                            value="<?php echo (isset($postdata['requests_items'][$i]['consignment_height'])) ? $postdata['requests_items'][$i]['consignment_height'] : ''?>"
                                             required>
                                     </div>
                                     <div class="clearfix"></div>
@@ -155,16 +158,139 @@ $i=0;
                             </div>
                             <div class="form-group trans-shipment-city-postcode">
                                 <label>Description</label>
+                               
                                 <textarea name="consignment_details[]" class="trans-textarea-descri"
-                                    id="consignment_details1"></textarea>
+                                    id="consignment_details1"><?php echo (isset($postdata['requests_items'][$i]['consignment_details'])) ? $postdata['requests_items'][$i]['consignment_details'] : ''?></textarea>
                             </div>
                             <button class="btn trans-btns-hover-effect add-remove-btn" type="button"
                                 onclick="education_fields();"><i class="fal fa-plus"></i> Add </button>
                             <div class="clearfix"></div>
                         </div>
                         <div class="clearfix"></div>
-                        <div id="education_fields"></div>
+                        
                     </div>
+                   
+                    <?php
+                    
+                    if(isset($postdata['requests_items']) && sizeof($postdata['requests_items']) >1  ){
+                        for($i=1; $i<sizeof($postdata['requests_items']); $i++){
+                            $time_id = time();
+                     ?>
+                      <div class="text-block form-group removeclass<?php echo $time_id;?>">
+                        <div class="trans-item-section-main">
+                            <div class="trans-item-section-head">
+                                Item <?php echo $i+1?>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <div class="trans-item-lable-section">
+                                        Quantity*
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 col-md-8 col-lg-10">
+                                    <div class="form-group trans-list-para-postcode trans-qty-drop">
+                                        <select name="consignment_qty[]" id="consignment_qty1" required>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+
+
+
+                                        </select>
+                                        <span><i class="fal fa-angle-down"></i></span>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <div class="trans-item-lable-section">
+                                        Weight*
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 col-md-8 col-lg-10">
+                                    <div class="form-group trans-list-para-postcode">
+                                        <input type="text" name="consignment_weight[]" id="consignment_weight1"
+                                            class="form-control formclass" placeholder="Kg"
+                                            value="<?php echo (isset($postdata['requests_items'][$i]['consignment_weight'])) ? $postdata['requests_items'][$i]['consignment_weight'] : ''?>"
+                                            required>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <div class="trans-item-lable-section">
+                                        Length*
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 col-md-8 col-lg-10">
+                                    <div class="form-group trans-list-para-postcode">
+                                        <input type="text" name="consignment_length[]" id="consignment_length1"
+                                            class="form-control formclass" placeholder="cm"
+                                            value="<?php echo (isset($postdata['requests_items'][$i]['consignment_length'])) ? $postdata['requests_items'][$i]['consignment_length'] : ''?>"
+                                            required>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <div class="trans-item-lable-section">
+                                        Width*
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 col-md-8 col-lg-10">
+                                    <div class="form-group trans-list-para-postcode">
+                                        <input type="text" name="consignment_width[]" id="consignment_width1"
+                                            class="form-control formclass" placeholder="cm"
+                                            value="<?php echo (isset($postdata['requests_items'][$i]['consignment_width'])) ? $postdata['requests_items'][$i]['consignment_width'] : ''?>"
+                                            required>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <div class="trans-item-lable-section">
+                                        Height*
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 col-md-8 col-lg-10">
+                                    <div class="form-group trans-list-para-postcode">
+                                        <input type="text" name="consignment_height[]" id="consignment_height1"
+                                            class="form-control formclass" placeholder="cm"
+                                            value="<?php echo (isset($postdata['requests_items'][$i]['consignment_height'])) ? $postdata['requests_items'][$i]['consignment_height'] : ''?>"
+                                            required>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="form-group trans-shipment-city-postcode">
+                                <label>Description</label>
+                               
+                                <textarea name="consignment_details[]" class="trans-textarea-descri"
+                                    id="consignment_details1"><?php echo (isset($postdata['requests_items'][$i]['consignment_details'])) ? $postdata['requests_items'][$i]['consignment_details'] : ''?></textarea>
+                            </div>
+                            <button class="btn trans-btns-hover-effect add-remove-btn" type="button"
+                                onclick="remove_education_fields(<?php echo $time_id;?>);"><i class="fal fa-minus"></i> Remove </button>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                      </div>    
+                    </div>
+                     <?php 
+                        }  
+                    }
+                    ?>
+                    <div id="education_fields"></div>
                     <div class="form-group trans-list-para-postcode add-photos-main-section">
                         <label>Add Photos</label>
                         <div class="add-photos-main-section-images">
@@ -175,9 +301,13 @@ $i=0;
                                 if(isset($consignmentimage_temp) && sizeof($consignmentimage_temp) > 0) { 
                                     foreach($consignmentimage_temp as $key => $val){
                                 ?>
-                                <div class="upload-photo" id="multiupload_img_1_<?php echo $val['img_id']?>"><span class="upload-close"><a
-                                            href="javascript:void(0)" onclick="bindRemoveMultiUpload_new('<?php echo $val['img_id']?>')" id="multiupload_img_remove1_<?php echo $val['img_id']?>"><i
-                                                class="fal fa-trash-alt"></i></a></span><img src="<?php echo base_url();?>uploads/consignmentimage_temp/<?php echo $val['image_name']?>"></div>
+                                <div class="upload-photo" id="multiupload_img_1_<?php echo $val['img_id']?>"><span
+                                        class="upload-close"><a href="javascript:void(0)"
+                                            onclick="bindRemoveMultiUpload_new('<?php echo $val['img_id']?>')"
+                                            id="multiupload_img_remove1_<?php echo $val['img_id']?>"><i
+                                                class="fal fa-trash-alt"></i></a></span><img
+                                        src="<?php echo base_url();?>uploads/consignmentimage_temp/<?php echo $val['image_name']?>">
+                                </div>
                                 <?php    }
                                     }
                                 ?>
@@ -336,18 +466,18 @@ $i=0;
     })(jQuery);
 
     function bindRemoveMultiUpload_new(id) {
-        
-                        $("#multiupload_img_1_" + id).remove();
-                         
 
-                        $.post('<?php echo site_url("request/doDeletImage");?>', {
+        $("#multiupload_img_1_" + id).remove();
 
-                                img_id: id
-                            },
-                            function(data) {
-                                console.log(data);
-                            });
-                }
+
+        $.post('<?php echo site_url("request/doDeletImage");?>', {
+
+                img_id: id
+            },
+            function(data) {
+                console.log(data);
+            });
+    }
     </script>
 
     <script type="text/javascript">

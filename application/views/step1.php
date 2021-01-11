@@ -45,6 +45,7 @@
             <div class="trans-listing-parameters-main">
                 <form class="frm-vendor-search" name="request_step1" id="request_step1" action="<?php echo site_url("request/step1");?>" method="post">
                     <input type="hidden" name="category_id" id="category_id" value="<?php echo (isset($postdata['category_id'])) ? $postdata['category_id'] : ''?>">
+                    <input type="hidden" name="request_id" id="request_id" value="<?php echo (isset($postdata['request_id'])) ? $postdata['request_id'] : ''?>">
                     <input type="hidden" name="subcategory_id" id="subcategory_id" value="<?php echo (isset($postdata['subcategory_id'])) ? $postdata['subcategory_id'] : ''?>">
                     <input type="hidden" name="category_name" id="category_name" value="<?php echo (isset($postdata['category_name'])) ? $postdata['category_name'] : ''?>">
                     <input type="hidden" name="subcategory_name" id="subcategory_name" value="<?php echo (isset($postdata['subcategory_name'])) ? $postdata['subcategory_name'] : ''?>">
@@ -73,8 +74,11 @@
                                             Pickup Date
                                         </div>
                                         <div class="form-group trans-shipment-city-postcode">
+                                        <?php
+                                        $pickup_date = (isset($postdata['pickup_date'])) ? $postdata['pickup_date'] : '';
+                                        ?>
                                             <input type="text" name="pickup_date" id="pickup_date"
-                                                class="form-control formclass datepicker1" placeholder="Earliest" value="<?php echo (isset($postdata['pickup_date'])) ? $postdata['pickup_date'] : ''?>" required>
+                                                class="form-control formclass datepicker1" placeholder="Earliest" value="<?php echo $pickup_date?>" required>
                                             <img src="<?php echo base_url();?>assets/images/input-calender-icon.png"
                                                 alt="input-up-arrow-icon" />
                                         </div>
@@ -101,8 +105,13 @@
                                             Delivery Date
                                         </div>
                                         <div class="form-group trans-shipment-city-postcode">
+                                        <?php
+                                        
+                                        $drop_destination_date = (isset($postdata['drop_destination_date'])) ? $postdata['drop_destination_date'] : '';
+                                        ?>
+
                                             <input type="text" name="drop_destination_date" id="drop_destination_date"
-                                                class="form-control formclass datepicker1" placeholder="Earliest" value="<?php echo (isset($postdata['drop_destination_date'])) ? $postdata['drop_destination_date'] : ''?>" required>
+                                                class="form-control formclass datepicker1" placeholder="Earliest" value="<?php echo $drop_destination_date?>" required>
                                             <img src="<?php echo base_url();?>assets/images/input-calender-icon.png"
                                                 alt="input-up-arrow-icon" />
                                         </div>
@@ -293,6 +302,9 @@
         //alert(longitude)
         document.getElementById('destination_longitude').value = latitude;
         document.getElementById('destination_latitude').value = longitude;
+
+
+        
     }
 
     function geolocate() {

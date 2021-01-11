@@ -5,6 +5,11 @@
     <?php $this->load->view('inc_header_commoncss');?>
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/slick.css">
+    <style>
+        .activetr{
+            background-color: #ccc;
+        }
+        </style>
 </head>
 
 <body>
@@ -25,14 +30,38 @@
 
         <div class="trans-caet-banner-bottom-img"></div>
     </div>
+    
     <div class="trans-shipment-detials-main">
+        <form name="frm_request_detail" id="frm_request_detail" action="<?php echo site_url("customer/my_shipment_details/".$request_id);?>" method="post">
+        <input type="hidden" name="mode" id="mode" value="doRequestAction">
+        <input type="hidden" name="action_flag" id="action_flag" value="0">
         <div class="container">
             <?php $this->load->view('inc_error');?>
             <div class="trans-shipment-steps-main">
                 <div class="trans-shipment-steps-head">
                     <?php echo $this->common->getDbValue($requests['request_title']); ?>
                 </div>
-
+                <?php
+                    if($requests['is_editable']==1){
+                    ?>
+                <div class="trans-price-accepted-action-btns">
+                    
+                    <div class="trans-price-accepted-btns">
+                        <a href="<?php echo site_url("customer/shipment_details_edit/".$requests['uuid']);?>">
+                            <span><i class="fal fa-pencil-alt"></i></span> <span>Edit</span>
+                        </a>
+                    </div>
+                             
+                    <!-- <div class="trans-price-accepted-btns">
+                        <a href="javascript:void(0);">
+                            <span><i class="fal fa-map-marker-alt"></i></span> <span>Confirm my Collection Address</span>
+                        </a>
+                    </div> -->
+                   <!--  <div class="trans-shipment-deleverd-btn">
+                        <a href="javascript:void(0);" class="trans-btn-shipment-deleverd">Shipment Delivered</a>
+                    </div> -->
+                </div>
+                <?php }?>  
                 <div class="trans-shipment-steps">
                     <div class="trans-shipment-steps-point active">
                         <div class="trans-shipment-steps-circle"><span>1</span></div>
@@ -55,7 +84,7 @@
                         </div>
                     </div>
                     <div
-                        class="trans-shipment-steps-point <?php if(in_array('Pick Up',$request_status)){?> active <?php } ?>">
+                        class="trans-shipment-steps-point <?php if(in_array('Pick Up',$request_status) || in_array('Picked Up',$request_status)){?> active <?php } ?>">
                         <div class="trans-shipment-steps-circle"><span>4</span></div>
                         <div class="trans-shipment-steps-name">
                             Picked Up
@@ -71,6 +100,87 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
+            <?php
+            if($requests['service_pro_user_id']!=0){
+
+            
+            ?>
+            <div class="trans-price-accepted-main">
+                <div class="trans-price-accepted-seciton">
+                    <div class="trans-price-accepted-head">
+                        Congratulations! Your Shipment is been successfully booked.
+                    </div>
+                    <div class="transport-details-amount-section">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <div class="transport-details-section">
+                                    <div class="transport-details-img">
+                                        <img src="<?php echo $this->common->getDbValue($requests['service_pro_profile_pic']); ?>" style="width:80px; height:auto" alt="default-img" />
+                                    </div>
+                                    <div class="transport-details-txt">
+                                        <div class="transport-details-txt-head">
+                                        <?php echo $this->common->getDbValue($requests['service_pro_first_name']); ?> <?php echo $this->common->getDbValue($requests['service_pro_last_name']); ?>
+                                        </div>
+                                        <div class="transport-details-txt-semihead">
+                                            xyz
+                                        </div>
+                                        <div class="transport-details-number">
+                                        <?php echo $this->common->getDbValue($requests['service_pro_mobile']); ?>
+                                        </div>
+                                        <div class="transport-details-email">
+                                        <?php echo $this->common->getDbValue($requests['service_pro_email']); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <div class="service-provider-amount">
+                                    <div class="transport-details-txt-head">
+                                    <?php echo $this->common->getDbValue($requests['enterprise_name']); ?>
+                                    </div>
+                                    <div class="transport-details-price">
+                                        <?php
+                                         $req_quotes = $requests['bids_list'];
+                                         $first_bid=0;
+                                         $selected_bid_tr="";
+                                         $current_selected_bid = [];
+                                         foreach($req_quotes as $key => $qts){
+                                             if($qts['service_pro_user_id']==$requests['service_pro_user_id']){
+                                                echo 'SR '. number_format($qts['quote_amount'],2);
+                                             }
+                                         }
+                                        ?>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                                                
+                    </div>
+                </div>
+                <?php
+                    if($requests['is_editable']==1){
+                    ?>
+                <div class="trans-price-accepted-action-btns">
+                    
+                    <div class="trans-price-accepted-btns">
+                        <a href="<?php echo site_url("customer/shipment_details/".$requests['uuid']);?>">
+                            <span><i class="fal fa-pencil-alt"></i></span> <span>Edit</span>
+                        </a>
+                    </div>
+                             
+                    <!-- <div class="trans-price-accepted-btns">
+                        <a href="javascript:void(0);">
+                            <span><i class="fal fa-map-marker-alt"></i></span> <span>Confirm my Collection Address</span>
+                        </a>
+                    </div> -->
+                   <!--  <div class="trans-shipment-deleverd-btn">
+                        <a href="javascript:void(0);" class="trans-btn-shipment-deleverd">Shipment Delivered</a>
+                    </div> -->
+                </div>
+                <?php }?>          
+                <div class="clearfix"></div>
+            </div>
+            <?php }?>
             <div class="trans-shipment-information-main">
                 <div class="trans-shipment-information-head">
                     Shipment Information
@@ -82,6 +192,7 @@
                                 <tr>
                                     <td>Price</td>
                                     <td>Transporter/Courier</td>
+                                    <td>Action</td>
                                     <td>Chat</td>
 
                                 </tr>
@@ -89,8 +200,25 @@
                             <tbody>
                                 <?php
                             $req_quotes = $requests['bids_list'];
-                            foreach($req_quotes as $key => $qts){ ?>
-                                <tr>
+                            if(sizeof($req_quotes)>0){
+
+                            
+                            $first_bid=0;
+                            $selected_bid_tr="";
+                            $current_selected_bid = [];
+                            foreach($req_quotes as $key => $qts){
+                                $selected_bid_tr = "";
+                                if($first_bid==0){
+                                    $first_bid = $qts['service_pro_user_id'];
+                                    $selected_bid_tr = "activetr";
+                                    $current_selected_bid = $qts;
+                                } 
+                                $qts['bid_amount_info'][0]['amt'] = number_format($qts['bid_amount_info'][0]['amt'],2);
+                                $qts['bid_amount_info'][1]['amt'] = number_format($qts['bid_amount_info'][1]['amt'],2);
+                                $qts['bid_amount_info'][2]['amt'] = number_format($qts['bid_amount_info'][2]['amt'],2);
+                                $qts['bid_amount_info'][1]['amt'] = number_format($qts['bid_amount_info'][3]['amt'],2);
+                                ?>
+                                <tr id="trclass<?php echo $qts['service_pro_user_id']?>" class="trclass <?php echo $selected_bid_tr?>">
                                     <td>
                                         <div class="transporter-price-section">SR
                                             <?php echo number_format($this->common->getDbValue($qts['quote_amount']),2); ?>
@@ -111,8 +239,10 @@
 
                                         </div>
                                     </td>
+                                    <td> <a href="javascript:void(0);" class="vide_detail" data-jsondata='<?php echo json_encode($qts) ?>' id="<?php echo $qts['service_pro_user_id']?>" > Detail</a>
 
-                                    <td>
+                                    </td>
+                                    <td class="text-center">
                                         <span class="message-section-block">
                                             <span><i class="fal fa-comment-lines"></i></span>
 
@@ -120,7 +250,16 @@
 
                                     </td>
                                 </tr>
-                                <?php } ?>
+                                <?php }
+                            } else {
+                                ?>
+                               
+                                     <tr>
+                                         <td colspan="4">Yet no bid is placed</td>
+                                     </tr>
+                                <?php
+                            }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -170,15 +309,7 @@
                                         <?php echo $this->common->getDateFormat($requests['insert_date'], 'd-M-Y h:i');; ?>
                                     </div>
                                 </div>
-
-                                <div class="shipment-listing-main">
-                                    <div class="shipment-listing-head">
-                                        Budget
-                                    </div>
-                                    <div class="shipment-listing-contnet">
-                                        SR <?php echo $this->common->getDbValue($requests['budget_amount']); ?>
-                                    </div>
-                                </div>
+ 
                             </div>
                         </div>
                         <div class="col-sm-6 col-md-6 col-lg-6">
@@ -199,7 +330,7 @@
                                             <?php echo $this->common->getDbValue($requests['pickup_location']); ?>
                                             </div>
                                             <div class="colection-content-txt">
-                                            Collection <?php echo $this->common->getDateFormat($requests['pickup_date'], 'd M Y'); ?> to <?php echo $this->common->getDateFormat($requests['latest_pickup_date'], 'd M Y'); ?>
+                                            Collection <?php echo $this->common->getDateFormat($requests['pickup_date'], 'd M Y'); ?>  
                                             </div>
                                         </div>
                                     </div>
@@ -217,7 +348,7 @@
                                             <?php echo $this->common->getDbValue($requests['destination_location']); ?>
                                             </div>
                                             <div class="colection-content-txt">
-                                                Collection <?php echo $this->common->getDateFormat($requests['drop_destination_date'], 'd M Y'); ?> to <?php echo $this->common->getDateFormat($requests['latest_drop_destination_date'], 'd M Y'); ?>
+                                                Collection <?php echo $this->common->getDateFormat($requests['drop_destination_date'], 'd M Y'); ?>  
                                             </div>
                                         </div>
                                     </div>
@@ -226,31 +357,36 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-3">
-                   <!--  <div class="right-payment-section">
+                <div class="col-sm-4 col-md-4 col-lg-3" id="bid_details_info"> 
+          <?php
+               if(sizeof($req_quotes)>0){
+
+        ?>                                       
+                <input type="hidden" id="service_provider_id" name="service_provider_id" value="<?php echo isset($current_selected_bid['service_pro_user_id']) ? $current_selected_bid['service_pro_user_id']:'0';?> ">
+                <div class="right-payment-section">
                         <div class="payment-section-head">
                             Quote
                         </div>
-                        <div class="payment-section-amount quote-right-price">
-                            SR4,800
+                        <div class="payment-section-amount quote-right-price" >
+                            SR <span id="bid_details_info_quote"><?php echo isset($current_selected_bid['bid_amount_info']) ? number_format($current_selected_bid['bid_amount_info'][0]['amt'],2):'0';?> </span>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="right-payment-section payment-small-section"  id="bid_details_info_admin_section">
+                        <div class="payment-section-head"  id="bid_details_info_admin_label">
+                        <?php echo isset($current_selected_bid['bid_amount_info']) ? $current_selected_bid['bid_amount_info'][2]['label']:'Admin Fee';?>
+                        </div>
+                        <div class="payment-section-amount" id="bid_details_info_admin_amt">
+                        <?php echo isset($current_selected_bid['bid_amount_info']) ? number_format($current_selected_bid['bid_amount_info'][2]['amt'],2):'0';?>
                         </div>
                         <div class="clearfix"></div>
                     </div>
                     <div class="right-payment-section payment-small-section">
-                        <div class="payment-section-head">
-                            Auction Service Fee:
+                        <div class="payment-section-head" id="bid_details_info_vat_label">
+                          <?php echo isset($current_selected_bid['bid_amount_info']) ? $current_selected_bid['bid_amount_info'][1]['label']:'VAT';?>
                         </div>
-                        <div class="payment-section-amount">
-                            +0.00
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="right-payment-section payment-small-section">
-                        <div class="payment-section-head">
-                            Vat:
-                        </div>
-                        <div class="payment-section-amount">
-                            15%
+                        <div class="payment-section-amount" id="bid_details_info_vat_amt">
+                        <?php echo isset($current_selected_bid['bid_amount_info']) ? number_format($current_selected_bid['bid_amount_info'][1]['amt'],2):'0';?>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -258,8 +394,8 @@
                         <div class="payment-section-head">
                             Total
                         </div>
-                        <div class="payment-section-amount">
-                            SR4,800
+                        <div class="payment-section-amount" id="bid_details_info_total">
+                       SR <?php echo isset($current_selected_bid['bid_amount_info']) ? number_format($current_selected_bid['bid_amount_info'][3]['amt'],2):'0';?>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -272,11 +408,17 @@
                         </div>
                         <div class="clearfix"></div>
                     </div>
-
+                        <?php
+                        if($requests['service_pro_user_id']==0){
+            
+                        
+                        ?>                      
                     <div class="price-action-btn-section">
-                        <a href="after-accept-offer-my_shipment_details.html" class="bid-accept-btn">Accept</a>
-                        <a href="javascript:void(0);" class="bid-reject-btn">Reject</a>
-                    </div> -->
+                        <a href="javascript:void(0);" data-html="after-accept-offer-my_shipment_details.html" class="bid-accept-btn" id="btn_accept">Accept</a>
+                        <a href="javascript:void(0);" class="bid-reject-btn" id="btn_reject">Reject</a>
+                    </div>  
+                    <?php }?>
+                    <?php }?>
                                        
 <?php 
 $cons_images = $requests['consignment_image'];
@@ -301,6 +443,32 @@ $cons_images = $requests['consignment_image'];
                         <!-- /.carousel -->
                     </div>
 <?php } ?>
+
+<?php
+
+$cons_final_images = $requests['complete_consignment_image'];
+if (isset($cons_final_images) && sizeof($cons_final_images)>0) {  ?>                    
+                    <div class="shipment-listing-info-head">
+                        Consignment Images
+                    </div>
+                    <div class="shipment-pictures-section">
+                    <!-- /.carousel -->
+                        <div class="trans_main_slider">
+                        <?php foreach($cons_final_images as $key => $imgs){ 
+						
+						 
+							$sel_photo = $imgs;		 
+							 
+							 					
+						?>
+                          <div>
+                            <img src="<?php echo $sel_photo?>" alt="slider" width="300" height="200">
+                          </div>
+                        <?php } ?>   
+                        </div>
+                        <!-- /.carousel -->
+                    </div>
+<?php } ?>    
                 </div>
             </div>
             <div class="route-information-section-main">
@@ -308,9 +476,7 @@ $cons_images = $requests['consignment_image'];
                     Route Information
                 </div>
                 <div class="route-information-map">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d121048.04380827247!2d73.82958079999999!3d18.5401344!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1607749861136!5m2!1sen!2sin"
-                        allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                <iframe width="100%" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=<?php echo $this->common->getDbValue($requests['destination_latitude']); ?>,<?php echo $this->common->getDbValue($requests['destination_longitude']); ?>&amp;key=AIzaSyBs3Ci13XYyV1cPcs88UVbkOjn05c1r4gY"></iframe>
                 </div>
             </div>
 
@@ -373,15 +539,12 @@ $cons_images = $requests['consignment_image'];
 <?php } ?> 
 
         </div>
+
+                </form>
     </div>
     <?php $this->load->view('inc_footer');?>
     <script>
-    function getChange_Status(my_val) {
-        if (my_val != 'Booked') {
-            window.location.href =
-                "<?php echo site_url('serviceprovider/change_ship_status/'.$request_id)?>?sel_status=" + my_val;
-        }
-    }
+ 
     </script>
     <!--Main JS-->
     <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-1.11.3.min.js"></script>
@@ -390,4 +553,37 @@ $cons_images = $requests['consignment_image'];
     <script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>assets/js/slick.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>assets/js/common_inner.js"></script>
+    <script>
+        //vide_detail
+        $(document).ready(function(){  
+            $('.vide_detail').click(function() {
+               
+                $(".trclass").removeClass("activetr");
+                var id = $(this).attr('id');
+                var jsondata = JSON.parse(JSON.stringify($(this).data('jsondata')));
+
+                $("#trclass"+id).addClass("activetr");
+                $("#service_provider_id").val(jsondata.service_pro_user_id);
+                console.log("jsondata",jsondata.bid_amount_info);
+                var bid_amount_info = jsondata.bid_amount_info;
+                $("#bid_details_info_quote").html(bid_amount_info[0].amt)
+               
+                $("#bid_details_info_vat_label").html(bid_amount_info[1].label)
+                $("#bid_details_info_vat_amt").html(bid_amount_info[1].amt)
+                $("#bid_details_info_admin_label").html(bid_amount_info[2].label)
+                $("#bid_details_info_admin_amt").html(bid_amount_info[2].amt)
+                $("#bid_details_info_total").html("SR "+bid_amount_info[3].amt)
+                console.log("aaa ",bid_amount_info[1].amt);
+                
+            })
+            $('#btn_accept').click(function() {
+                $("#action_flag").val("1");
+                $("#frm_request_detail").submit();
+            });
+            $('#btn_reject').click(function() {
+                $("#action_flag").val("2");
+                $("#frm_request_detail").submit();
+            });
+        });
+        </script>
 </body>

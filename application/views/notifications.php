@@ -39,7 +39,13 @@
                 </div>
 
                 <div class="row">
-                    <?php $this->load->view('inc_service_left');?>
+                <?php 
+				   if($controller=='serviceprovider') {
+				   	$this->load->view('inc_service_left');
+				   } else {
+					   $this->load->view('inc_customer_left');
+				   }
+				   ?>
                     <div class="col-sm-12 col-md-12 col-lg-9">    
 <?php if (isset($todays_not) && sizeof($todays_not)>0) {  ?>                                        
                         <div class="fb-notification-messages-main">

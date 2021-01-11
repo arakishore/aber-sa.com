@@ -144,14 +144,15 @@ class Serviceprovider extends CI_Controller
         $session_user_data = $this->session->userdata('user_data');
         $id = $session_user_data['user_id'];
 
-        $sSql = "SELECT us.first_name, us.last_name, us.profile_pic, rq.service_pro_overall, rq.service_pro_ratings, rq.service_pro_review_date, rq.service_pro_review,rq.request_title, rq.insert_date
+//rq.service_pro_review, rq.service_pro_overall, rq.service_pro_ratings, rq.service_pro_review_date
+$sSql = "SELECT us.first_name, us.last_name, us.profile_pic,
+rq.service_pro_review as review_text, rq.service_pro_overall as overall, rq.service_pro_ratings as rating, rq.service_pro_review_date  as review_date,rq.request_title, rq.insert_date
 FROM user_master_front us
- 
-left join lt_requests rq on us.user_id = rq.user_id
-WHERE rq.service_provider_id='" . $id . "'   ORDER BY rq.request_id";
+
+inner join lt_requests rq on us.user_id = rq.user_id 
+WHERE rq.service_provider_id='" . $id . "'  AND(  service_pro_ratings IS NOT NULL && service_pro_ratings > 0 ) ORDER BY rq.request_id";
         $query = $this->db->query($sSql);
         $data['reviews'] = $reviews = $query->result_array();
-
         $this->load->view("review", $data);
     }
 
@@ -561,8 +562,8 @@ WHERE rq.service_provider_id='" . $id . "'   ORDER BY rq.request_id";
             $add_in['request_id'] = $request_id;
             $add_in['insert_date'] = date("Y-m-d H:i:s");
             $add_in['update_date'] = date("Y-m-d H:i:s");
-            $add_in['pickup_date'] = $pickup_date = (isset($_POST['pickup_date'])) ? $this->common->mysql_safe_string($_POST['pickup_date']) : '';
-            $add_in['drop_date'] = $drop_date = (isset($_POST['drop_date'])) ? $this->common->mysql_safe_string($_POST['drop_date']) : '';
+            //$add_in['pickup_date'] = $pickup_date = (isset($_POST['pickup_date'])) ? $this->common->mysql_safe_string($_POST['pickup_date']) : '';
+            //$add_in['drop_date'] = $drop_date = (isset($_POST['drop_date'])) ? $this->common->mysql_safe_string($_POST['drop_date']) : '';
 
             $sql = "select * from lt_request_quotes where request_id='" . $request_id . "' and service_provider_id='" . $id . "'";
             $query = $this->db->query($sql);
@@ -573,7 +574,7 @@ WHERE rq.service_provider_id='" . $id . "'   ORDER BY rq.request_id";
                 $this->session->set_flashdata('success', 'Bid request has been added succssfully!!');
                 redirect($this->controller . '/shipment_details/' . $request_id);
             } else {
-                $this->session->set_flashdata('error', 'Error!');
+                $this->session->set_flashdata('error', 'You have already submitted bid for this shipment request!');
             }
         }
 
@@ -682,7 +683,7 @@ WHERE rq.service_provider_id='" . $id . "'   ORDER BY rq.request_id";
         }
         $data['total_weight'] = $total_weight;
 
-        $sql = "SELECT us.first_name, us.last_name, qt.quote_amount  FROM user_master_front us , lt_request_quotes qt
+        $sql = "SELECT us.user_id, us.first_name, us.last_name, qt.quote_amount  FROM user_master_front us , lt_request_quotes qt
 			WHERE us.user_id=qt.service_provider_id AND
 			qt.request_id=" . $requests['request_id'] . "
 			ORDER BY qt.request_quote_id DESC";

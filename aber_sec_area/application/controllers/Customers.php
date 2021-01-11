@@ -171,11 +171,14 @@ class Customers extends CI_Controller
 
         $sSql = "SELECT csa.*,mp.name as cat_name, md.name as sub_cat_name FROM `lt_requests` csa
 		left join product_category mp on csa.category_id = mp.category_id
-		left join product_category md on csa.subcategory_id = md.category_id  where user_id='" . $id . "'   ORDER BY csa.request_id DESC";
+		left join product_category md on csa.subcategory_id = md.category_id  where user_id='" . $id . "' ORDER BY csa.request_id DESC";
         $query = $this->db->query($sSql);
         $data['requests'] = $query->result_array();
 		//die();
 
+        $sSql = " SELECT * FROM  user_master_front WHERE user_id=".$id." ORDER BY user_id DESC ";
+        $query = $this->db->query($sSql);
+        $data['customer'] = $customer = $query->row_array();
 
         $data['start'] = 0;
         $data['maxm'] = $maxm = 50;
@@ -205,6 +208,15 @@ class Customers extends CI_Controller
 		
 		$data['fun_name'] = $fun_name . "?" . $data['other_para'];
 
+
+		$sSql = "SELECT us.first_name, us.last_name, us.profile_pic, rq.cust_overall, rq.cust_rating, rq.cust_review_date, rq.cust_review,rq.request_title, rq.insert_date
+		FROM lt_requests rq 
+		 
+		inner join user_master_front us on us.user_id = rq.user_id
+		WHERE rq.user_id='" . $id . "'   ORDER BY rq.request_id";
+		
+		$query = $this->db->query($sSql);
+		$data['reviews'] = $reviews = $query->result_array();
 
         $this->load->view('view_customer', $data);
         $this->session->unset_userdata('success');
@@ -243,14 +255,24 @@ class Customers extends CI_Controller
         $query = $this->db->query($sSql);
         $data['requests_items'] = $query->result_array();
 
-        $sSql = " SELECT * FROM  lt_request_consignment_imgs WHERE request_id=".$request_id." AND user_id=".$id." ";
+        $sSql = " SELECT * FROM  lt_request_consignment_imgs WHERE request_id=".$request_id." ";
         $query = $this->db->query($sSql);
         $data['consignment_images'] = $query->result_array();
 
-        $sSql = " SELECT * FROM  lt_request_final_complete_images WHERE request_id=".$request_id." AND user_id=".$id." ";
+        $sSql = " SELECT * FROM  lt_request_final_complete_images WHERE request_id=".$request_id." ";
         $query = $this->db->query($sSql);
         $data['consignment_images_comp'] = $query->result_array();
 
+        $sSql = " SELECT * FROM  user_master_front WHERE user_id=".$id." ORDER BY user_id DESC ";
+        $query = $this->db->query($sSql);
+        $data['customer'] = $customer = $query->row_array();
+
+        $sSql = "SELECT csa.*,mp.name as cat_name, md.name as sub_cat_name FROM `lt_requests` csa
+		left join product_category mp on csa.category_id = mp.category_id
+		left join product_category md on csa.subcategory_id = md.category_id  where user_id='" . $id . "' ORDER BY csa.request_id DESC";
+        $query = $this->db->query($sSql);
+        $data['requests'] = $query->result_array();
+		
         $this->load->view('view_trip', $data);
         $this->session->unset_userdata('success');
         $this->session->unset_userdata('warning');

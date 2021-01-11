@@ -37,7 +37,13 @@
                 </div>
 
                 <div class="row">
-                    <?php $this->load->view('inc_service_left');?>
+                <?php 
+				   if($controller=='serviceprovider') {
+				   	$this->load->view('inc_service_left');
+				   } else {
+					   $this->load->view('inc_customer_left');
+				   }
+				   ?>
                     <div class="col-sm-12 col-md-12 col-lg-9">                        
                         <div class="card">
                             <div class="card-header">Customer Review
@@ -54,12 +60,12 @@
                                 <div class="media align-items-center">
                                   <img src="<?php echo base_url();?>assets/images/user-img.jpg" alt="user avatar" class="customer-img rounded-circle">
                                 <div class="media-body ml-3">
-                                  <h6 class="mb-0"><?php echo $val['request_title']?> <small class="ml-4"><?php echo $val['service_pro_review_date']?></small></h6>
-                                  <p class="mb-0 small-font"><?php echo $val['service_pro_review']?></p>
+                                  <h6 class="mb-0"><?php echo $val['first_name']?> <?php echo $val['last_name']?> <small class="ml-4"><?php echo $val['review_date']?></small></h6>
+                                  <p class="mb-0 small-font"><?php echo $val['review_text']?></p>
                                 </div>
                                 <div class="star">
                                   <?php
-                                  for($i=1;$i<$val['service_pro_ratings'];$i++){
+                                  for($i=1;$i<=$val['rating'];$i++){
                                   ?>
                                   <i class="fa fa-star" aria-hidden="true"></i>
                                    <?php }?>

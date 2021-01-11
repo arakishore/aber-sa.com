@@ -69,7 +69,7 @@
             <div class="trans-price-accepted-main">
                 <div class="trans-price-accepted-seciton">
                     <div class="trans-price-accepted-head">
-                        Your price of SR <?php echo number_format($this->common->getDbValue($my_quotes['quote_amount'])),2; ?> is accepted by <span> <?php echo $this->common->getDbValue($customer['first_name']); ?> <?php echo $this->common->getDbValue($customer['last_name']); ?> </span>
+                        Your price of SR <?php echo number_format($this->common->getDbValue($my_quotes['quote_amount']),2); ?> is accepted by <span> <?php echo $this->common->getDbValue($customer['first_name']); ?> <?php echo $this->common->getDbValue($customer['last_name']); ?> </span>
                     </div>
                     <div class="trans-booking-date-section">
                        
@@ -115,17 +115,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                        <?php foreach($req_quotes as $key => $qts){ ?>
+                        <?php foreach($req_quotes as $key => $qts){
+                            
+                            ?>
                                 <tr>
                                     <td><div class="transporter-price-section">SR <?php echo number_format($this->common->getDbValue($qts['quote_amount']),2); ?></div></td>
                                     <td>
                                         <div class="transporter-name"><?php echo $this->common->getDbValue($qts['first_name']); ?> <?php echo $this->common->getDbValue($qts['last_name']); ?></div>
                                         <div class="transporter-ratings">
+                                        <?php
+                                         $qts['service_pro_ratings'] = $this->services->getAverageReview($qts['user_id'], 'servicepro') + 0;
+                                        for($i=1;$i<=$qts['service_pro_ratings'];$i++){
+                                            ?>
                                             <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
+                                            <?php    
+                                              }  ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -195,7 +199,7 @@
                                 </div>
 								<div class="shipment-listing-main">
                                     <div class="shipment-listing-head">
-                                        Miles
+                                        KMs.
                                     </div>
                                     <div class="shipment-listing-contnet">
                                         <?php echo $this->common->getDbValue($requests['distance_mile']); ?>
@@ -210,14 +214,7 @@
                                         <?php echo $this->common->getDbValue($requests['expected_travelling_time']); ?> HRS
                                     </div>
                                 </div>
-                                <div class="shipment-listing-main">
-                                    <div class="shipment-listing-head">
-                                        Budget
-                                    </div>
-                                    <div class="shipment-listing-contnet">
-                                        SR <?php echo $this->common->getDbValue($requests['budget_amount']); ?>
-                                    </div>
-                                </div>
+                                
                                 <div class="shipment-listing-main">
                                     <div class="shipment-listing-head">
                                         # of Quotes
@@ -345,7 +342,7 @@ $grand_total = ($price + $tax + $admn_fees);
 							}						
 						?>
                           <div>
-                            <img src="<?php echo $sel_photo?>" alt="slider">
+                            <img src="<?php echo $sel_photo?>" alt="slider" width="300" height="200">
                           </div>
                         <?php } ?>   
                         </div>
@@ -368,7 +365,7 @@ $grand_total = ($price + $tax + $admn_fees);
 							}						
 						?>
                           <div>
-                            <img src="<?php echo $sel_photo?>" alt="slider">
+                            <img src="<?php echo $sel_photo?>" alt="slider" width="300" height="200">
                           </div>
                         <?php } ?>   
                         </div>

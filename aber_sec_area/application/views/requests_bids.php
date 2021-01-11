@@ -93,8 +93,8 @@
                                         <th width="13%">Title</th>
 
 
-                                        <th width="32%">Category</th>
-                                        <th width="4%">Pic - Drop Dates</th>
+                                        <th width="24%">Category</th>
+                                        <th width="12%">Pic - Drop Dates</th>
                                         <th width="11%">Status</th>
                                         <th width="5%">Actions</th>
                                     </tr>
@@ -103,14 +103,14 @@
                                     <?php  $i=0;
 								foreach($requests_rs as $key => $value){
 								$i++;
-                                $status_flag = $this->common->getDbValue($value['status_flag']);
+                                $status = $this->common->getDbValue($value['request_status']);
 
 								$sSql = " SELECT * FROM user_master_front WHERE user_id=".$this->common->getDbValue($value['user_id'])."  ";
 								$query = $this->db->query($sSql);
 								$user_rs = $query->row_array();
                                 
 								?>
-                                    <tr class="  border-left-3  <?php echo ($status_flag == "Active") ? 'border-left-success' : 'border-left-danger' ?>  tr<?php echo $this->common->getDbValue($value['status_flag']); ?>">
+                                    <tr class="  border-left-3">
                                         <td valign="top"><?php echo $i?></td>
                                         <td valign="top"><strong>
                                                 <?php echo $this->common->getDbValue($user_rs['first_name']); ?>
@@ -122,18 +122,15 @@
 
 
                                         <td valign="top"><strong><?php echo $this->common->getDbValue($value['category_name']); ?></strong> - <strong><?php echo $this->common->getDbValue($value['subcategory_name']); ?></strong></td>
-                                        <td valign="top"><?php echo $this->common->getDateFormat($value['pickup_date'], 'Y-m-d'); ?>-<?php echo $this->common->getDateFormat($value['drop_destination_date'], 'Y-m-d'); ?></td>
                                         <td valign="top">
-                                            <?php
-                                        if($status_flag=="Active"){echo '<span class="badge badge-success">Active</span>';}
-                                        ?>
-                                            <?php
-                                        if($status_flag=="Inactive"){echo '<span class="badge badge-danger">Inactive</span>';}
-                                        ?>
+										From : <?php echo $this->common->getDateFormat($value['pickup_date'], 'Y-m-d'); ?> <br/>
+                                        To : <?php echo $this->common->getDateFormat($value['drop_destination_date'], 'Y-m-d'); ?></td>
+                                        <td valign="top">
+                                            <?php echo $status;?>
                                         </td>
                                         <td valign="top">
                                             <div class="list-icons">
-                                                <a href="<?php echo site_url($this->ctrl_name.'/view_bids/'.$this->common->getDbValue($value['request_id'])) ?>" class="list-icons-item text-primary-600" data-popup="tooltip" title="" data-original-title="VIEW BIDS"><i class="icon-file-stats"></i></a>
+                                                <a href="<?php echo site_url($this->ctrl_name.'/view_request_detail/'.$this->common->getDbValue($value['request_id'])) ?>" class="list-icons-item text-primary-600" data-popup="tooltip" title="" data-original-title="VIEW BIDS"><i class="icon-file-stats"></i></a>
                                             </div>
                                         </td>
                                     </tr>

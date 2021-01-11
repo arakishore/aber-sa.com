@@ -101,9 +101,7 @@
                                             <span><img src="<?php echo base_url();?>assets/images/table-down-arrow-img.png" alt="table-up-arrow-img" /></span> 
                                             <span><?php echo substr($this->common->getDbValue($value['destination_location']),0,20); ?></span>
                                         </div>
-                                        <div class="list-offer-price-section">
-                                            Offer <span>SR <?php echo $this->common->getDbValue($value['budget_amount']); ?></span>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
